@@ -13,8 +13,8 @@ jobs:
   deploy_runningdinner_functions:
     docker:
       - image: cimg/node:current
-    environment:
-      SERVERLESS_ACCESS_KEY: $PROD_SERVERLESS_ACCESS_KEY
+    # environment:
+    #   SERVERLESS_ACCESS_KEY: $PROD_SERVERLESS_ACCESS_KEY
     steps:
       - checkout
       - restore_cache:
@@ -38,7 +38,7 @@ jobs:
               export AWS_SECRET_ACCESS_KEY=${PROD_AWS_SECRET_ACCESS_KEY}
               STAGE="prod"
             fi
-            # export SERVERLESS_ACCESS_KEY=$PROD_SERVERLESS_ACCESS_KEY
+            export SERVERLESS_ACCESS_KEY=$PROD_SERVERLESS_ACCESS_KEY
             echo "Starting deploy to $STAGE..."
             npx sls deploy --stage $STAGE --verbose
       - save_cache:
