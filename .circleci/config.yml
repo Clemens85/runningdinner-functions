@@ -24,8 +24,8 @@ commands:
 
 jobs:
   run_tests:
-    docker:
-    - image: cimg/node:current
+    machine:
+      image: ubuntu-2004:202201-02
     steps:
       - checkout
       - setup-aws-credentials-from-env
