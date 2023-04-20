@@ -15,6 +15,6 @@ source ../runningdinner-infrastructure/aws/scripts/setup-aws-cli.sh $passedStage
 
 npx sls deploy --stage $passedStage --verbose
 
-source ../../runningdinner-infrastructure/aws/scripts/clear-aws-cli.sh
+source ../runningdinner-infrastructure/aws/scripts/clear-aws-cli.sh
 
 cd $CUR_DIR

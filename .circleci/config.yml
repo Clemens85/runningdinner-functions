@@ -8,13 +8,47 @@ parameters:
     type: string
     default: "main"
 
+commands:
+  setup-aws-credentials-from-env:
+    steps:
+      - run:
+          command: |
+            if [ $CIRCLE_BRANCH == "<< pipeline.parameters.dev-stage-branch >>" ]; then
+              echo "export AWS_ACCESS_KEY_ID='${DEV_AWS_ACCESS_KEY_ID}'" >> "$BASH_ENV"
+              echo "export AWS_SECRET_ACCESS_KEY='${DEV_AWS_SECRET_ACCESS_KEY}'" >> "$BASH_ENV"
+            else
+              echo "export AWS_ACCESS_KEY_ID='${PROD_AWS_ACCESS_KEY_ID}'" >> "$BASH_ENV"
+              echo "export AWS_SECRET_ACCESS_KEY='${PROD_AWS_SECRET_ACCESS_KEY}'" >> "$BASH_ENV"
+            fi
+            source "$BASH_ENV"
+
 jobs:
+  run_tests:
+    docker:
+    - image: cimg/node:current
+    steps:
+      - checkout
+      - setup-aws-credentials-from-env
+      - restore_cache:
+          keys:
+            - npm-deps-{{ checksum "package.json" }}
+            - npm-deps-
+      - run:
+          name: Install serverless framework and all needed dependencies
+          command: |
+            yarn install
+      - run:
+          name: Generate .env file with Google Maps Key
+          command: |
+            ./util/write-googlemaps-key-to-env.sh
+      - run:
+          name: Execute Tests
+          command: |
+            yarn test
 
   deploy_runningdinner_functions:
     docker:
       - image: cimg/node:current
-    # environment:
-    #   SERVERLESS_ACCESS_KEY: $PROD_SERVERLESS_ACCESS_KEY
     steps:
       - checkout
       - restore_cache:
@@ -49,8 +83,12 @@ jobs:
 workflows:
   deploy_functions:
     jobs:
+      - run_tests:
+          context: workspace
       - confirm-functions-deployment:
           type: approval
+          requires:
+            - run_tests
           filters:
             branches:
               only:
@@ -60,6 +98,7 @@ workflows:
           context: workspace
           requires:
             - confirm-functions-deployment
+            - run_tests
           filters:
             branches:
               only:

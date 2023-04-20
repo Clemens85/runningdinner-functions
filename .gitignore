@@ -9,4 +9,5 @@ geocode-service/.serverless
 .idea
 *.iml
 .esbuild
+.env
 

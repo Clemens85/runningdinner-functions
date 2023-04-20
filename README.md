@@ -15,15 +15,15 @@ Contains a quite simple lambda for geocoding addresses, that is invoked by SQS e
 * It provides also a local SQS queue which is backed by Localstack
 * The parameter store (SSM) is also provided by Localstack 
 
-See the scripts in runningdinner-infrastructure/local for more information. There is also a convenience script for adding a
-Google Maps Key to the local SSM Parameter Store.
+See the scripts in `runningdinner-infrastructure/local` for more information. There is also a convenience script for adding a
+Google Maps Key to the local SSM Parameter Store (this is however also automatically performed by the `start-dev-env` script).
 
 ## Running the Tests
 
 The test is quite a full integration test for performing a real geocoding operation.
 It needs therefore a Google Maps Key provided by Localstack.<br/>
-Furthermore we need to overwrite the SSM parameter store endpoint to Localstack by setting the env-var:
-`AWS_ENDPOINT_URL_OVERWRITE = http://localhost:4566`
+Locally we need to run at least once `./util/write-googlemaps-key-to-env.sh --local` for generating an .env file containing the Google Maps key as env config.
+(It is retrieved from Localstack's Parameter Store).
 
 ## Esbuild
 For minifying the packaged Javascript code the esbuild-plugin is used which seems to work also with the latest Nodejs 18x version.
@@ -34,6 +34,8 @@ We have 2 stages to deploy to: dev and prod
 
 * ``./deploy.sh dev``
 * ``./deploy.sh prod``
+
+Those scripts need access to the `runningdinner-infrastructure` repository
 
 ---
 
