@@ -10,3 +10,5 @@ geocode-service/.serverless
 *.iml
 .esbuild
 
+
+cluster-service/venv/
