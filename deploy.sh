@@ -11,10 +11,12 @@ fi
 
 cd "$( dirname "${BASH_SOURCE[0]}" )" || exit 1
 
-source ../runningdinner-infrastructure/aws/scripts/setup-aws-cli.sh $passedStage
+source ../runningdinner-infrastructure/aws/scripts/setup-aws-cli.sh "$passedStage"
 
-npx sls deploy --stage $passedStage --verbose
+echo "Calling Deploy tp $passedStage..."
+npx sls deploy --stage "$passedStage" --verbose
 
-source ../../runningdinner-infrastructure/aws/scripts/clear-aws-cli.sh
+source ../runningdinner-infrastructure/aws/scripts/clear-aws-cli.sh
 
-cd $CUR_DIR
+# shellcheck disable=SC2164
+cd "$CUR_DIR"

@@ -10,3 +10,4 @@ geocode-service/.serverless
 *.iml
 .esbuild
 
+/.env
