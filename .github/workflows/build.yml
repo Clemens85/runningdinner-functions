@@ -1,0 +1,53 @@
+name: 'Build Geocoding Function'
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: 'Typecheck, lint & test'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Check-out repository
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm package manager
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        name: 'Install Node.js & cache pnpm store'
+        with:
+          cache: 'pnpm'
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Lint
+        run: cd packages/geocoding && pnpm lint
+
+#      - name: Test
+#        run: pnpm test:ci
+
+      - name: Build
+        run: cd packages/geocoding && pnpm build
+
+#      - name: Upload Test Report
+#        uses: actions/upload-artifact@v4  # upload test results
+#        if: success() || failure()        # run this step even if previous step failed
+#        with:
+#          name: test-results
+#          path: reports/
+#
+#      - name: Test Report
+#        uses: dorny/test-reporter@v1
+#        if: always()
+#        with:
+#          name: Test Results               # Name of the check run which will be created
+#          path: reports/test-*.xml         # Path to test results
+#          reporter: jest-junit             # Format of test results
