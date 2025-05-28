@@ -1,0 +1,19 @@
+{
+  "name": "@runningdinner/geocoding",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.812.0",
+    "@aws-sdk/client-ssm": "^3.812.0",
+    "@aws-sdk/lib-dynamodb": "^3.812.0",
+    "@aws-sdk/client-dynamodb": "^3.812.0"
+  }
+}

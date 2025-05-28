@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    /* Base Options: */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": false,
+    /* If NOT transpiling with TypeScript: */
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "noEmit": true,
+    "sourceMap": true,
+    /* If your code doesn't run in the DOM: */
+    "lib": ["esnext"]
+  }
+}

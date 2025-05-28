@@ -1,13 +1,16 @@
-# package directories
-node_modules
-geocode-service/node_modules
-geocode-service/jspm_packages
+node_modules/
 
-# Serverless directories
-geocode-service/.serverless
-.serverless
-.idea
+# CDK asset staging directory
+*.d.ts
+.cdk.staging
+cdk.out
+
+.idea/
+.vscode/
+
 *.iml
-.esbuild
 
-/.env
+dist/
+dev-dist/
+
+.env.local
