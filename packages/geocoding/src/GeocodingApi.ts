@@ -81,7 +81,9 @@ export class GeocodingApi {
     let exactness: EXACTNESS_TYPE = 'NONE';
     if (result.geometry?.location_type === 'ROOFTOP') {
       exactness = 'EXACT';
-    } else if (result.geometry?.location_type === 'APPROXIMATE' || result.geometry?.location_type === 'GEOMETRIC_CENTER') {
+    } else if (result.geometry?.location_type === 'APPROXIMATE' ||
+               result.geometry?.location_type === 'GEOMETRIC_CENTER' ||
+               result.geometry?.location_type === 'RANGE_INTERPOLATED') {
       exactness = 'NOT_EXACT';
     }
 
