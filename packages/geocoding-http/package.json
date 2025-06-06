@@ -1,0 +1,16 @@
+{
+  "name": "@runningdinner/geocoding-http",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@runningdinner/geocoding": "^1.0.0"
+  }
+}

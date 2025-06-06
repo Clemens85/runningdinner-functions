@@ -43,6 +43,10 @@ export class GeocodingApi {
       return null;
     }
     if (data.status !== 'OK') {
+      if (data.status === 'REQUEST_DENIED') {
+        // Try to refetch API key (in case lambda is warmed), but don't wait here. But this may help on next request
+        googleMapsApiKeyFactory.triggerRefetchApiKey();
+      }
       Util.logAndThrowError(`Error in geocode response: ${data.status}`);
     }
 

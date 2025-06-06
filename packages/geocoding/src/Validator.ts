@@ -25,7 +25,7 @@ export class Validator {
     Validator.validateAddress(request.address);
   }
 
-  static assertStringNotEmpty(str: string | null | undefined, errorMessage: string) {
+  public static assertStringNotEmpty(str: string | null | undefined, errorMessage: string) {
     if (!str || str.trim().length === 0) {
       Util.logAndThrowError(errorMessage);
     }

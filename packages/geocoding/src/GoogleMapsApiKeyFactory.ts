@@ -42,6 +42,10 @@ export class GoogleMapsApiKeyFactory {
     return result;
   }
 
+  public triggerRefetchApiKey() {
+    this.ssmPromise = this.fetchSsmParameter(SSM_PARAMETER);
+  }
+
   private async fetchSsmParameter(parameterName: string): Promise<GetParameterCommandOutput> {
     return ssmClient.send(
       new GetParameterCommand({

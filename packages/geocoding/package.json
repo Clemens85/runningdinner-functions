@@ -1,8 +1,9 @@
 {
   "name": "@runningdinner/geocoding",
   "version": "1.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "author": "Clemens Stich",
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "test": "vitest run",
@@ -11,9 +12,8 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.812.0",
+    "@aws-sdk/client-dynamodb": "^3.812.0",
     "@aws-sdk/client-ssm": "^3.812.0",
-    "@aws-sdk/lib-dynamodb": "^3.812.0",
-    "@aws-sdk/client-dynamodb": "^3.812.0"
+    "@aws-sdk/lib-dynamodb": "^3.812.0"
   }
 }

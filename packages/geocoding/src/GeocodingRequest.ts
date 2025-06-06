@@ -12,5 +12,5 @@ export type GeocodingRequest = {
   [ENTITY_TYPE_FIELD]: GeocodingEntityType;
   [ENTITY_ID_FIELD]: string;
   [ADMIN_ID_FIELD]: string;
-  responseQueueUrl: string;
+  [RESPONSE_QUEUE_URL_FIELD]: string;
 };

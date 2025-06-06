@@ -1,0 +1,17 @@
+{
+  "name": "@runningdinner/geocoding-sqs",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.812.0",
+    "@runningdinner/geocoding": "^1.0.0"
+  }
+}

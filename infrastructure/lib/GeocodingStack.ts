@@ -7,7 +7,8 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { ENVIRONMENT } from "./Environment";
 import { LocalDevUser } from "./LocalDevUser";
-import { AttributeType } from "aws-cdk-lib/aws-dynamodb";
+import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
+import { HttpMethod } from 'aws-cdk-lib/aws-lambda';
 
 export class GeocodingStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -18,27 +19,38 @@ export class GeocodingStack extends cdk.Stack {
     const geocodingResponseQueue =
       this.createSqsWithDLQ("geocoding-response")[0];
 
-    // Create lambda and give access to the queues
-    const geocodingFunc = new NodeJsLambda(this, "geocoding", {
-      name: "geocoding",
-      packageFolderName: "geocoding",
+    // Create SQS-lambda and give access to the queues
+    const geocodingFuncSqs = new NodeJsLambda(this, "geocoding-sqs", {
+      name: "geocoding-sqs",
+      packageFolderName: "geocoding-sqs",
     });
-    geocodingFunc.lambdaFunction.addEventSource(
+    // Create HTTP-Lambda
+    const geocodingFuncHttp = new NodeJsLambda(this, "geocoding-http", {
+      name: "geocoding-http",
+      packageFolderName: "geocoding-http",
+      addFunctionUrl: true,
+      cors: this.corsForHttpMethods([HttpMethod.HEAD, HttpMethod.PUT]),
+    });
+
+    geocodingFuncSqs.lambdaFunction.addEventSource(
       new lambdaEventSources.SqsEventSource(geocodingRequestQueue, {
         batchSize: 3,
       })
     );
-    geocodingRequestQueue.grantConsumeMessages(geocodingFunc.lambdaFunction);
-    geocodingResponseQueue.grantSendMessages(geocodingFunc.lambdaFunction);
+    geocodingRequestQueue.grantConsumeMessages(geocodingFuncSqs.lambdaFunction);
+    geocodingResponseQueue.grantSendMessages(geocodingFuncSqs.lambdaFunction);
 
     // Grant access to the SSM parameter store
     const policyStatementsSsm = this.allowParameterStoreAccess(
-      geocodingFunc.lambdaFunction,
+      [geocodingFuncSqs.lambdaFunction, geocodingFuncHttp.lambdaFunction],
       "/runningdinner/googlemaps/*"
     );
 
     const table = this.createDynamoDbTable("runningdinner-v1");
-    table.grantReadWriteData(geocodingFunc.lambdaFunction);
+    this.grantReadWriteDataToTable(
+      [geocodingFuncSqs.lambdaFunction, geocodingFuncHttp.lambdaFunction],
+      table
+    );
 
     // Create local dev response SQS queue if in dev stage
     if (ENVIRONMENT.createDevSqsResponseQueue) {
@@ -47,7 +59,7 @@ export class GeocodingStack extends cdk.Stack {
       )[0];
 
       geocodingResponseQueueLocalDev.grantSendMessages(
-        geocodingFunc.lambdaFunction
+        geocodingFuncSqs.lambdaFunction
       );
 
       const localDevUser = new LocalDevUser(this, "geocoding-local-dev");
@@ -63,8 +75,17 @@ export class GeocodingStack extends cdk.Stack {
     }
   }
 
+  private grantReadWriteDataToTable(
+    lambdaFunctions: Array<lambda.Function>,
+    table: Table
+  ) {
+    for (let lambdaFunc of lambdaFunctions) {
+      table.grantReadWriteData(lambdaFunc);
+    }
+  }
+
   private allowParameterStoreAccess(
-    lambdaFunc: lambda.Function,
+    lambdaFunctions: Array<lambda.Function>,
     paramStorePathPrefix: string
   ): iam.PolicyStatement[] {
     const region = this.region;
@@ -87,8 +108,10 @@ export class GeocodingStack extends cdk.Stack {
       resources: [`arn:aws:kms:${region}:${accountId}:key/*`],
     });
 
-    lambdaFunc.addToRolePolicy(ssmPolicy);
-    lambdaFunc.addToRolePolicy(kmsPolicy);
+    for (let lambdaFunc of lambdaFunctions) {
+      lambdaFunc.addToRolePolicy(ssmPolicy);
+      lambdaFunc.addToRolePolicy(kmsPolicy);
+    }
 
     return [ssmPolicy, kmsPolicy];
   }
@@ -125,5 +148,14 @@ export class GeocodingStack extends cdk.Stack {
       },
     });
     return [queue, queueDLQ];
+  }
+
+  private corsForHttpMethods(allowedMethods: cdk.aws_lambda.HttpMethod[]): cdk.aws_lambda.FunctionUrlCorsOptions {
+    return {
+      allowedOrigins: ["*"],
+      allowedMethods,
+      allowedHeaders: ["*"],
+      exposedHeaders: ["*"]
+    };
   }
 }
