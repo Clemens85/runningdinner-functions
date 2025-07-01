@@ -6,25 +6,28 @@ sns.set(style="whitegrid")
 
 class Visualizer:
     def __init__(self, routes, dist_matrix):
-        self.routes = routes
+        self.routes = routes.copy()  # Ensure we don't modify the original DataFrame
         self.dist_matrix = dist_matrix
         self.cluster_ids = self.routes['clusterNumber'].unique()
         palette = sns.color_palette("deep", len(self.cluster_ids))
         self.cluster_color_map = dict(zip(self.cluster_ids, palette))
-    
+
     def plot_geocodes(self):
         plt.figure(figsize=(12, 8))
-        for cluster_id in self.cluster_ids:
-            cluster_data = self.routes[self.routes['clusterNumber'] == cluster_id]
-            plt.scatter(cluster_data['lng'], cluster_data['lat'],
-                        label=f"Cluster {cluster_id}",
-                        color=self.cluster_color_map[cluster_id],
-                        s=80, alpha=0.8, edgecolor='black', linewidth=0.7)
-        plt.title("Geopunkte nach Cluster")
-        plt.xlabel("Längengrad")
-        plt.ylabel("Breitengrad")
-        plt.legend()
-        plt.grid(True)
+        sns.scatterplot(data=self.routes, x='lng', y='lat', hue='clusterNumber', style='mealClass',
+                        s=80, alpha=0.8, edgecolor='black', linewidth=0.7,
+                        palette=self.cluster_color_map)
+        # for cluster_id in self.cluster_ids:
+        #     cluster_data = self.routes[self.routes['clusterNumber'] == cluster_id]
+        #     plt.scatter(cluster_data['lng'], cluster_data['lat'],
+        #                 label=f"Cluster {cluster_id}",
+        #                 color=self.cluster_color_map[cluster_id],
+        #                 s=80, alpha=0.8, edgecolor='black', linewidth=0.7)
+        # plt.title("Geopunkte nach Cluster")
+        # plt.xlabel("Längengrad")
+        # plt.ylabel("Breitengrad")
+        # plt.legend()
+        # plt.grid(True)
         plt.show()
 
     def plot_distance_matrix(self):
@@ -56,3 +59,15 @@ class Visualizer:
         # Print some percentiles for guidance
         for p in [50, 75, 90, 95, 99]:
             print(f"{p}th percentile: {np.percentile(dists, p)}")
+
+    def plot_max_distances_per_cluster(self, distances_per_cluster):
+        plt.figure(figsize=(12, 6))
+        cluster_sizes = pd.Series(distances_per_cluster)
+        cluster_sizes = cluster_sizes.sort_index()  # Sort by cluster ID for better visualization
+        plt.bar(cluster_sizes.index, cluster_sizes.values, color=sns.color_palette("viridis", len(cluster_sizes)))
+        plt.title("Maximale Distanz pro Cluster")
+        plt.xlabel("Cluster ID")
+        plt.ylabel("Maximale Distanz")
+        plt.xticks(rotation=45)
+        plt.grid(axis='y')
+        plt.show()
