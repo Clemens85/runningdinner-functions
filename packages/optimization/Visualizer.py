@@ -13,21 +13,20 @@ class Visualizer:
         self.cluster_color_map = dict(zip(self.cluster_ids, palette))
 
     def plot_geocodes(self):
+
+        jitter = 0.002
+        routes_jittered = self.routes.copy()
+        routes_jittered['lng'] += np.random.uniform(-jitter, jitter, size=len(self.routes))
+        routes_jittered['lat'] += np.random.uniform(-jitter, jitter, size=len(self.routes))
+
+
         plt.figure(figsize=(12, 8))
-        sns.scatterplot(data=self.routes, x='lng', y='lat', hue='clusterNumber', style='mealClass',
+        sns.scatterplot(data=routes_jittered, x='lng', y='lat', hue='clusterNumber', style='mealClass',
                         s=80, alpha=0.8, edgecolor='black', linewidth=0.7,
                         palette=self.cluster_color_map)
-        # for cluster_id in self.cluster_ids:
-        #     cluster_data = self.routes[self.routes['clusterNumber'] == cluster_id]
-        #     plt.scatter(cluster_data['lng'], cluster_data['lat'],
-        #                 label=f"Cluster {cluster_id}",
-        #                 color=self.cluster_color_map[cluster_id],
-        #                 s=80, alpha=0.8, edgecolor='black', linewidth=0.7)
-        # plt.title("Geopunkte nach Cluster")
-        # plt.xlabel("Längengrad")
-        # plt.ylabel("Breitengrad")
-        # plt.legend()
-        # plt.grid(True)
+        # Move legend outside the plot
+        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+        plt.tight_layout() 
         plt.show()
 
     def plot_distance_matrix(self):

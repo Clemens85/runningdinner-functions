@@ -1,3 +1,4 @@
+from collections import Counter
 import numpy as np
 import pandas as pd
 from sklearn.cluster import DBSCAN, AgglomerativeClustering, KMeans
@@ -53,3 +54,104 @@ class ClustererAgg:
             print(f"Cluster {cluster}: {len(indices)} Elemente, maximale Distanz: {max_dist:.2f}")
         return result
 
+
+    def greedy_balance_clusters(self, cluster_templates):
+        """
+        routes: DataFrame with at least ['mealClass', ...]
+        dist_matrix: numpy array, shape (n_samples, n_samples)
+        cluster_labels: array-like, initial cluster assignment for each datapoint
+        cluster_templates: list of lists, each inner list is the required mealClasses for that cluster
+        """
+        routes = self.routes.copy()
+        uniqueClusterNumbersSorted = sorted(routes['clusterNumber'].unique())
+        meal_classes = routes['mealClass'].unique()
+        n_points = len(routes)
+
+        # Build a lookup for available indices by mealClass
+        # (0, 1, 2, ..., n_points-1)
+        #range(n_points)
+        available_indices = set([])
+        # cluster_indices is a dict, mapping each cluster label to the set of DataFrame indices belonging to that cluster.
+        # Example: {0: {0, 2}, 1: {1, 3}, 2: {4}}
+        cluster_indices = {label: set(routes.index[routes['clusterNumber'] == label]) for label in uniqueClusterNumbersSorted}
+        print (cluster_indices)
+
+        # For each cluster, enforce the template
+        for cluster_idx, template in enumerate(cluster_templates):
+            required = Counter(template)
+            meal_classes_current_cluster = routes.loc[list(cluster_indices[cluster_idx]), 'mealClass']
+            current = Counter(meal_classes_current_cluster)
+
+            print(f"\n********* CLUSTER {cluster_idx} *********")
+            print(f"Current cluster {cluster_idx} has {len(cluster_indices[cluster_idx])} points.")
+            print(f"Current meal classes in cluster {cluster_idx}:\n{meal_classes_current_cluster}")
+            print(f"Required meal classes for cluster {cluster_idx}: {required}")
+            print(f"Current meal classes count in cluster {cluster_idx}: {current}")
+
+            # Remove excess
+            for mealClass in meal_classes:
+                excess = current[mealClass] - required[mealClass]
+                print(f"Cluster {cluster_idx}: {mealClass} excess: {excess}")
+                if excess > 0:
+                    # Remove farthest points of this mealClass from the cluster center
+                    indices = [idx for idx in cluster_indices[cluster_idx] if routes.loc[idx, 'mealClass'] == mealClass]
+                    # Compute mean distance to other cluster members
+                    mean_dists = []
+                    for idx in indices:
+                        # other shall not contain the idx itself
+                        others = list(cluster_indices[cluster_idx] - {idx})
+                        if others:
+                            mean_dist = self.dist_matrix[idx, others].mean()
+                        else:
+                            mean_dist = 0
+                        mean_dists.append((mean_dist, idx))
+                    # Remove the ones with largest mean distance
+                    mean_dists.sort(reverse=True)
+                    for _, idx in mean_dists[:excess]:
+                        cluster_indices[cluster_idx].remove(idx)
+                        available_indices.add(idx)
+                    print (f"Cluster {cluster_idx}: Removed {excess} excess {mealClass} points. \nRemaining: {len(cluster_indices[cluster_idx])}")
+
+
+            print(f"*** Updated cluster indices after removal: {cluster_indices}***\n")
+
+            print('\n+++ ADDITION +++')
+            # Add missing
+            for mealClass in meal_classes:
+                deficit = required[mealClass] - Counter(routes.loc[list(cluster_indices[cluster_idx]), 'mealClass'])[mealClass]
+                if deficit > 0:
+                    print(f"Cluster {cluster_idx}: Need {deficit} more of {mealClass}.")
+                    print("Available indices:", available_indices)
+                    # Find nearest available points of this mealClass
+                    candidates = [idx for idx in available_indices if routes.loc[idx, 'mealClass'] == mealClass]
+                    print(f"Candidates for {mealClass} in cluster {cluster_idx}: {candidates}")
+                    # For each needed, pick the closest to the current cluster
+                    for _ in range(deficit):
+                        if not candidates:
+                            raise ValueError(f"Not enough {mealClass} to fill cluster {cluster_idx}")
+                        # Compute distance to current cluster
+                        if cluster_indices[cluster_idx]:
+                            dists = [self.dist_matrix[cand, list(cluster_indices[cluster_idx])].mean() for cand in candidates]
+                            # print(f"Distances for candidates in cluster {cluster_idx}: {dists}")
+                        else:
+                            dists = [0 for _ in candidates]
+                        min_idx = np.argmin(dists)
+                        chosen = candidates[min_idx]
+                        print(f"Chosen index for cluster {cluster_idx}: {chosen} with distance {dists[min_idx]:.2f}")
+                        cluster_indices[cluster_idx].add(chosen)
+                        available_indices.remove(chosen)
+                        candidates.remove(chosen)
+
+                    print(f"*** Updated cluster indices after addition: {cluster_indices}***\n")
+
+        print("\n-----------\n")
+
+        # Build final assignments
+        final_labels = np.empty(n_points, dtype=int)
+        for new_idx, (cluster_number_label, indices) in enumerate(cluster_indices.items()):
+            for idx in indices:
+                final_labels[idx] = cluster_number_label
+
+        print(f"Final cluster labels: {final_labels}")
+        routes['clusterNumber'] = final_labels
+        return routes, final_labels
