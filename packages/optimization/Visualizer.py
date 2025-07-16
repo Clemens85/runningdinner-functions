@@ -1,47 +1,58 @@
+from copy import deepcopy
+from typing import List
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+
+from DataProvider import DataProvider
+from DinnerRouteList import DinnerRoute
+
 sns.set(style="whitegrid")
 
 class Visualizer:
-    def __init__(self, routes, dist_matrix):
-        self.routes = routes.copy()  # Ensure we don't modify the original DataFrame
-        self.dist_matrix = dist_matrix
-        self.cluster_ids = self.routes['clusterNumber'].unique()
-        palette = sns.color_palette("deep", len(self.cluster_ids))
-        self.cluster_color_map = dict(zip(self.cluster_ids, palette))
+    def __init__(self, data_provider: DataProvider):
+        self.dist_matrix = data_provider.get_distance_matrix()
 
-    def plot_geocodes(self):
+    def plot_geocodes(self, routes: List[DinnerRoute]):
+        cluster_labels_sorted = sorted({route.clusterNumber for route in routes})
+        palette = sns.color_palette("deep", len(cluster_labels_sorted))
+        cluster_color_map = dict(zip(cluster_labels_sorted, palette))
+
+        # Convert list of DinnerRoute objects to DataFrame
+        df = pd.DataFrame([{
+            'lng': route.lng,
+            'lat': route.lat,
+            'clusterNumber': route.clusterNumber,
+            'mealClass': route.mealClass
+        } for route in routes])
 
         jitter = 0.002
-        routes_jittered = self.routes.copy()
-        routes_jittered['lng'] += np.random.uniform(-jitter, jitter, size=len(self.routes))
-        routes_jittered['lat'] += np.random.uniform(-jitter, jitter, size=len(self.routes))
-
+        df['lng'] += np.random.uniform(-jitter, jitter, size=len(df))
+        df['lat'] += np.random.uniform(-jitter, jitter, size=len(df))
 
         plt.figure(figsize=(12, 8))
-        sns.scatterplot(data=routes_jittered, x='lng', y='lat', hue='clusterNumber', style='mealClass',
+        sns.scatterplot(data=df, x='lng', y='lat', hue='clusterNumber', style='mealClass',
                         s=80, alpha=0.8, edgecolor='black', linewidth=0.7,
-                        palette=self.cluster_color_map)
+                        palette=cluster_color_map)
         # Move legend outside the plot
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
         plt.tight_layout() 
         plt.show()
 
-    def plot_distance_matrix(self):
-        mask = np.tril(np.ones_like(self.dist_matrix, dtype=bool))
-        # --- 2. Heatmap der Distanzmatrix ---
-        plt.figure(figsize=(14, 8))
-        sns.heatmap(self.dist_matrix,
-                    mask=mask,
-                    annot=False, fmt=".1f", cmap="YlGnBu",
-                    xticklabels=[f'#{i}' for i in range(len(self.routes))],
-                    yticklabels=[f'#{i}' for i in range(len(self.routes))])
-        plt.title("Distanzmatrix zwischen Objekten")
-        plt.xlabel("Zielobjekt")
-        plt.ylabel("Quellobjekt")
-        plt.show()
+    # def plot_distance_matrix(self):
+    #     mask = np.tril(np.ones_like(self.dist_matrix, dtype=bool))
+    #     # --- 2. Heatmap der Distanzmatrix ---
+    #     plt.figure(figsize=(14, 8))
+    #     sns.heatmap(self.dist_matrix,
+    #                 mask=mask,
+    #                 annot=False, fmt=".1f", cmap="YlGnBu",
+    #                 xticklabels=[f'#{i}' for i in range(len(self.routes))],
+    #                 yticklabels=[f'#{i}' for i in range(len(self.routes))])
+    #     plt.title("Distanzmatrix zwischen Objekten")
+    #     plt.xlabel("Zielobjekt")
+    #     plt.ylabel("Quellobjekt")
+    #     plt.show()
 
     def plot_distance_threshold(self, bins=50):
         # Assuming dist_matrix is your numpy array
