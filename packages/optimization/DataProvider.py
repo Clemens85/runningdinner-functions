@@ -1,39 +1,28 @@
-#from itertools import chain
 from copy import deepcopy
-from types import SimpleNamespace
-import pandas as pd
 import numpy as np
 import json
 import itertools
 
 from DinnerRouteList import DinnerRouteList
-# from itertools import chain_from_iterable
 
 class DataProvider:
     def __init__(self, file_path):
         self.__load(file_path)
         
     def __load(self, file_path):
-        # with open(file_path) as f:
-        #     data_raw = json.load(f)
-
         with open(file_path) as f:
-            data: DinnerRouteList = json.load(f, object_hook=lambda d: SimpleNamespace(**d))
+            data_tmp = json.load(f)
+            data = DinnerRouteList(**data_tmp)  # Convert dict to DinnerRouteList instance
 
-        # self.routes_obj: DinnerRouteList = json.loads(data['dinnerRoutes'], object_hook=lambda d: SimpleNamespace(**d))
         self.routes = data.dinnerRoutes
         self.dist_matrix = np.array(data.distanceMatrix)
-        cluster_sizes_dict = vars(data.clusterSizes) # Converts SimpleNamespace to dict
-        self.cluster_sizes = [len(v) for v in cluster_sizes_dict.values()]
+        self.cluster_sizes = [len(v) for v in data.clusterSizes.values()]
+        self.meal_classes = data.meals
         
         for index, route in enumerate(self.routes):
             route.originalIndex = index
             route.mealClass = route.meal.label
 
-        # self.routes = pd.DataFrame(data_raw["dinnerRoutes"])
-        # self.routes["mealClass"] = [route["meal"]["label"] for route in data_raw["dinnerRoutes"]]
-        # self.routes["originalIndex"] = self.routes.index
-   
     def get_routes(self):
         return deepcopy(self.routes)
 
@@ -59,7 +48,7 @@ class DataProvider:
         """
         result = []
         
-        unique_meal_classes = sorted({route.mealClass for route in self.routes}) # Vorspeise, Hauptspeise, Nachspeise
+        unique_meal_classes = self.get_unique_meal_classes_ordered() # Vorspeise, Hauptspeise, Nachspeise
 
         for cluster_size in self.get_cluster_sizes():
             # cluster_size is e.g. 9
@@ -69,3 +58,8 @@ class DataProvider:
                 meal_classes_of_cluster.append([meal_class for _ in range(int(meal_class_amounts))])
             result.append(list(itertools.chain.from_iterable(meal_classes_of_cluster)))
         return result
+    
+    def get_unique_meal_classes_ordered(self):
+        """ Returns a list of unique meal classes from the routes.
+        """
+        return [meal_class.label for meal_class in self.meal_classes]

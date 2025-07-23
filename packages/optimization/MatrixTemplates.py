@@ -7,15 +7,15 @@ matrix9_1 = [
     ],
     # The second block represents the hosters for the next meal like e.g. Hauptspeise
     [
-        [ 4, 2, 9 ],
-        [ 5, 3, 7 ],
-        [ 6, 1, 8 ],
+        [ 4, 2, 9 ], # 4 is hoster for 2 and 9
+        [ 5, 3, 7 ], # 5 is hoster for 3 and 7   
+        [ 6, 1, 8 ], # 6 is hoster for 1 and 8
     ],
     # The third block represents the hosters for the next meal like e.g. Nachspeise
     [
-        [7, 2, 6],
-        [8, 3, 4],
-        [9, 1, 5]
+        [7, 2, 6], # 7 is hoster for 2 and 6
+        [8, 3, 4], # 8 is hoster for 3 and 4
+        [9, 1, 5] # 9 is hoster for 1 and 5
     ]
 ]
 

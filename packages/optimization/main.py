@@ -11,7 +11,7 @@ def main():
   clusterer = Clusterer(data)
   optimized_routes, labels = clusterer.predict()
   print(labels)
-  clusterer.print_max_distances_per_cluster(optimized_routes)
+  clusterer.print_max_distances_per_cluster()
 
 
 if __name__ == "__main__":
