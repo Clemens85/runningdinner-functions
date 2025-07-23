@@ -1,6 +1,5 @@
 from copy import deepcopy
 from typing import List, Dict, Tuple
-import random
 
 from DataProvider import DataProvider
 from DinnerRouteList import DinnerRoute, TeamsOnRoute
@@ -35,22 +34,34 @@ class RouteBuilder:
         
         # Get size of cluster_routes dataframe
         cluster_size = len(routes_of_cluster)
-        matrix = self._get_random_matrix_for_cluster_size(cluster_size)
-
-        print(f"Building route for cluster label {cluster_label} with size {cluster_size} and matrix: {matrix}")
 
         # Get teams grouped by meal class
         teams_by_meal_class = {}
         for meal_class in self.meal_classes:
             teams_by_meal_class[meal_class] = [route for route in routes_of_cluster if route.mealClass == meal_class]
 
-        # Find optimal assignment using brute force
-        best_assignment, best_distance = self._find_optimal_assignment(teams_by_meal_class, matrix)
+        matrix_list = get_matrixes_for_cluster_size(cluster_size)
+        best_matrix: List[List[List[int]]] = []
+        best_distance = float('inf')
+        best_assignment: Dict[int, DinnerRoute] = {}
+
+        for matrix in matrix_list:
+            print(f"Building route for cluster label {cluster_label} with size {cluster_size} and matrix: {matrix}")
+            # Find optimal assignment using brute force
+            assignment_candidate, distance_sum = self._find_optimal_assignment(teams_by_meal_class, matrix)
+            if distance_sum < best_distance:
+                best_matrix = matrix
+                best_distance = distance_sum
+                best_assignment = assignment_candidate
+
+        if len(best_matrix) == 0:
+            raise ValueError(f"Unexpected error during route building, no assignment candidate found")
+
         # Apply the best assignment found
-        optimized_routes = self._apply_assignment(best_assignment, matrix)
+        optimized_routes = self._apply_assignment(best_assignment, best_matrix)
         return optimized_routes, best_distance
 
-    def _find_optimal_assignment(self, teams_by_meal_class: Dict[str, List[DinnerRoute]], matrix) -> Tuple[Dict[int, DinnerRoute], float]:
+    def _find_optimal_assignment(self, teams_by_meal_class: Dict[str, List[DinnerRoute]], matrix: List[List[List[int]]]) -> Tuple[Dict[int, DinnerRoute], float]:
         """
         Find the optimal assignment of teams to matrix positions using brute force.
         :param teams_by_meal_class: Dictionary mapping meal classes to lists of teams.
@@ -99,11 +110,10 @@ class RouteBuilder:
                 best_distance = total_distance
                 best_assignment = matrix_number_to_team
         
-        print(f"Best distance found: {best_distance}")
         print(best_assignment)
         return best_assignment, best_distance
 
-    def _calculate_total_distance(self, matrix_number_to_team: Dict[int, DinnerRoute], matrix) -> float:
+    def _calculate_total_distance(self, matrix_number_to_team: Dict[int, DinnerRoute], matrix: List[List[List[int]]]) -> float:
         """
         Calculate the total distance for a given team assignment.
         :param matrix_number_to_team: Mapping from team numbers to DinnerRoute objects.
@@ -180,12 +190,3 @@ class RouteBuilder:
                     result.append(hosting_arrangement[0])
 
         return result
-
-    def _get_random_matrix_for_cluster_size(self, cluster_size: int) -> List[List[List[int]]]:
-        """ Returns a random matrix for the given cluster size.
-        """
-        matrix_list = get_matrixes_for_cluster_size(cluster_size)
-        if not matrix_list:
-            raise ValueError(f"No matrix defined for cluster size {cluster_size}.")
-        return random.choice(matrix_list)
-    

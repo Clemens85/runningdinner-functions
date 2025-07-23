@@ -103,6 +103,7 @@ def test_route_building():
 
     route_builder = RouteBuilder(data, data.get_routes())
     routes_of_cluster, optimized_distance_sum = route_builder.build_route_for_cluster_label(1)
+    print(f"OPTIMIZED DISTANCE SUM: {optimized_distance_sum}")
 
     # Check appetizer hosts
     hosts_appetizer = _get_routes_of_cluster_with_meal(routes_of_cluster, 1, "Vorspeise")
