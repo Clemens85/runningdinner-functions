@@ -4,15 +4,16 @@ import json
 import itertools
 
 from DinnerRouteList import DinnerRouteList
+from loaders.DataLoader import DataLoader
 
 class DataProvider:
-    def __init__(self, file_path):
-        self.__load(file_path)
+    def __init__(self, data_loader: DataLoader):
+        self.__load(data_loader)
         
-    def __load(self, file_path):
-        with open(file_path) as f:
-            data_tmp = json.load(f)
-            data = DinnerRouteList(**data_tmp)  # Convert dict to DinnerRouteList instance
+    def __load(self, data_loader: DataLoader):
+        json_string = data_loader.load_json_string()
+        data_tmp = json.loads(json_string)
+        data = DinnerRouteList(**data_tmp)  # Convert dict to DinnerRouteList instance
 
         self.routes = data.dinnerRoutes
         self.dist_matrix = np.array(data.distanceMatrix)
