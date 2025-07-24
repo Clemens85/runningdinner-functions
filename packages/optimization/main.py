@@ -1,18 +1,19 @@
-from Clusterer import Clusterer
-from DataProvider import DataProvider
+from RouteOptimizer import RouteOptimizer
+from loaders.LocalFileDataLoader import LocalFileDataLoader
+from response.LocalFileResponseHandler import LocalFileResponseHandler
+from logger.Log import Log
 
 WORKSPACE_BASE_DIR = "/home/clemens/Projects/runningdinner-functions/packages/optimization/test-data"
+file_name = "27_teams_017662e4"
 
 def main():
-  data = DataProvider(f"{WORKSPACE_BASE_DIR}/27_teams_3ce786ba.json")
-  cluster_sizes = data.get_cluster_sizes()
-  print(f"Cluster sizes: {cluster_sizes}")
 
-  clusterer = Clusterer(data)
-  optimized_routes, labels = clusterer.predict()
-  print(labels)
-  clusterer.print_max_distances_per_cluster()
+  request_file_path = f"{WORKSPACE_BASE_DIR}/{file_name}.json"
+  response_file_path = f"{WORKSPACE_BASE_DIR}/response/{file_name}.json"
+  route_optimizer = RouteOptimizer(LocalFileDataLoader(request_file_path), LocalFileResponseHandler(response_file_path))
 
+  optimized_routes = route_optimizer.optimize()
+  Log.info(f"Optimized routes: {optimized_routes}")
 
 if __name__ == "__main__":
     main()

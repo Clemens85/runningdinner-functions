@@ -1,6 +1,5 @@
-import boto3
-
 from loaders.DataLoader import DataLoader
+from aws_adapter.S3Client import s3_client
 
 class S3DataLoader(DataLoader):
     def __init__(self, bucket, key):
@@ -8,6 +7,5 @@ class S3DataLoader(DataLoader):
         self.key = key
 
     def load_json_string(self) -> str:
-        s3 = boto3.client('s3')
-        obj = s3.get_object(Bucket=self.bucket, Key=self.key)
+        obj = s3_client.get_object(Bucket=self.bucket, Key=self.key)
         return obj['Body'].read().decode('utf-8')

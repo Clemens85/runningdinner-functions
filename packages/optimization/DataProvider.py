@@ -19,6 +19,9 @@ class DataProvider:
         self.dist_matrix = np.array(data.distanceMatrix)
         self.cluster_sizes = [len(v) for v in data.clusterSizes.values()]
         self.meal_classes = data.meals
+
+        self.admin_id = data.adminId
+        self.optimization_id = data.optimizationId
         
         for index, route in enumerate(self.routes):
             route.originalIndex = index
@@ -64,3 +67,9 @@ class DataProvider:
         """ Returns a list of unique meal classes from the routes.
         """
         return [meal_class.label for meal_class in self.meal_classes]
+    
+    def get_admin_id(self):
+        return self.admin_id
+    
+    def get_optimization_id(self):
+        return self.optimization_id
