@@ -1,4 +1,3 @@
-from copy import deepcopy
 from typing import List
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -21,8 +20,8 @@ class Visualizer:
 
         # Convert list of DinnerRoute objects to DataFrame
         df = pd.DataFrame([{
-            'lng': route.lng,
-            'lat': route.lat,
+            'lng': route.geocodingResult.lng,
+            'lat': route.geocodingResult.lat,
             'clusterNumber': route.clusterNumber,
             'mealClass': route.mealClass
         } for route in routes])

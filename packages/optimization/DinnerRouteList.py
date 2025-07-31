@@ -11,14 +11,29 @@ class Meal(BaseModel):
     def __repr__(self):
         return f"{self.label}"
 
+class GeocodingResult(BaseModel):
+    lat: float
+    lng: float
+    resultType: str
+    syncStatus: Optional[str] = None
+    formattedAddress: Optional[str] = None
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return f"({self.lat}, {self.lng})"
+
+class RouteOptimizationSettings(BaseModel):
+    currentSumDistanceInMeters: float
+    currentAverageDistanceInMeters: float
+
 class TeamsOnRoute(BaseModel):
     teamNumber: int
     teamId: str
     meal: Meal
     status: str
-    lat: float
-    lng: float
-    geocodingResult: str
+    geocodingResult: GeocodingResult
     clusterNumber: int
     teamsOnRoute: List["TeamsOnRoute"] = [] # Will always be empty in this context
     
@@ -33,9 +48,7 @@ class DinnerRoute(BaseModel):
     teamId: str
     meal: Meal
     status: str
-    lat: float
-    lng: float
-    geocodingResult: str
+    geocodingResult: GeocodingResult
     clusterNumber: int
     teamsOnRoute: List[TeamsOnRoute]
     mealClass: Optional[str] = None
@@ -45,9 +58,6 @@ class DinnerRoute(BaseModel):
         return self.__repr__()
     
     def __repr__(self):
-        visits = [str(team_on_route) for team_on_route in self.teamsOnRoute]
-        visits_str = ", ".join(visits) if visits else "[]"
-        # return f"Team({self.teamNumber}, {self.meal.label} (--> {visits_str}))"
         return f"Team({self.teamNumber}, {self.meal.label})"
 
 class DinnerRouteList(BaseModel):
@@ -57,3 +67,4 @@ class DinnerRouteList(BaseModel):
     dinnerRoutes: List[DinnerRoute]
     distanceMatrix: List[List[float]]
     clusterSizes: Dict[str, List[int]]
+    optimizationSettings: RouteOptimizationSettings

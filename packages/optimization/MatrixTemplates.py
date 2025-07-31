@@ -129,7 +129,7 @@ matrix6 = [
 
 matrixes_per_size = {
     9: [matrix9_1, matrix9_2],
-    12: [ matrix12_1, matrix12_2 ],
+    12: [matrix12_1, matrix12_2],
     15: [matrix_15],
     4: [matrix4],
     6: [matrix6]

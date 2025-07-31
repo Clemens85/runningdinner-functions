@@ -22,6 +22,8 @@ class DataProvider:
 
         self.admin_id = data.adminId
         self.optimization_id = data.optimizationId
+
+        self.optimization_settings = data.optimizationSettings
         
         for index, route in enumerate(self.routes):
             route.originalIndex = index
@@ -73,3 +75,6 @@ class DataProvider:
     
     def get_optimization_id(self):
         return self.optimization_id
+
+    def get_optimization_settings(self):
+        return self.optimization_settings

@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.cluster import AgglomerativeClustering
 from DataProvider import DataProvider
 from DinnerRouteList import DinnerRoute
+from logger.Log import Log
 
 class Clusterer:
     def __init__(self, 
@@ -84,15 +85,15 @@ class Clusterer:
         return list(indices_to_remove)
 
     def __print_current_cluster_status(self, available_indices: set, cluster_labels_sorted: list):
-        print("\n*** Current cluster status:***")
-        print(f"Available indices: {available_indices}")
+        Log.info("*** Current cluster status:***")
+        Log.info(f"Available indices: {available_indices}")
         for cluster_label in cluster_labels_sorted:
             indices_of_cluster = [route.originalIndex for route in self.routes if route.clusterNumber == cluster_label]
             meal_classes_current_cluster = [route.mealClass for route in self.routes if route.clusterNumber == cluster_label]
             current_counts = Counter(meal_classes_current_cluster)
-            print(f"Cluster {cluster_label}:")
-            print(f"Indices: {indices_of_cluster}")
-            print(f"Meal Class Counts: {current_counts}\n")
+            Log.info(f"Cluster {cluster_label}:")
+            Log.info(f"Indices: {indices_of_cluster}")
+            Log.info(f"Meal Class Counts: {current_counts}\n")
 
 
     def predict(self):
@@ -113,24 +114,24 @@ class Clusterer:
             current_counts = Counter(meal_classes_current_cluster)
             required_counts = Counter(self.cluster_templates[cluster_label])
 
-            print(f"\nCluster {cluster_label}:")
-            print(f"Current meal classes: {current_counts}")
-            print(f"Required meal classes: {required_counts}")
+            Log.info(f"Cluster {cluster_label}:")
+            Log.info(f"Current meal classes: {current_counts}")
+            Log.info(f"Required meal classes: {required_counts}")
             # Remove excess meal classes
             for meal_class in meal_classes:
                 excess = current_counts[meal_class] - required_counts[meal_class]
                 if excess > 0:
-                    print(f"Cluster {cluster_label}: {meal_class} excess: {excess}")
+                    Log.info(f"Cluster {cluster_label}: {meal_class} excess: {excess}")
                     removed_indices = self.__remove_excess_meal_classes(routes_of_cluster, meal_class, excess)
                     available_indices.update(removed_indices)
-                    print (f"Removing indices {removed_indices} from cluster {cluster_label}")
+                    Log.info (f"Removing indices {removed_indices} from cluster {cluster_label}")
                     for route in routes_of_cluster:
                         if route.originalIndex in removed_indices:
                             route.clusterNumber = -1 # Mark as removed
 
                     #routes.loc[removed_indices, 'clusterNumber'] = -1  # Mark as removed or noise
 
-        print("\n*** AFTER EXCEESS REMOVAL ***")
+        Log.info("*** AFTER EXCEESS REMOVAL ***")
         self.__print_current_cluster_status(available_indices, cluster_labels_sorted)
 
         # Now add missing meal classes to each cluster
@@ -146,10 +147,10 @@ class Clusterer:
             for meal_class in meal_classes:
                 deficit = required_counts[meal_class] - current_counts[meal_class]
                 if deficit > 0:
-                    print(f"Cluster {cluster_label}: Need {deficit} more of {meal_class}.")
+                    Log.info(f"Cluster {cluster_label}: Need {deficit} more of {meal_class}.")
                     # Find nearest available points of this mealClass
                     candidate_indices = [idx for idx in available_indices if self.routes[idx].mealClass == meal_class]
-                    print(f"Candidates for {meal_class} in cluster {cluster_label}: {candidate_indices}")
+                    Log.info(f"Candidates for {meal_class} in cluster {cluster_label}: {candidate_indices}")
                     # For each needed, pick the closest to the current cluster
                     for _ in range(deficit):
                         if not candidate_indices:
@@ -166,7 +167,7 @@ class Clusterer:
                         available_indices.remove(chosen_index)
                         candidate_indices.remove(chosen_index)
 
-            print(f"\n*** After adding missing meal classes in cluster {cluster_label} ***")
+            Log.info(f"*** After adding missing meal classes in cluster {cluster_label} ***")
             self.__print_current_cluster_status(available_indices, cluster_labels_sorted)
 
         final_cluster_labels = [route.clusterNumber for route in self.routes]

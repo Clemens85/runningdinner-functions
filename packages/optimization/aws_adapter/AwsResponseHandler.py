@@ -12,23 +12,20 @@ class AwsResponseHandler(ResponseHandler):
         self.bucket = bucket
         self.key = key
 
-    def send(self, json_string: str):
+    def send(self, json_string: str, finished_event: dict):
         Log.info(f"Sending response with length {len(json_string)} to S3: s3://%s/%s", self.bucket, self.key)
         s3_client.put_object(Bucket=self.bucket, Key=self.key, Body=json_string)
         Log.info("Response sent successfully.")
 
-        message = {
-            "bucket": self.bucket,
-            "key": self.key,
-            "status": "OK"
-        }
+        message_payload = json.dumps(finished_event)
+
         Log.info("Publishing message to SNS topic: %s", SNS_TOPIC_ARN)
-        Log.info("Message content: %s", message)
+        Log.info("Message content: %s", message_payload)
         
         sns_client.publish(
             TopicArn=SNS_TOPIC_ARN,
-            Message=json.dumps(message),
-            Subject="Lambda S3 Processing Complete", # TODO
+            Message=message_payload,
+            Subject="Optimization Finished"
         )
 
 

@@ -4,9 +4,9 @@ from Clusterer import Clusterer
 from DataProvider import DataProvider
 from RouteBuilder import calculate_distance_sum
 from RouteBuilder import RouteBuilder
-from loaders.LocalFileDataLoader import LocalFileDataLoader
+from local_adapter.LocalFileDataLoader import LocalFileDataLoader
 
-WORKSPACE_BASE_DIR = 'test-data'
+WORKSPACE_BASE_DIR = '../test-data'
 
 def load_sample_data(filename: str) -> DataProvider:
   data = DataProvider(LocalFileDataLoader(f'{WORKSPACE_BASE_DIR}/{filename}'))
@@ -24,7 +24,7 @@ def _get_routes_of_cluster_with_meal(routes, cluster_label, meal_class):
     return result
 
 def test_predict_3_team_clusters():
-    data = load_sample_data("27_teams_017662e4.json")
+    data = load_sample_data("27_teams.json")
 
     assert data.get_cluster_template()[0] == ['Vorspeise', 'Vorspeise', 'Vorspeise', 'Hauptspeise', 'Hauptspeise', 'Hauptspeise', 'Nachspeise', 'Nachspeise', 'Nachspeise']
 
@@ -42,7 +42,7 @@ def test_predict_3_team_clusters():
           assert sum_meal == 3
 
 def test_predict_5_team_clusters():
-    data = load_sample_data("45_teams_b17d628f.json")
+    data = load_sample_data("45_teams.json")
 
     clusterer = Clusterer(data)
     num_expected_clusters = len(data.get_cluster_sizes())
@@ -61,7 +61,7 @@ def test_predict_5_team_clusters():
 
 
 def test_predict_2_team_clusters_different_sizes():
-    data = load_sample_data("21_teams_274fc6d7.json")
+    data = load_sample_data("21_teams.json")
 
     clusterer = Clusterer(data)
     num_expected_clusters = len(data.get_cluster_sizes())
@@ -93,7 +93,7 @@ def test_predict_2_team_clusters_different_sizes():
         assert sum_meal == 4
 
 def test_route_building():
-    data = load_sample_data("27_teams_017662e4.json")
+    data = load_sample_data("27_teams.json")
 
     routes_of_cluster = _get_routes_of_cluster_with_expected_size(data.get_routes(), 1, 9)
 

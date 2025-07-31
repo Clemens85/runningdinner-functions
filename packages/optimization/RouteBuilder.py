@@ -1,6 +1,6 @@
 from copy import deepcopy
 from typing import List, Dict, Tuple
-
+from logger.Log import Log
 from DataProvider import DataProvider
 from DinnerRouteList import DinnerRoute, TeamsOnRoute
 from MatrixTemplates import get_matrixes_for_cluster_size
@@ -46,7 +46,7 @@ class RouteBuilder:
         best_assignment: Dict[int, DinnerRoute] = {}
 
         for matrix in matrix_list:
-            print(f"Building route for cluster label {cluster_label} with size {cluster_size} and matrix: {matrix}")
+            Log.info(f"Building route for cluster label {cluster_label} with size {cluster_size} and matrix: {matrix}")
             # Find optimal assignment using brute force
             assignment_candidate, distance_sum = self._find_optimal_assignment(teams_by_meal_class, matrix)
             if distance_sum < best_distance:
@@ -77,7 +77,7 @@ class RouteBuilder:
             teams = teams_by_meal_class[meal_class]
             meal_class_permutations.append(list(itertools.permutations(teams)))
 
-        print (f"Testing {len(meal_class_permutations)} x {len(meal_class_permutations[0])} meal class permutations")
+        Log.info (f"Testing {len(meal_class_permutations)} x {len(meal_class_permutations[0])} meal class permutations")
         
         # Try every combination of permutations
         for permutation_combo in itertools.product(*meal_class_permutations):
@@ -168,8 +168,6 @@ class RouteBuilder:
                             teamId=team_on_route.teamId,
                             meal=team_on_route.meal,
                             status=team_on_route.status,
-                            lat=team_on_route.lat,
-                            lng=team_on_route.lng,
                             geocodingResult=team_on_route.geocodingResult,
                             clusterNumber=team_on_route.clusterNumber,
                             teamsOnRoute=[]
