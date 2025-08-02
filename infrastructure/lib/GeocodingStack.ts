@@ -8,10 +8,14 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import { ENVIRONMENT } from "./Environment";
 import { LocalDevUser } from "./LocalDevUser";
 import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
-import { HttpMethod } from 'aws-cdk-lib/aws-lambda';
+import { HttpMethod } from "aws-cdk-lib/aws-lambda";
+
+export interface GeocodingStackProps extends cdk.StackProps {
+  localDevUser?: LocalDevUser;
+}
 
 export class GeocodingStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props?: GeocodingStackProps) {
     super(scope, id, props);
 
     const geocodingRequestQueue = this.createSqsWithDLQ("geocoding-request")[0];
@@ -53,7 +57,7 @@ export class GeocodingStack extends cdk.Stack {
     );
 
     // Create local dev response SQS queue if in dev stage
-    if (ENVIRONMENT.createDevSqsResponseQueue) {
+    if (ENVIRONMENT.isDevStage) {
       const geocodingResponseQueueLocalDev = this.createSqsWithDLQ(
         "geocoding-response-local_dev"
       )[0];
@@ -62,16 +66,18 @@ export class GeocodingStack extends cdk.Stack {
         geocodingFuncSqs.lambdaFunction
       );
 
-      const localDevUser = new LocalDevUser(this, "geocoding-local-dev");
-      localDevUser.grantSqsAccess([
-        geocodingRequestQueue,
-        geocodingResponseQueueLocalDev,
-      ]);
-      localDevUser.grantDynamoDbReadWriteData(table);
-      localDevUser.addPolicyStatements(
-        policyStatementsSsm,
-        `local-dev-geocoding-ssm-policy`
-      );
+      const localDevUser = props?.localDevUser;
+      if (localDevUser) {
+        localDevUser.grantSqsAccess([
+          geocodingRequestQueue,
+          geocodingResponseQueueLocalDev,
+        ]);
+        localDevUser.grantDynamoDbReadWriteData(table);
+        localDevUser.addPolicyStatements(
+          policyStatementsSsm,
+          `local-dev-geocoding-ssm-policy`
+        );
+      }
     }
   }
 
@@ -150,12 +156,14 @@ export class GeocodingStack extends cdk.Stack {
     return [queue, queueDLQ];
   }
 
-  private corsForHttpMethods(allowedMethods: cdk.aws_lambda.HttpMethod[]): cdk.aws_lambda.FunctionUrlCorsOptions {
+  private corsForHttpMethods(
+    allowedMethods: cdk.aws_lambda.HttpMethod[]
+  ): cdk.aws_lambda.FunctionUrlCorsOptions {
     return {
       allowedOrigins: ["*"],
       allowedMethods,
       allowedHeaders: ["*"],
-      exposedHeaders: ["*"]
+      exposedHeaders: ["*"],
     };
   }
 }

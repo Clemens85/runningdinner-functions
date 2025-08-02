@@ -2,8 +2,13 @@
 import * as cdk from "aws-cdk-lib";
 import { GeocodingStack } from "../lib/GeocodingStack";
 import { ENVIRONMENT } from "../lib/Environment";
+import { LocalDevUserStack } from "../lib/LocalDevUserStack";
 
 const app = new cdk.App();
+
+// Create the dev user stack first (if needed)
+const devUserStack = new LocalDevUserStack(app, "LocalDevUserStack", {});
+
 new GeocodingStack(app, "GeocodingStack", {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
@@ -15,6 +20,7 @@ new GeocodingStack(app, "GeocodingStack", {
    * want to deploy the stack to. */
   // env: { account: '123456789012', region: 'us-east-1' },
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+  localDevUser: devUserStack.localDevUser,
 });
 
 cdk.Tags.of(app).add("stage", ENVIRONMENT.stage);
