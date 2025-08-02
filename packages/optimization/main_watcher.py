@@ -9,7 +9,7 @@ from logger.Log import Log
 
 WORKSPACE_BASE_DIR = "/home/clemens/Projects/runningdinner-functions/packages/optimization/test-data"
 
-REQUEST_PATTERN = re.compile(r"request-(?P<optimization_id>.+)\.json$")
+REQUEST_PATTERN = re.compile(r"(?P<optimization_id>.+)-request\.json$")
 
 class RequestFileHandler(FileSystemEventHandler):
     def on_created(self, event):
@@ -17,15 +17,15 @@ class RequestFileHandler(FileSystemEventHandler):
             return
         rel_path = os.path.relpath(event.src_path, WORKSPACE_BASE_DIR)
         parts = rel_path.split(os.sep)
-        if len(parts) >= 3 and parts[1] == "optimization":
-            admin_id = parts[0]
+        if len(parts) >= 3 and parts[0] == "optimization":
+            admin_id = parts[1]
             filename = parts[2]
             match = REQUEST_PATTERN.match(filename)
             if match:
                 optimization_id = match.group("optimization_id")
                 request_file_path = event.src_path
                 response_file_path = os.path.join(
-                    WORKSPACE_BASE_DIR, admin_id, "optimization", f"response-{optimization_id}.json"
+                    WORKSPACE_BASE_DIR, "optimization", admin_id, f"{optimization_id}-response.json"
                 )
                 Log.info(f"Detected new request: {request_file_path}")
                 route_optimizer = RouteOptimizer(
