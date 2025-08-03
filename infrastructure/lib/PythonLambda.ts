@@ -37,6 +37,10 @@ export class PythonLambda extends Construct {
     } = props;
 
     let environmentToSet = environment || {};
+    environmentToSet = {
+      ...environmentToSet,
+      JOBLIB_MULTIPROCESSING: "0",
+    };
     const timeoutToSet = timeout || cdk.Duration.seconds(30);
 
     this.logGroup = new cdk.aws_logs.LogGroup(this, `loggroup-${name}`, {
