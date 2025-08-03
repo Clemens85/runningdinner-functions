@@ -57,7 +57,7 @@ export class RouteOptimizationStack extends cdk.Stack {
       index: "LambdaHandler.py",
       handler: "lambda_handler",
       allowAccessToBucket: bucket,
-      memorySize: 2048, // 2 GB
+      memorySize: 1024, // 1 GB
       timeout: cdk.Duration.minutes(3), // Increased timeout for route optimization
       deadLetterQueueEnabled: true,
       environment: {
