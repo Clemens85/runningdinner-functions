@@ -96,4 +96,19 @@ export class LocalDevUser {
     // Attach the custom policy to the user
     this.user.attachInlinePolicy(customPolicy);
   }
+
+  public grantBucketReadWrite(bucket: cdk.aws_s3.Bucket) {
+    const s3AccessPolicy = new iam.Policy(this.stack, "LocalDevS3Policy", {
+      statements: [
+        new iam.PolicyStatement({
+          actions: ["s3:ListBucket", "s3:GetObject", "s3:PutObject"],
+          resources: [bucket.bucketArn, `${bucket.bucketArn}/*`],
+        }),
+      ],
+      policyName: "LocalDevS3Policy",
+    });
+    this.user.attachInlinePolicy(s3AccessPolicy);
+    // bucket.grantReadWrite(this.user);
+    // bucket.
+  }
 }
