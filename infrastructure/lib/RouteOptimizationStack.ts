@@ -9,8 +9,6 @@ import { PythonLambda } from "./PythonLambda";
 import { LocalDevUser } from "./LocalDevUser";
 import * as path from "node:path";
 
-import { PythonLayerVersion } from "@aws-cdk/aws-lambda-python-alpha";
-
 export interface RouteOptimizationStackProps extends cdk.StackProps {
   localDevUser?: LocalDevUser;
 }
