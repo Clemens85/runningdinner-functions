@@ -10,6 +10,6 @@ docker run --rm -v "$PWD/layers/route_optimization":/lambda-layer -w /lambda-lay
 sudo chown -R $USER:$USER layers/route_optimization/python
 
 find layers/route_optimization/python -type d -name "__pycache__" -exec rm -rf {} +
-find layers/route_optimization/python -type d -name "tests" -exec rm -rf {} +
+# find layers/route_optimization/python -type d -name "tests" -exec rm -rf {} +
 find layers/route_optimization/python -type d -name "*.dist-info" -exec rm -rf {} +
 find layers/route_optimization/python -type d -name "*.egg-info" -exec rm -rf {} +
