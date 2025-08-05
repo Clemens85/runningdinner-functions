@@ -92,6 +92,23 @@ def test_predict_2_team_clusters_different_sizes():
         sum_meal = len(route_hosts_with_meal_class)
         assert sum_meal == 4
 
+def test_predict_only_one_cluster():
+    data = load_sample_data("15_teams.json")
+
+    clusterer = Clusterer(data)
+    num_expected_clusters = len(data.get_cluster_sizes())
+    assert num_expected_clusters == 1
+
+    final_routes, final_labels = clusterer.predict()
+    assert len(final_labels) == 15
+    assert set(final_labels) == {0}
+
+    routes_of_cluster = _get_routes_of_cluster_with_expected_size(final_routes, 0, 15)
+    for meal_class in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
+        print(f"Asserting cluster 0 has 5 occurrences of {meal_class}")
+        sum_meal = len([route for route in routes_of_cluster if route.mealClass == meal_class])
+        assert sum_meal == 5
+
 def test_route_building():
     data = load_sample_data("27_teams.json")
 
@@ -138,6 +155,58 @@ def test_route_building():
         assert set(visiting_meals) == { "Vorspeise", "Hauptspeise" }
 
     assert optimized_distance_sum < original_distance_sum, f"Optimized distance sum {optimized_distance_sum} should be less than original {original_distance_sum}"
+
+def test_predict_1_team_cluster_15_teams():
+    data = load_sample_data("15_teams.json")
+
+    clusterer = Clusterer(data)
+    num_expected_clusters = len(data.get_cluster_sizes())
+    assert num_expected_clusters == 1
+
+    final_routes, final_labels = clusterer.predict()
+    assert len(final_labels) == 15
+    assert set(final_labels) == {0}
+
+    routes_of_cluster = _get_routes_of_cluster_with_expected_size(final_routes, 0, 15)
+    for meal_class in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
+        print(f"Asserting cluster 0 has 5 occurrences of {meal_class}")
+        sum_meal = len([route for route in routes_of_cluster if route.mealClass == meal_class])
+        assert sum_meal == 5
+
+
+    route_builder = RouteBuilder(data, routes_of_cluster)
+    routes_of_cluster, _ = route_builder.build_route_for_cluster_label(0)
+
+    # Check appetizer hosts
+    hosts_appetizer = _get_routes_of_cluster_with_meal(routes_of_cluster, 0, "Vorspeise")
+    assert len(hosts_appetizer) == 5
+    assert len( set([ h.teamNumber for h in hosts_appetizer ]) ) == 5
+    for host_appetizer in hosts_appetizer:
+        assert len(host_appetizer.teamsOnRoute) == 2
+        visiting_meals = [ other_team_on_route.meal.label for other_team_on_route in host_appetizer.teamsOnRoute ]
+        print(f"Asserting {host_appetizer} which visits {host_appetizer.teamsOnRoute} meets constraints")
+        assert len(visiting_meals) == 2
+        assert set(visiting_meals) == { "Hauptspeise", "Nachspeise" }
+
+    # Check Hauptspeise hosts
+    hosts_main_course = _get_routes_of_cluster_with_meal(routes_of_cluster, 0, "Hauptspeise")
+    assert len(hosts_main_course) == 5
+    assert len( set([ h.teamNumber for h in hosts_main_course ]) ) == 5
+    for host_main_course in hosts_main_course:
+        assert len(host_main_course.teamsOnRoute) == 2
+        visiting_meals = [ other_team_on_route.meal.label for other_team_on_route in host_main_course.teamsOnRoute ]
+        assert len(visiting_meals) == 2
+        assert set(visiting_meals) == { "Vorspeise", "Nachspeise" }
+
+    # Check Nachspeise hosts
+    hosts_dessert_course = _get_routes_of_cluster_with_meal(routes_of_cluster, 0, "Nachspeise")
+    assert len(hosts_dessert_course) == 5
+    assert len( set([ h.teamNumber for h in hosts_dessert_course ]) ) == 5
+    for host_dessert_course in hosts_dessert_course:
+        assert len(host_dessert_course.teamsOnRoute) == 2
+        visiting_meals = [ other_team_on_route.meal.label for other_team_on_route in host_dessert_course.teamsOnRoute ]
+        assert len(visiting_meals) == 2
+        assert set(visiting_meals) == { "Vorspeise", "Hauptspeise" }
 
 def _clear_teams_on_route(routes):
     """

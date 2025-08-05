@@ -28,3 +28,18 @@ def test_exception_handling():
     assert test_response_handler.finished_events[0]['optimizationId'] == route_optimizer.data.get_optimization_id()
     assert len(test_response_handler.finished_events[0]['errorMessage']) > 0
     assert test_response_handler.json_payloads[0] == '{"errorMessage": "list index out of range"}'
+
+def test_route_optimizer_with_valid_data():
+    test_response_handler = InMemoryResponseHandler()
+    route_optimizer = RouteOptimizer(data_loader=LocalFileDataLoader(f'{WORKSPACE_BASE_DIR}/27_teams.json'), response_handler=test_response_handler)
+    optimized_routes, optimized_distance = route_optimizer.optimize()
+    assert optimized_routes is not None
+    assert optimized_distance is not None
+    assert len(optimized_routes) == 27
+    assert optimized_distance > 0
+
+    assert len(test_response_handler.json_payloads) > 0
+    assert len(test_response_handler.finished_events) > 0
+    assert test_response_handler.finished_events[0]['adminId'] == route_optimizer.data.get_admin_id()
+    assert test_response_handler.finished_events[0]['optimizationId'] == route_optimizer.data.get_optimization_id()
+    assert '"dinnerRoutes": [' in test_response_handler.json_payloads[0]

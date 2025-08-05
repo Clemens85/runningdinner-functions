@@ -91,15 +91,21 @@ class RouteBuilder:
                 # permutation_of_meal_class is something like (team1, team2, team3) for 9er matrix
                 # but maybe also something like (team1, team2, team3, team4) for 12er matrix
                 permutation_of_meal_class = permutation_combo[meal_class_index]
-                teams_per_meal = len(permutation_of_meal_class)
-
-                # Calculate the starting position for this meal class block
-                # Can e.g. be 1 or 4 or 7
-                start_position = meal_class_index * teams_per_meal + 1
-
+                
+                # Each outer row in the matrix represents one hosting meal class block
+                # The number of rows in such a block is equal to the number of teams that host this meal class
+                # The first number in each row is the host, the rest are guests
                 for team_index, team in enumerate(permutation_of_meal_class):
-                    matrix_position = start_position + team_index
-                    matrix_number_to_team[matrix_position] = team
+                    matrix_number = matrix[meal_class_index][team_index][0]
+                    matrix_number_to_team[matrix_number] = team
+
+                # # Calculate the starting position for this meal class block
+                # # Can e.g. be 1 or 4 or 7
+                # teams_per_meal = len(permutation_of_meal_class)
+                # start_position = meal_class_index * teams_per_meal + 1
+                # for team_index, team in enumerate(permutation_of_meal_class):
+                #     matrix_position = start_position + team_index
+                #     matrix_number_to_team[matrix_position] = team
 
             # Calculate total distance for this assignment
             total_distance = self._calculate_total_distance(matrix_number_to_team, matrix)
