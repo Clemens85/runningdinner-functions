@@ -1,0 +1,1628 @@
+{
+  "adminId": "b6aa1689-8248-48df-8de0-5577cb52f41c-yqG2u",
+  "optimizationId": "3ba1e8c4",
+  "meals": [
+    {
+      "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+      "label": "Vorspeise"
+    },
+    {
+      "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+      "label": "Hauptspeise"
+    },
+    {
+      "id": "4780a144-975e-4515-82e4-a410db24ec96",
+      "label": "Nachspeise"
+    }
+  ],
+  "dinnerRoutes": [
+    {
+      "teamNumber": 1,
+      "teamId": "bc5b597c-bbac-4c64-b777-ea811aac594d",
+      "meal": {
+        "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+        "label": "Hauptspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0889471,
+        "lng": 12.1246616,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 1,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 7,
+          "teamId": "95a123ca-6e0f-4bab-9764-7fba17087d67",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0893677,
+            "lng": 12.1247392,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 6,
+          "teamId": "40b73f3a-44e4-4299-a0a2-30b6802885a7",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0862523,
+            "lng": 12.1085399,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 2,
+      "teamId": "1f7051ba-619a-411d-90b0-1c90197a5449",
+      "meal": {
+        "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+        "label": "Vorspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0895434,
+        "lng": 12.1122725,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 1,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 1,
+          "teamId": "bc5b597c-bbac-4c64-b777-ea811aac594d",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0902772,
+            "lng": 12.1239195,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 4,
+          "teamId": "3b76d3d3-30c4-4660-ae71-959cbf1cc672",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0847753,
+            "lng": 12.1212268,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 3,
+      "teamId": "770a9738-74dc-401d-a731-18aa8e9dec13",
+      "meal": {
+        "id": "4780a144-975e-4515-82e4-a410db24ec96",
+        "label": "Nachspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0841797,
+        "lng": 12.1258091,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 1,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 5,
+          "teamId": "b313a4bd-3d47-4d6f-995c-6210823b16c2",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0858552,
+            "lng": 12.1171287,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 1,
+          "teamId": "bc5b597c-bbac-4c64-b777-ea811aac594d",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0886923,
+            "lng": 12.123622,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 4,
+      "teamId": "3b76d3d3-30c4-4660-ae71-959cbf1cc672",
+      "meal": {
+        "id": "4780a144-975e-4515-82e4-a410db24ec96",
+        "label": "Nachspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0891903,
+        "lng": 12.124453,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 1,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 7,
+          "teamId": "95a123ca-6e0f-4bab-9764-7fba17087d67",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0908488,
+            "lng": 12.1278163,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 8,
+          "teamId": "6b8e6054-5c1f-4ee1-9fb7-3392779635d9",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0883019,
+            "lng": 12.1091439,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 5,
+      "teamId": "b313a4bd-3d47-4d6f-995c-6210823b16c2",
+      "meal": {
+        "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+        "label": "Vorspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0859263,
+        "lng": 12.1165076,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 1,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 8,
+          "teamId": "6b8e6054-5c1f-4ee1-9fb7-3392779635d9",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0882423,
+            "lng": 12.1128378,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 6,
+          "teamId": "40b73f3a-44e4-4299-a0a2-30b6802885a7",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0868065,
+            "lng": 12.1120773,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 6,
+      "teamId": "40b73f3a-44e4-4299-a0a2-30b6802885a7",
+      "meal": {
+        "id": "4780a144-975e-4515-82e4-a410db24ec96",
+        "label": "Nachspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0834692,
+        "lng": 12.1115927,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 1,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 2,
+          "teamId": "1f7051ba-619a-411d-90b0-1c90197a5449",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0880147,
+            "lng": 12.116483,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 9,
+          "teamId": "ff6354fd-22c3-40ef-837f-4a129d3dd46d",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0912339,
+            "lng": 12.1166254,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 7,
+      "teamId": "95a123ca-6e0f-4bab-9764-7fba17087d67",
+      "meal": {
+        "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+        "label": "Vorspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0927182,
+        "lng": 12.1277503,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 1,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 9,
+          "teamId": "ff6354fd-22c3-40ef-837f-4a129d3dd46d",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0951367,
+            "lng": 12.1148142,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 3,
+          "teamId": "770a9738-74dc-401d-a731-18aa8e9dec13",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.082654,
+            "lng": 12.1229989,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 8,
+      "teamId": "6b8e6054-5c1f-4ee1-9fb7-3392779635d9",
+      "meal": {
+        "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+        "label": "Hauptspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0876357,
+        "lng": 12.1105181,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 1,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 2,
+          "teamId": "1f7051ba-619a-411d-90b0-1c90197a5449",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0868881,
+            "lng": 12.1169348,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 3,
+          "teamId": "770a9738-74dc-401d-a731-18aa8e9dec13",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0833823,
+            "lng": 12.125276,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 9,
+      "teamId": "ff6354fd-22c3-40ef-837f-4a129d3dd46d",
+      "meal": {
+        "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+        "label": "Hauptspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0917601,
+        "lng": 12.1165228,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 1,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 5,
+          "teamId": "b313a4bd-3d47-4d6f-995c-6210823b16c2",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0900695,
+            "lng": 12.1139954,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 4,
+          "teamId": "3b76d3d3-30c4-4660-ae71-959cbf1cc672",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0865937,
+            "lng": 12.1223016,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 10,
+      "teamId": "05532bde-0984-4609-b8db-8278c3dc1043",
+      "meal": {
+        "id": "4780a144-975e-4515-82e4-a410db24ec96",
+        "label": "Nachspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0861967,
+        "lng": 12.1251269,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 12,
+          "teamId": "ecebc16c-7f1a-4181-8ef1-9447d53e59d4",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0811673,
+            "lng": 12.1237244,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 13,
+          "teamId": "c46334fb-022c-4b3c-9991-42165772a9ef",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0887378,
+            "lng": 12.1119937,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 11,
+      "teamId": "621435f1-b38f-4ace-bd8e-20be2ce927d8",
+      "meal": {
+        "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+        "label": "Vorspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0892836,
+        "lng": 12.1038181,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 13,
+          "teamId": "c46334fb-022c-4b3c-9991-42165772a9ef",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0864126,
+            "lng": 12.1107734,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 21,
+          "teamId": "d045e9ae-5384-4b92-a9c5-b2c9187066ae",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0845846,
+            "lng": 12.1250523,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 12,
+      "teamId": "ecebc16c-7f1a-4181-8ef1-9447d53e59d4",
+      "meal": {
+        "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+        "label": "Vorspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0849301,
+        "lng": 12.125763,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 14,
+          "teamId": "a94dea61-92b6-4f36-8516-e805f5ed4aa2",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0873408,
+            "lng": 12.1133248,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 18,
+          "teamId": "a6638ca0-d735-41f9-8fc5-fffc8a8ef6c4",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0877255,
+            "lng": 12.1092476,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 13,
+      "teamId": "c46334fb-022c-4b3c-9991-42165772a9ef",
+      "meal": {
+        "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+        "label": "Hauptspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0877754,
+        "lng": 12.1100076,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 15,
+          "teamId": "7b2402c5-e60b-4554-9fc7-2e8f5b525921",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0799679,
+            "lng": 12.1139115,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 16,
+          "teamId": "b11ba7fb-c1ff-4b4c-b01c-8c3e8d62cd66",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0921705,
+            "lng": 12.1239682,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 14,
+      "teamId": "a94dea61-92b6-4f36-8516-e805f5ed4aa2",
+      "meal": {
+        "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+        "label": "Hauptspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0885604,
+        "lng": 12.1112212,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 20,
+          "teamId": "bb30f32d-da97-412a-bcb2-cf5d9fedae44",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0878333,
+            "lng": 12.1140191,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 10,
+          "teamId": "05532bde-0984-4609-b8db-8278c3dc1043",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0860734,
+            "lng": 12.1247465,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 15,
+      "teamId": "7b2402c5-e60b-4554-9fc7-2e8f5b525921",
+      "meal": {
+        "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+        "label": "Vorspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0816947,
+        "lng": 12.1149158,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 17,
+          "teamId": "93fd638a-c113-4da0-b5ae-41735b7359c5",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0866828,
+            "lng": 12.1210295,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 10,
+          "teamId": "05532bde-0984-4609-b8db-8278c3dc1043",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0873438,
+            "lng": 12.1249813,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 16,
+      "teamId": "b11ba7fb-c1ff-4b4c-b01c-8c3e8d62cd66",
+      "meal": {
+        "id": "4780a144-975e-4515-82e4-a410db24ec96",
+        "label": "Nachspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0898053,
+        "lng": 12.1219999,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 11,
+          "teamId": "621435f1-b38f-4ace-bd8e-20be2ce927d8",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0902286,
+            "lng": 12.1011083,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 14,
+          "teamId": "a94dea61-92b6-4f36-8516-e805f5ed4aa2",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0886871,
+            "lng": 12.1126263,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 17,
+      "teamId": "93fd638a-c113-4da0-b5ae-41735b7359c5",
+      "meal": {
+        "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+        "label": "Hauptspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0881433,
+        "lng": 12.1213921,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 20,
+          "teamId": "bb30f32d-da97-412a-bcb2-cf5d9fedae44",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.088149,
+            "lng": 12.1154337,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 21,
+          "teamId": "d045e9ae-5384-4b92-a9c5-b2c9187066ae",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0830865,
+            "lng": 12.1239967,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 18,
+      "teamId": "a6638ca0-d735-41f9-8fc5-fffc8a8ef6c4",
+      "meal": {
+        "id": "4780a144-975e-4515-82e4-a410db24ec96",
+        "label": "Nachspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0881268,
+        "lng": 12.1137673,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 11,
+          "teamId": "621435f1-b38f-4ace-bd8e-20be2ce927d8",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.08978,
+            "lng": 12.1049374,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 17,
+          "teamId": "93fd638a-c113-4da0-b5ae-41735b7359c5",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0880829,
+            "lng": 12.1226387,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 19,
+      "teamId": "80111c2c-90b6-464a-a84d-a6ba908d664c",
+      "meal": {
+        "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+        "label": "Hauptspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0874071,
+        "lng": 12.1229113,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 15,
+          "teamId": "7b2402c5-e60b-4554-9fc7-2e8f5b525921",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0832381,
+            "lng": 12.1165154,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 18,
+          "teamId": "a6638ca0-d735-41f9-8fc5-fffc8a8ef6c4",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0878728,
+            "lng": 12.113142,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 20,
+      "teamId": "bb30f32d-da97-412a-bcb2-cf5d9fedae44",
+      "meal": {
+        "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+        "label": "Vorspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0886254,
+        "lng": 12.1163875,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 19,
+          "teamId": "80111c2c-90b6-464a-a84d-a6ba908d664c",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0880543,
+            "lng": 12.1223152,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 16,
+          "teamId": "b11ba7fb-c1ff-4b4c-b01c-8c3e8d62cd66",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0892749,
+            "lng": 12.1244278,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    },
+    {
+      "teamNumber": 21,
+      "teamId": "d045e9ae-5384-4b92-a9c5-b2c9187066ae",
+      "meal": {
+        "id": "4780a144-975e-4515-82e4-a410db24ec96",
+        "label": "Nachspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0828892,
+        "lng": 12.125949,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 2,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 12,
+          "teamId": "ecebc16c-7f1a-4181-8ef1-9447d53e59d4",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0834085,
+            "lng": 12.1262696,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 19,
+          "teamId": "80111c2c-90b6-464a-a84d-a6ba908d664c",
+          "meal": {
+            "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+            "label": "Hauptspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0868342,
+            "lng": 12.1233193,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 2,
+          "teamsOnRoute": []
+        }
+      ]
+    }
+  ],
+  "distanceMatrix": [
+    [
+      0,
+      780.7116467373336,
+      966.0521275035771,
+      449.8153954275585,
+      775.1083224831666,
+      1263.1526078991578,
+      198.2241692596261,
+      1141.1709325948634,
+      770.6885728301434,
+      574.5357710159117,
+      1678.9140542796695,
+      970.9234461704543,
+      1051.282071411585,
+      1036.3537360683633,
+      1261.3726776678643,
+      34.57665777925535,
+      554.2799733782699,
+      1042.6534025227575,
+      512.324039825636,
+      749.4442648990012,
+      822.053661864085
+    ],
+    [
+      780.7116467373336,
+      0,
+      1142.6566167753836,
+      731.4632652546835,
+      181.9411964022743,
+      597.9044095596523,
+      900.0028745610314,
+      384.61782111269224,
+      478.0566082086001,
+      852.3171461167333,
+      913.5542445641463,
+      1218.5654543513845,
+      314.8471018880674,
+      320.039338680963,
+      873.200268989702,
+      802.8724556691732,
+      555.6424952369213,
+      278.6391103658311,
+      731.842802357116,
+      40.27541675528258,
+      1049.899917862084
+    ],
+    [
+      966.0521275035771,
+      1142.6566167753836,
+      0,
+      541.2323799259049,
+      980.6647231361077,
+      1151.4820849158705,
+      1151.8609665707581,
+      1258.4649116183264,
+      1483.1103543317083,
+      396.2583150991097,
+      1926.900892430443,
+      109.90779598208864,
+      1170.1062149959957,
+      1130.8855351321324,
+      774.6683673985784,
+      996.190357864205,
+      607.9058198618404,
+      1223.2241059001544,
+      493.334099828004,
+      1104.5310413967968,
+      144.6002799881817
+    ],
+    [
+      449.8153954275585,
+      731.4632652546835,
+      541.2323799259049,
+      0,
+      622.1124618048765,
+      1006.3943869624322,
+      646.6392260785403,
+      985.042146148243,
+      973.8837804480512,
+      150.30636356232253,
+      1622.901214847226,
+      572.5031584224537,
+      887.0266934953917,
+      857.3043873574493,
+      868.4744463922907,
+      483.1953130377857,
+      212.95333746972403,
+      911.6890388801207,
+      64.03067705510011,
+      691.2775269625017,
+      404.73279937346825
+    ],
+    [
+      775.1083224831666,
+      181.9411964022743,
+      980.6647231361077,
+      622.1124618048765,
+      0,
+      503.03126698651135,
+      925.5599760302173,
+      376.1536408391126,
+      644.8790485169139,
+      723.9998850837858,
+      1001.3162634760499,
+      1062.7250593552678,
+      280.82029970165337,
+      261.85016773027763,
+      702.0682172538743,
+      802.7511934074838,
+      422.9698761916582,
+      291.5511527216902,
+      609.1945082468153,
+      155.16704574893015,
+      898.3319097488137
+    ],
+    [
+      1263.1526078991578,
+      597.9044095596523,
+      1151.4820849158705,
+      1006.3943869624322,
+      503.03126698651135,
+      0,
+      1424.3543589537742,
+      285.3750309161416,
+      1054.1980354100426,
+      1053.1560543861087,
+      836.0217424788138,
+      1256.4327766198026,
+      295.995887574363,
+      279.6349681676275,
+      494.95387329085463,
+      1293.0279014192463,
+      795.3034222631283,
+      363.2501152177261,
+      968.0909399021492,
+      602.1866958887811,
+      1128.965542622528
+    ],
+    [
+      198.2241692596261,
+      900.0028745610314,
+      1151.8609665707581,
+      646.6392260785403,
+      925.5599760302173,
+      1424.3543589537742,
+      0,
+      1276.5461500913987,
+      780.5649933491355,
+      765.7971186418064,
+      1765.921871633816,
+      1148.5442456522974,
+      1192.101498808586,
+      1181.9695295458387,
+      1453.342935378373,
+      164.00595448767533,
+      748.6124359153694,
+      1173.7202688819457,
+      709.6230506256778,
+      874.0917915556437,
+      1007.2895999917305
+    ],
+    [
+      1141.1709325948634,
+      384.61782111269224,
+      1258.4649116183264,
+      985.042146148243,
+      376.1536408391126,
+      285.3750309161416,
+      1276.5461500913987,
+      0,
+      794.828327976707,
+      1069.2736573171646,
+      668.6187478784807,
+      1354.1455864985328,
+      98.01882626800545,
+      130.9581286421643,
+      730.4856075889423,
+      1166.714756118588,
+      775.9602712654612,
+      106.42535499560937,
+      963.1168055934702,
+      404.49214038405313,
+      1204.14757219757
+    ],
+    [
+      770.6885728301434,
+      478.0566082086001,
+      1483.1103543317083,
+      973.8837804480512,
+      644.8790485169139,
+      1054.1980354100426,
+      780.5649933491355,
+      794.828327976707,
+      0,
+      1121.5305479826243,
+      1057.3453004260027,
+      1535.9822521983638,
+      758.4246997732448,
+      776.3733557011321,
+      1346.704008007563,
+      773.272833812896,
+      878.2655603063735,
+      696.658428623016,
+      1003.6897815692982,
+      492.6724289816913,
+      1363.290599666207
+    ],
+    [
+      574.5357710159117,
+      852.3171461167333,
+      396.2583150991097,
+      150.30636356232253,
+      723.9998850837858,
+      1053.1560543861087,
+      765.7971186418064,
+      1069.2736573171646,
+      1121.5305479826243,
+      0,
+      1722.6625131798974,
+      422.34447468722556,
+      972.154452288714,
+      938.8629890625679,
+      841.2594167801658,
+      606.0132472649653,
+      301.18821964794466,
+      1005.8540139860737,
+      122.17226863082071,
+      812.09114869318,
+      256.30423252633386
+    ],
+    [
+      1678.9140542796695,
+      913.5542445641463,
+      1926.900892430443,
+      1622.901214847226,
+      1001.3162634760499,
+      836.0217424788138,
+      1765.921871633816,
+      668.6187478784807,
+      1057.3453004260027,
+      1722.6625131798974,
+      0,
+      2022.7293766714133,
+      759.8056266246647,
+      797.6724264174114,
+      1330.5872200399237,
+      1696.7449222984662,
+      1422.95134378368,
+      717.4019730656128,
+      1610.047182006968,
+      950.8508088844577,
+      1871.3914484094607
+    ],
+    [
+      970.9234461704543,
+      1218.5654543513845,
+      109.90779598208864,
+      572.5031584224537,
+      1062.7250593552678,
+      1256.4327766198026,
+      1148.5442456522974,
+      1354.1455864985328,
+      1535.9822521983638,
+      422.34447468722556,
+      2022.7293766714133,
+      0,
+      1264.0006179590637,
+      1225.3786703134115,
+      884.5433713435445,
+      998.9825435755401,
+      671.6495334155919,
+      1314.4341857010024,
+      533.7307733815608,
+      1179.6372890196153,
+      172.98139565301008
+    ],
+    [
+      1051.282071411585,
+      314.8471018880674,
+      1170.1062149959957,
+      887.0266934953917,
+      280.82029970165337,
+      295.995887574363,
+      1192.101498808586,
+      98.01882626800545,
+      758.4246997732448,
+      972.154452288714,
+      759.8056266246647,
+      1264.0006179590637,
+      0,
+      40.93587082552228,
+      685.2620567329391,
+      1077.6504301695752,
+      678.105636086093,
+      76.47550405669959,
+      865.3625025295278,
+      328.00423170191726,
+      1111.586441636984
+    ],
+    [
+      1036.3537360683633,
+      320.039338680963,
+      1130.8855351321324,
+      857.3043873574493,
+      261.85016773027763,
+      279.6349681676275,
+      1181.9695295458387,
+      130.9581286421643,
+      776.3733557011321,
+      938.8629890625679,
+      797.6724264174114,
+      1225.3786703134115,
+      40.93587082552228,
+      0,
+      647.8008606722647,
+      1063.5144009990092,
+      647.0320897109558,
+      113.54308377922784,
+      833.7541089397595,
+      328.28348817297535,
+      1074.0243803241156
+    ],
+    [
+      1261.3726776678643,
+      873.200268989702,
+      774.6683673985784,
+      868.4744463922907,
+      702.0682172538743,
+      494.95387329085463,
+      1453.342935378373,
+      730.4856075889423,
+      1346.704008007563,
+      841.2594167801658,
+      1330.5872200399237,
+      884.5433713435445,
+      685.2620567329391,
+      647.8008606722647,
+      0,
+      1295.621174859181,
+      707.8693958116245,
+      761.0833117653,
+      809.6101191287493,
+      854.4723903983854,
+      805.2615870907083
+    ],
+    [
+      34.57665777925535,
+      802.8724556691732,
+      996.190357864205,
+      483.1953130377857,
+      802.7511934074838,
+      1293.0279014192463,
+      164.00595448767533,
+      1166.714756118588,
+      773.272833812896,
+      606.0132472649653,
+      1696.7449222984662,
+      998.9825435755401,
+      1077.6504301695752,
+      1063.5144009990092,
+      1295.621174859181,
+      0,
+      588.6936721231612,
+      1067.3533776740076,
+      545.9341337052488,
+      772.4786249154788,
+      851.9683203061962
+    ],
+    [
+      554.2799733782699,
+      555.6424952369213,
+      607.9058198618404,
+      212.95333746972403,
+      422.9698761916582,
+      795.3034222631283,
+      748.6124359153694,
+      775.9602712654612,
+      878.2655603063735,
+      301.18821964794466,
+      1422.95134378368,
+      671.6495334155919,
+      678.105636086093,
+      647.0320897109558,
+      707.8693958116245,
+      588.6936721231612,
+      0,
+      707.3629708348628,
+      187.63781031470373,
+      515.6996416475777,
+      499.8083121455663
+    ],
+    [
+      1042.6534025227575,
+      278.6391103658311,
+      1223.2241059001544,
+      911.6890388801207,
+      291.5511527216902,
+      363.2501152177261,
+      1173.7202688819457,
+      106.42535499560937,
+      696.658428623016,
+      1005.8540139860737,
+      717.4019730656128,
+      1314.4341857010024,
+      76.47550405669959,
+      113.54308377922784,
+      761.0833117653,
+      1067.3533776740076,
+      707.3629708348628,
+      0,
+      894.933791160243,
+      300.0647733840148,
+      1158.206164215135
+    ],
+    [
+      512.324039825636,
+      731.842802357116,
+      493.334099828004,
+      64.03067705510011,
+      609.1945082468153,
+      968.0909399021492,
+      709.6230506256778,
+      963.1168055934702,
+      1003.6897815692982,
+      122.17226863082071,
+      1610.047182006968,
+      533.7307733815608,
+      865.3625025295278,
+      833.7541089397595,
+      809.6101191287493,
+      545.9341337052488,
+      187.63781031470373,
+      894.933791160243,
+      0,
+      691.578325986582,
+      362.40287184889286
+    ],
+    [
+      749.4442648990012,
+      40.27541675528258,
+      1104.5310413967968,
+      691.2775269625017,
+      155.16704574893015,
+      602.1866958887811,
+      874.0917915556437,
+      404.49214038405313,
+      492.6724289816913,
+      812.09114869318,
+      950.8508088844577,
+      1179.6372890196153,
+      328.00423170191726,
+      328.28348817297535,
+      854.4723903983854,
+      772.4786249154788,
+      515.6996416475777,
+      300.0647733840148,
+      691.578325986582,
+      0,
+      1010.6440548454304
+    ],
+    [
+      822.053661864085,
+      1049.899917862084,
+      144.6002799881817,
+      404.73279937346825,
+      898.3319097488137,
+      1128.965542622528,
+      1007.2895999917305,
+      1204.14757219757,
+      1363.290599666207,
+      256.30423252633386,
+      1871.3914484094607,
+      172.98139565301008,
+      1111.586441636984,
+      1074.0243803241156,
+      805.2615870907083,
+      851.9683203061962,
+      499.8083121455663,
+      1158.206164215135,
+      362.40287184889286,
+      1010.6440548454304,
+      0
+    ]
+  ],
+  "clusterSizes": {
+    "1": [
+      1,
+      6,
+      7,
+      2,
+      4,
+      3,
+      5,
+      8,
+      9
+    ],
+    "2": [
+      10,
+      12,
+      13,
+      20,
+      14,
+      17,
+      15,
+      18,
+      19,
+      21,
+      11,
+      16
+    ]
+  },
+  "optimizationSettings": {
+    "currentSumDistanceInMeters": 32744.741373539866,
+    "currentAverageDistanceInMeters": 779.6366993699968
+  }
+}

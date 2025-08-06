@@ -1,0 +1,80 @@
+{
+  "adminId": "b6aa1689-8248-48df-8de0-5577cb52f41c-yqG2u",
+  "optimizationId": "3ba1e8c4",
+  "meals": [
+    {
+      "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+      "label": "Vorspeise"
+    },
+    {
+      "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+      "label": "Hauptspeise"
+    },
+    {
+      "id": "4780a144-975e-4515-82e4-a410db24ec96",
+      "label": "Nachspeise"
+    }
+  ],
+  "dinnerRoutes": [
+    {
+      "teamNumber": 1,
+      "teamId": "bc5b597c-bbac-4c64-b777-ea811aac594d",
+      "meal": {
+        "id": "28a5a3c7-ac3e-4827-828b-58f64d229e60",
+        "label": "Hauptspeise"
+      },
+      "status": "OK",
+      "geocodingResult": {
+        "lat": 54.0903331,
+        "lng": 12.1247001,
+        "resultType": "EXACT",
+        "syncStatus": "UNSYNCHRONIZED"
+      },
+      "clusterNumber": 1,
+      "teamsOnRoute": [
+        {
+          "teamNumber": 7,
+          "teamId": "95a123ca-6e0f-4bab-9764-7fba17087d67",
+          "meal": {
+            "id": "27c580fa-0d56-4910-a559-2b4be4abb24c",
+            "label": "Vorspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.09171139999999,
+            "lng": 12.1256304,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        },
+        {
+          "teamNumber": 6,
+          "teamId": "40b73f3a-44e4-4299-a0a2-30b6802885a7",
+          "meal": {
+            "id": "4780a144-975e-4515-82e4-a410db24ec96",
+            "label": "Nachspeise"
+          },
+          "status": "OK",
+          "geocodingResult": {
+            "lat": 54.0855746,
+            "lng": 12.1108143,
+            "resultType": "EXACT",
+            "syncStatus": "UNSYNCHRONIZED"
+          },
+          "clusterNumber": 1,
+          "teamsOnRoute": []
+        }
+      ]
+    }
+  ],
+  "distanceMatrix": [],
+  "clusterSizes": {
+    "1": [1, 6, 7, 2, 4, 3, 5, 8, 9]
+  },
+  "optimizationSettings": {
+    "currentSumDistanceInMeters": 32744.741373539866,
+    "currentAverageDistanceInMeters": 779.6366993699968
+  }
+}
