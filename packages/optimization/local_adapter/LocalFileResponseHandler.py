@@ -1,7 +1,6 @@
 import json
 from response.ResponseHandler import ResponseHandler
 import requests
-# import re
 
 class LocalFileResponseHandler(ResponseHandler):
     
@@ -21,10 +20,6 @@ class LocalFileResponseHandler(ResponseHandler):
         # admin_id, optimization_id = self._parse_ids_from_response_path()
         print (f"Sending notification response to {self.notification_url} for finished event {finished_event}")
 
-        # if admin_id is None or optimization_id is None:
-        #     print ("ERROR: Could not retrieve admin_id and/or optimization_id for sending notification")
-        #     return
-
         headers = {
             "Content-Type": "text/plain"
         }
@@ -42,18 +37,3 @@ class LocalFileResponseHandler(ResponseHandler):
         response = requests.post(self.notification_url, json=sns_message, headers=headers)
         print(response.status_code)
         print(response.text)
-
-    # def _parse_ids_from_response_path(self):
-    #     """
-    #     Our response file paths look like this: x/y/{admin_id}/optimization/response-{optimization_id}.json
-    #     We return then the adminId and optimizationId
-    #     :return:
-    #     """
-    #     pattern = r".*/([^/]+)/optimization/response-([^.]+)\.json$"
-
-    #     match = re.match(pattern, self.file_path)
-    #     if match:
-    #         admin_id = match.group(1)
-    #         optimization_id = match.group(2)
-    #         return admin_id, optimization_id
-    #     return None, None

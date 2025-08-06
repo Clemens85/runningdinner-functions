@@ -115,8 +115,8 @@ class RouteBuilder:
             if total_distance < best_distance:
                 best_distance = total_distance
                 best_assignment = matrix_number_to_team
-        
-        print(best_assignment)
+
+        Log.info(f"Best assignment: {best_assignment}")
         return best_assignment, best_distance
 
     def _calculate_total_distance(self, matrix_number_to_team: Dict[int, DinnerRoute], matrix: List[List[List[int]]]) -> float:

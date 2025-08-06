@@ -160,7 +160,7 @@ class Clusterer:
 
                         min_idx = np.argmin(dists)
                         chosen_index = candidate_indices[min_idx]
-                        print(f"Chosen index for cluster {cluster_label}: {chosen_index} with distance {dists[min_idx]:.2f}")
+                        Log.info(f"Chosen index for cluster {cluster_label}: {chosen_index} with distance {dists[min_idx]:.2f}")
                         indices_of_cluster.append(chosen_index)
                         # Update the route with the cluster label
                         self.routes[chosen_index].clusterNumber = cluster_label

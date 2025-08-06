@@ -108,7 +108,5 @@ export class LocalDevUser {
       policyName: "LocalDevS3Policy",
     });
     this.user.attachInlinePolicy(s3AccessPolicy);
-    // bucket.grantReadWrite(this.user);
-    // bucket.
   }
 }
