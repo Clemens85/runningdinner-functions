@@ -19,3 +19,4 @@ __pycache__/
 
 test-data/78_teams.json
 /packages/optimization/test-data/78_teams.json
+chroma.sqlite3
