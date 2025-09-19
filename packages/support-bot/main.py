@@ -1,14 +1,17 @@
 import os
 from dotenv import load_dotenv
-from SupportBotSimple import SupportBotSimple
 from langchain_core.runnables import RunnableConfig
 
 from SupportBot import SupportBot
 from UserRequest import UserRequest
-from langgraph.checkpoint.memory import MemorySaver
+
+from memory.MemoryProvider import MemoryProvider
 
 load_dotenv(override=True)
 os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY', '')
+
+memory_provider = MemoryProvider()
+support_bot = SupportBot(memory_provider, use_local_vector_db=False)
 
 def main():
 
@@ -18,13 +21,12 @@ def main():
     config = new_configurable_from_user_request(user_request)
     response = request(user_request, config)
 
-    user_request = UserRequest(question="In welcher Stadt war das Event zum ich dich vorhin befragt habe nochmal?", thread_id="1")
+    user_request = UserRequest(question="In welcher Stadt war das Event zu dem ich dich vorhin befragt habe nochmal?", thread_id="1")
     config = new_configurable_from_user_request(user_request)
     response = request(user_request, config)
 
 
 def request(user_request: UserRequest, config: RunnableConfig):
-    support_bot = SupportBot()
     response = support_bot.query(user_request, config)
     return response
 

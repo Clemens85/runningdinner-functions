@@ -1,7 +1,9 @@
 from typing import Optional
 from pydantic import BaseModel
 
+URL_KEY = "url"
+
 class UserRequest(BaseModel):
     question: str
-    url: Optional[str] = None
+    request_params: Optional[dict[str, str]] = None
     thread_id: Optional[str] = None

@@ -34,15 +34,13 @@ The given examples may contain real names or addresses or personal data.
 It is very important that you never ever repeat those personal data from the past examples in your answers for privacy reasons.
 The current user messages are wrapped with <user-input>...</user-input> tags.
 You are allowed to use the given personal data from the actual conversation with the user (the data the user gave to you) to give a more personalized answer.
+
+If the given examples from the past contradicts a fact in the software description or software features, then always prefer the fact in the software description or software features.
 """
 
 USER_PROMPT_TEMPLATE =  PromptTemplate.from_template("""
-If the given examples from the past contradicts a fact in the software description or software features, then always prefer the fact in the software description or software features:
-
 {context}
-
 ---
-
 <user-input>
 {input}
 </user-input>
