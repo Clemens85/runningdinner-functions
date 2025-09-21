@@ -4,6 +4,7 @@ import { GeocodingStack } from "../lib/GeocodingStack";
 import { ENVIRONMENT } from "../lib/Environment";
 import { LocalDevUserStack } from "../lib/LocalDevUserStack";
 import { RouteOptimizationStack } from "../lib/RouteOptimizationStack";
+import { SupportBotStack } from "../lib/SupportBotStack";
 
 const app = new cdk.App();
 
@@ -17,6 +18,8 @@ new GeocodingStack(app, "GeocodingStack", {
 new RouteOptimizationStack(app, "RouteOptimizationStack", {
   localDevUser: devUserStack.localDevUser,
 });
+
+new SupportBotStack(app, "SupportBotStack", {});
 
 cdk.Tags.of(app).add("stage", ENVIRONMENT.stage);
 

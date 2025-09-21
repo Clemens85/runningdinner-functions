@@ -11,6 +11,8 @@ import {
 export type PythonLambdaProps = {
   name: string;
   packageFolderName: string;
+  addFunctionUrl?: boolean;
+  cors?: cdk.aws_lambda.FunctionUrlCorsOptions;
   allowAccessToBucket?: Bucket;
   index: string;
   handler: string;
@@ -31,6 +33,8 @@ export class PythonLambda extends Construct {
       handler,
       environment,
       timeout,
+      addFunctionUrl,
+      cors,
       deadLetterQueueEnabled,
       allowAccessToBucket,
       ...remainder
@@ -75,6 +79,22 @@ export class PythonLambda extends Construct {
       // Grant the Lambda function permissions to access the S3 bucket
       allowAccessToBucket.grantReadWrite(this.lambdaFunction);
       allowAccessToBucket.grantPut(this.lambdaFunction);
+    }
+
+    if (addFunctionUrl) {
+      const functionUrl = this.lambdaFunction.addFunctionUrl({
+        authType: lambda.FunctionUrlAuthType.NONE,
+        cors,
+      });
+      // Remove all non-alphanumeric chars from packageFolderName
+      const normalizedPackageFolderName = packageFolderName.replace(
+        /[^a-zA-Z0-9]/g,
+        ""
+      );
+      new cdk.CfnOutput(this, `${normalizedPackageFolderName}FunctionUrl`, {
+        value: functionUrl.url,
+        key: `${normalizedPackageFolderName}FunctionUrl`,
+      });
     }
   }
 }
