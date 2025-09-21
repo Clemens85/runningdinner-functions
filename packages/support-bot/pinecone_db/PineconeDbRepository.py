@@ -5,15 +5,15 @@ from VectorDbRepository import VectorDbRepository
 import openai
 
 INDEX_NAME = "support-documents-v1"
+EMBEDDING_MODEL = 'text-embedding-3-small'
 
-load_dotenv(override=True)
-os.environ['PINECONE_API_KEY'] = os.getenv('PINECONE_API_KEY', '')
-PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
+# TODO This is for local usage
+# load_dotenv(override=True)
+# os.environ['PINECONE_API_KEY'] = os.getenv('PINECONE_API_KEY', '')
+
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_CLOUD = os.getenv('PINECONE_CLOUD', 'aws')
 PINECONE_REGION = os.getenv('PINECONE_REGION', 'us-east-1') 
-
-openai = openai.OpenAI()
-EMBEDDING_MODEL = 'text-embedding-3-small'
 
 class PineconeDbRepository(VectorDbRepository):
     
@@ -21,6 +21,7 @@ class PineconeDbRepository(VectorDbRepository):
         self.index_name = index_name
         self.pc = Pinecone(api_key=PINECONE_API_KEY)
         self._init_index()
+        self.openai_api = openai.OpenAI()
     
     def _init_index(self):
         """Initialize the Pinecone index or verify it exists"""
@@ -28,7 +29,7 @@ class PineconeDbRepository(VectorDbRepository):
         self.index = self.pc.Index(self.index_name)
 
     def embed_text(self, text: str) -> list[float]:
-        response = openai.embeddings.create(
+        response = self.openai_api.embeddings.create(
             input=text,
             model=EMBEDDING_MODEL
         )

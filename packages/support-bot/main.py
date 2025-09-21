@@ -6,12 +6,14 @@ from SupportBot import SupportBot
 from UserRequest import UserRequest
 
 from memory.MemoryProvider import MemoryProvider
+from local_db.LocalChromaDbRepository import LocalChromaDbRepository
 
 load_dotenv(override=True)
 os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY', '')
 
 memory_provider = MemoryProvider()
-support_bot = SupportBot(memory_provider, use_local_vector_db=False)
+vector_db_repository = LocalChromaDbRepository()
+support_bot = SupportBot(memory_provider, vector_db_repository=vector_db_repository)
 
 def main():
 

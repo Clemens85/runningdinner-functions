@@ -1,6 +1,5 @@
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
-from langchain_core.documents import Document
 from VectorDbRepository import VectorDbRepository
 
 DATABASE_NAME = "/home/clemens/Projects/runningdinner-support-rag/rag-data-writer/.chromadb"

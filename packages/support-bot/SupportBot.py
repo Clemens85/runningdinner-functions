@@ -1,10 +1,9 @@
-import os
 from typing import List, Optional, Sequence
 
+import httpx
 from langchain_core.language_models import BaseChatModel
 from typing_extensions import Annotated, TypedDict
-from dotenv import load_dotenv
-from langchain.chat_models import init_chat_model
+from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, BaseMessage, AIMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph.message import add_messages
@@ -13,19 +12,19 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from Prompts import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE, EXAMPLE_CONVERSATION_DOC_TEMPLATE
 from UserRequest import UserRequest
-from local_db.LocalChromaDbRepository import LocalChromaDbRepository
-from pinecone_db.PineconeDbRepository import PineconeDbRepository
+from VectorDbRepository import VectorDbRepository
 
 from memory.MemoryProvider import MemoryProvider
 from Configuration import Configuration
 from RequestParamsParser import RequestParamsParser
 
 from api.RunningDinnerApi import RunningDinnerApi
+from logger.Log import Log
 
 # from IPython.display import Image, display
 
-load_dotenv(override=True)
-os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY', '')
+# load_dotenv(override=True)
+# os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY', '')
 
 OPENAI_MODEL = "gpt-4o-mini"
 TEMPERATURE = 0.2
@@ -41,18 +40,15 @@ class State(TypedDict, total=False):
   
 class SupportBot:
   
-  def __init__(self, memory_provider: MemoryProvider, use_local_vector_db: bool = True):
+  def __init__(self, memory_provider: MemoryProvider, vector_db_repository: VectorDbRepository):
     self.models: List[BaseChatModel] = []
     self.models.append(SupportBot.__init_openai())
-    if use_local_vector_db:
-      self.vector_db = LocalChromaDbRepository()
-    else:
-      self.vector_db = PineconeDbRepository()
+    self.vector_db = vector_db_repository
     self.memory_provider = memory_provider
 
   @classmethod
   def __init_openai(cls) -> BaseChatModel:
-    return init_chat_model(model_provider="openai", model=OPENAI_MODEL, temperature=TEMPERATURE)
+    return ChatOpenAI(model=OPENAI_MODEL, temperature=TEMPERATURE, http_async_client=httpx.AsyncClient())
   
   def build_workflow_graph(self):
     builder = StateGraph(state_schema=State)
@@ -92,35 +88,35 @@ class SupportBot:
       public_event_info = api.get_public_event_info(public_event_id)
       return { "user_context": public_event_info }
     except Exception as e:
-      print(f"Error fetching public event info: {e}")
+      Log.error(f"Error fetching public event info: {e}")
       return {}
 
   def retrieve_example_conversations(self, state: State, config: RunnableConfig):
 
       question = state["question"]
 
-      print ("*** CURRENT STATE ***")
-      print(state)
-      print("*** END CURRENT STATE ***")
+      Log.info("*** CURRENT STATE ***")
+      Log.info(state)
+      Log.info("*** END CURRENT STATE ***")
 
       configurable = Configuration.from_runnable_config(config)
       k = configurable.max_similar_docs
 
       if state.get("docs") is not None and len(state.get("docs")) > 0:
-        print(f"Already have {len(state['docs'])} documents in state, skipping retrieval.")
+        Log.info(f"Already have {len(state['docs'])} documents in state, skipping retrieval.")
         return { "docs": []}
 
-      print(f"--- RETRIEVE {k} SIMILAR CONTEXT DOCUMENTS ---")
+      Log.info(f"--- RETRIEVE {k} SIMILAR CONTEXT DOCUMENTS ---")
       docs = self.vector_db.retrieve(query = question, top_k = k)
       return { "docs": docs }
   
   def answer_with_context(self, state: State):
-    print("--- ANSWER WITH CONTEXT ---")
+    Log.info("--- ANSWER WITH CONTEXT ---")
 
     user_question = state["question"]
     docs = state.get("docs") or []
 
-    print(f"*** Question {user_question} has {len(docs)} documents as context.***")
+    Log.info(f"*** Question {user_question} has {len(docs)} documents as context.***")
 
     context_tmp = [ EXAMPLE_CONVERSATION_DOC_TEMPLATE.invoke({ "example": doc}).to_string() for doc in docs ]
     context = "\n".join(context_tmp)
@@ -142,14 +138,14 @@ class SupportBot:
     response = model.invoke(prompt)
 
     final_messages = messages + [AIMessage(content=response.content)]
-    # print ("\n*** STATE IS ***")
+    # Log.debug("\n*** STATE IS ***")
     # for msg in final_messages:
-    #   print(msg.to_json())
+    #   Log.debug(msg.to_json())
 
-    print ("\n*** MESSAGES ARE ***")
+    Log.info("\n*** MESSAGES ARE ***")
     for m in final_messages:
       m.pretty_print()
-    print("\n*** END OF MESSAGES ***")
+    Log.info("\n*** END OF MESSAGES ***")
 
     return { "messages": final_messages, "answer": response.content }
   
@@ -162,9 +158,9 @@ class SupportBot:
       "request_params": user_request.request_params or {},
     }, config)
 
-    # print ("*** COMPLETE STATE IS ***")
-    # print (graph.get_state(config))
-    # print ("*** END OF COMPLETE STATE ***")
+    # Log.debug("*** COMPLETE STATE IS ***")
+    # Log.debug(graph.get_state(config))
+    # Log.debug("*** END OF COMPLETE STATE ***")
     return response["answer"]
   
 
