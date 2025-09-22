@@ -1,9 +1,7 @@
 from typing import List, Optional, Sequence
 
-import httpx
-from langchain_core.language_models import BaseChatModel
+from langchain_core.prompt_values import ChatPromptValue
 from typing_extensions import Annotated, TypedDict
-from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, BaseMessage, AIMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph.message import add_messages
@@ -18,13 +16,12 @@ from memory.MemoryProvider import MemoryProvider
 from Configuration import Configuration
 from RequestParamsParser import RequestParamsParser
 
+from ChatOpenAI import ChatOpenAI
+
 from api.RunningDinnerApi import RunningDinnerApi
 from logger.Log import Log
 
 # from IPython.display import Image, display
-
-# load_dotenv(override=True)
-# os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY', '')
 
 OPENAI_MODEL = "gpt-4o-mini"
 TEMPERATURE = 0.2
@@ -41,15 +38,10 @@ class State(TypedDict, total=False):
 class SupportBot:
   
   def __init__(self, memory_provider: MemoryProvider, vector_db_repository: VectorDbRepository):
-    self.models: List[BaseChatModel] = []
-    self.models.append(SupportBot.__init_openai())
+    self.model = ChatOpenAI(model = OPENAI_MODEL, temperature = TEMPERATURE)
     self.vector_db = vector_db_repository
     self.memory_provider = memory_provider
 
-  @classmethod
-  def __init_openai(cls) -> BaseChatModel:
-    return ChatOpenAI(model=OPENAI_MODEL, temperature=TEMPERATURE, http_async_client=httpx.AsyncClient())
-  
   def build_workflow_graph(self):
     builder = StateGraph(state_schema=State)
     
@@ -132,10 +124,9 @@ class SupportBot:
       SystemMessage(content=SYSTEM_PROMPT),
       MessagesPlaceholder(variable_name="all_messages"),
     ])
-    prompt = prompt_template.invoke({ "all_messages": messages })
+    prompt: ChatPromptValue = prompt_template.invoke({ "all_messages": messages })
 
-    model = self.models[0]
-    response = model.invoke(prompt)
+    response = self.model.invoke(prompt)
 
     final_messages = messages + [AIMessage(content=response.content)]
     # Log.debug("\n*** STATE IS ***")

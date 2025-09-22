@@ -1,7 +1,6 @@
 langgraph
 langchain
 langchain-core
-langchain-openai
 
 pinecone
 

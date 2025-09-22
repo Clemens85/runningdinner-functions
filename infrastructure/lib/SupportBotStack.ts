@@ -15,7 +15,7 @@ export class SupportBotStack extends cdk.Stack {
 
     const supportBotFunc = new PythonLambda(this, "support-bot", {
       name: "support-bot",
-      runtime: lambda.Runtime.PYTHON_3_12,
+      runtime: lambda.Runtime.PYTHON_3_13,
       packageFolderName: "support-bot",
       index: "LambdaHandler.py",
       handler: "lambda_handler",
