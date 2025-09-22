@@ -1,5 +1,4 @@
 langgraph
-langchain
 langchain-core
 
 pinecone
@@ -9,10 +8,10 @@ requests
 pydantic>=2.0.0
 pydantic-settings>=2.0.0
 
-httpx
+openai
 
-# LLM Providers
-#langchain-google-genai>=2.0.0
+# LLM Providers (add selectively as needed)
+# langchain-google-genai>=2.0.0
 
 
 # AWS Lambda utilities (matching existing project patterns)

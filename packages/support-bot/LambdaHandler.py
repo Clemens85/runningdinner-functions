@@ -1,6 +1,5 @@
 from aws_lambda_powertools import Tracer, Metrics
 from aws_lambda_powertools.utilities.typing import LambdaContext
-from aws_lambda_powertools.event_handler import content_types
 import json
 import os
 from logger.Log import Log
@@ -9,6 +8,8 @@ from memory.MemoryProvider import MemoryProvider
 from pinecone_db.PineconeDbRepository import PineconeDbRepository
 from SupportRequestHandler import SupportRequestHandler
 from ApiKeysSsmFactory import ApiKeysSsmFactory
+
+from HttpUtil import APPLICATION_JSON, get_http_method, is_http_path_match
 
 # Initialize tools
 tracer = Tracer()
@@ -28,7 +29,7 @@ except Exception as e:
 
 vector_db_repository = PineconeDbRepository()
 memory_provider = MemoryProvider()
-support_reqquest_handler = SupportRequestHandler(memory_provider=memory_provider, vector_db_repository=vector_db_repository)
+support_request_handler = SupportRequestHandler(memory_provider=memory_provider, vector_db_repository=vector_db_repository)
 
 @tracer.capture_lambda_handler
 @Log.inject_lambda_context(log_event=True)
@@ -36,11 +37,14 @@ def lambda_handler(event: dict, context: LambdaContext):
 
     Log.info("Processing event: %s", event)
 
+    if is_http_path_match(event, "/warmup") and get_http_method(event) == "GET":
+        return support_request_handler.warm_up()
+
     try:
         http_body_str = event['body']
         http_body = json.loads(http_body_str)
         user_request = UserRequest(**http_body)
-        return support_reqquest_handler.process_user_request(user_request)
+        return support_request_handler.process_user_request(user_request)
     except Exception as e:
         Log.exception("Unhandled exception when processing request %s", str(e))
-        return support_reqquest_handler.process_error(e)
+        return support_request_handler.process_error(e)

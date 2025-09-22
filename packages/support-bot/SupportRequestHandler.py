@@ -5,8 +5,8 @@ from UserResponse import UserResponse
 from langchain_core.runnables import RunnableConfig
 from VectorDbRepository import VectorDbRepository
 from memory.MemoryProvider import MemoryProvider
-
-APPLICATION_JSON = "application/json"
+from HttpUtil import APPLICATION_JSON
+from logger.Log import Log
 
 class SupportRequestHandler:
     
@@ -38,3 +38,18 @@ class SupportRequestHandler:
         return {"configurable": {
             "thread_id": user_request.thread_id
         }}
+    
+
+    def warm_up(self):
+        try: 
+            Log.info("Warming up SupportBot and its workflow graph...")
+            support_bot = SupportBot(memory_provider=self.memory_provider, vector_db_repository=self.vector_db_repository)
+            support_bot.build_workflow_graph()
+            Log.info("... warmed up SupportBot and its workflow graph")
+            return {
+                "statusCode": 200,
+                "headers": {"Content-Type": APPLICATION_JSON}
+            }
+        except Exception as e:
+            Log.exception("Exception during warm up: %s", str(e))
+            return self.process_error(e)

@@ -2,7 +2,6 @@ import os
 from typing import Sequence
 from typing_extensions import Annotated, TypedDict
 from dotenv import load_dotenv
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, BaseMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph.message import add_messages
@@ -22,9 +21,9 @@ class SupportBotSimple:
   def __init__(self, configuration: RunnableConfig):
     load_dotenv(override=True)
     os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY', '')
-    
-    self.models = []
-    self.models.append(self.__init_openai())
+    # Use internal ChatOpenAI wrapper instead of langchain meta package
+    from ChatOpenAI import ChatOpenAI
+    self.models = [ChatOpenAI(model=OPENAI_MODEL, temperature=TEMPERATURE)]
     
     self.workflow = self.__init_workflow_graph()
     self.configuration = configuration
@@ -32,7 +31,9 @@ class SupportBotSimple:
     self.prompt_template = self.__init_prompt_template()
   
   def __init_openai(self):
-    return init_chat_model(model_provider="openai", model=OPENAI_MODEL, temperature=TEMPERATURE)
+    # Deprecated: kept for backward compatibility if referenced elsewhere
+    from ChatOpenAI import ChatOpenAI
+    return ChatOpenAI(model=OPENAI_MODEL, temperature=TEMPERATURE)
   
   def __init_workflow_graph(self):
     workflow = StateGraph(state_schema=State)
