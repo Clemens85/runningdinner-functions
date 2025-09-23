@@ -79,6 +79,11 @@ async def health_check():
     """Simple health check endpoint"""
     return {"status": "ok"}
 
+
+@app.get("/warmup")
+async def warmup():
+    return json.loads(support_request_handler.warm_up())
+
 def start_server(host="localhost", port=8000):
     """Start the FastAPI server"""
     try:

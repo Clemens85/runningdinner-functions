@@ -33,6 +33,7 @@ class State(TypedDict, total=False):
   answer: str
   request_params: dict[str, str]
   public_event_id: Optional[str]
+  user_context: Optional[str]
   admin_id: Optional[str]
   
 class SupportBot:
@@ -78,6 +79,7 @@ class SupportBot:
     try:
       api = RunningDinnerApi(host)
       public_event_info = api.get_public_event_info(public_event_id)
+      Log.info(f"Retrieved public event info: {public_event_info}")
       return { "user_context": public_event_info }
     except Exception as e:
       Log.error(f"Error fetching public event info: {e}")
@@ -111,11 +113,14 @@ class SupportBot:
     Log.info(f"*** Question {user_question} has {len(docs)} documents as context.***")
 
     context_tmp = [ EXAMPLE_CONVERSATION_DOC_TEMPLATE.invoke({ "example": doc}).to_string() for doc in docs ]
-    context = "\n".join(context_tmp)
+    example_support_cases = "\n".join(context_tmp)
+
+    user_context_json = state.get("user_context") or ""
 
     user_prompt = USER_PROMPT_TEMPLATE.invoke({
-      "context": context,
+      "examples": example_support_cases,
       "input": user_question,
+      "user-context": user_context_json
     })
 
     messages = state.get("messages", []) + [HumanMessage(content=user_prompt.to_string())]

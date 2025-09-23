@@ -1,7 +1,8 @@
 from typing import Optional
 from pydantic import BaseModel
 
-URL_KEY = "url"
+PAGE_NAME_KEY = "page_name"
+PUBLIC_EVENT_REGISTRATIONS_KEY = "public_event_registrations"
 
 class UserRequest(BaseModel):
     question: str

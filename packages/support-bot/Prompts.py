@@ -36,14 +36,21 @@ The current user messages are wrapped with <user-input>...</user-input> tags.
 You are allowed to use the given personal data from the actual conversation with the user (the data the user gave to you) to give a more personalized answer.
 
 If the given examples from the past contradicts a fact in the software description or software features, then always prefer the fact in the software description or software features.
+
+You might get additional information about the user (which might be either the organizer of the event or a participant of the event), which might comprise the data about the event a user is asking questions.
+This data is wrapped with <user-contextd>...</user-contextd> tags and the data is typically shapes as JSON. If this data is provided, use it (if suitable) for a more helpful and contentful answer.
 """
 
 USER_PROMPT_TEMPLATE =  PromptTemplate.from_template("""
-{context}
+{examples}
 ---
 <user-input>
 {input}
 </user-input>
+---
+<user-context>
+{user-context}
+</user-context>
 """)
 
 
