@@ -8,7 +8,7 @@ from langgraph.graph.message import add_messages
 from langgraph.graph import START, END, StateGraph
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-from Prompts import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE, EXAMPLE_CONVERSATION_DOC_TEMPLATE
+from Prompts import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE, EXAMPLE_CONVERSATION_DOC_TEMPLATE, ADMIN_SOFTWARE_FEATURES
 from UserRequest import UserRequest
 from VectorDbRepository import VectorDbRepository
 
@@ -119,6 +119,7 @@ class SupportBot:
 
     user_prompt = USER_PROMPT_TEMPLATE.invoke({
       "examples": example_support_cases,
+      "features": ADMIN_SOFTWARE_FEATURES,
       "input": user_question,
       "user-context": user_context_json
     })
