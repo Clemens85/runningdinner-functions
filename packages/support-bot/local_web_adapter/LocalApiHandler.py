@@ -6,21 +6,26 @@ import json
 import sys
 import os
 
+from langsmith import traceable
+from langsmith.wrappers import OpenAIAgentsTracingProcessor
+
 # Add parent directory to path to import modules from parent directory
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import support bot components
 from UserRequest import UserRequest
-from UserResponse import UserResponse
 from memory.MemoryProvider import MemoryProvider
 from pinecone_db.PineconeDbRepository import PineconeDbRepository
 from SupportRequestHandler import SupportRequestHandler
+from agents import set_trace_processors
 
 # Load environment variables from .env file
 load_dotenv()
 
+set_trace_processors([OpenAIAgentsTracingProcessor()])
+
 # Check if required environment variables are present
-required_env_vars = ['PINECONE_API_KEY', 'OPENAI_API_KEY']
+required_env_vars = ['PINECONE_API_KEY', 'OPENAI_API_KEY', 'LANGSMITH_API_KEY']
 missing_vars = [var for var in required_env_vars if not os.getenv(var)]
 if missing_vars:
     print(f"WARNING: Missing required environment variables: {', '.join(missing_vars)}")
@@ -47,6 +52,8 @@ support_request_handler = SupportRequestHandler(
     vector_db_repository=vector_db_repository
 )
 
+
+@traceable
 @app.post("/api/support")
 async def handle_support_request(request: Request):
     """
@@ -83,6 +90,7 @@ async def health_check():
 @app.get("/warmup")
 async def warmup():
     return json.loads(support_request_handler.warm_up())
+
 
 def start_server(host="localhost", port=8000):
     """Start the FastAPI server"""

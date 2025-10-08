@@ -27,7 +27,12 @@ export class SupportBotStack extends cdk.Stack {
         lambda.HttpMethod.GET,
         lambda.HttpMethod.POST,
       ]),
-      environment: {},
+      environment: {
+        LANGSMITH_TRACING: "true",
+        LANGSMITH_ENDPOINT: "https://eu.api.smith.langchain.com",
+        LANGSMITH_PROJECT: "pr-stupendous-spray-96",
+        RUNNING_DINNER_API_HOST: "https://runyourdinner.eu",
+      },
       bundling: {
         assetExcludes: [
           "*.ipynb",

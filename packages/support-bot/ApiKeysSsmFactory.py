@@ -69,6 +69,53 @@ class ApiKeysSsmFactory:
                 logger.error(error_message)
                 raise Exception(error_message)
 
+    def get_api_keys_batch(self, parameter_names: list[str], with_decryption: bool = True) -> Dict[str, str]:
+        """
+        Get multiple API keys from SSM Parameter Store in a single batch call with caching.
+        This is more efficient than multiple individual get_api_key calls, especially during Lambda cold starts.
+        
+        Args:
+            parameter_names: List of parameter names in SSM
+            with_decryption: Whether to decrypt the parameter values
+            
+        Returns:
+            Dictionary mapping parameter names to their values
+            
+        Raises:
+            Exception: If parameters cannot be retrieved or don't exist
+        """
+        # Check which parameters are already cached
+        result = {}
+        uncached_params = []
+        
+        for param_name in parameter_names:
+            if param_name in self._cached_parameters:
+                result[param_name] = self._cached_parameters[param_name]
+            else:
+                uncached_params.append(param_name)
+        
+        # If all parameters are cached, return immediately
+        if not uncached_params:
+            logger.info("All parameters found in cache")
+            return result
+        
+        # Fetch uncached parameters in batch
+        try:
+            fetched_params = self._fetch_and_cache_parameters_batch(uncached_params, with_decryption)
+            result.update(fetched_params)
+            return result
+        except Exception as e:
+            # Retry once on failure
+            logger.warning(f"Failed to fetch parameters batch, retrying: {str(e)}")
+            try:
+                fetched_params = self._fetch_and_cache_parameters_batch(uncached_params, with_decryption)
+                result.update(fetched_params)
+                return result
+            except Exception as inner_e:
+                error_message = f"Failed to fetch SSM parameters batch: {str(inner_e)}"
+                logger.error(error_message)
+                raise Exception(error_message)
+
     def trigger_refetch_api_key(self, parameter_name: str):
         """
         Force a refresh of the cached parameter
@@ -110,3 +157,55 @@ class ApiKeysSsmFactory:
         logger.info(f"Successfully fetched and cached parameter {parameter_name}")
         
         return parameter_value
+
+    def _fetch_and_cache_parameters_batch(self, parameter_names: list[str], with_decryption: bool) -> Dict[str, str]:
+        """
+        Fetch multiple parameters from SSM in a single batch call and store in cache
+        
+        Args:
+            parameter_names: List of parameter names in SSM
+            with_decryption: Whether to decrypt the parameter values
+            
+        Returns:
+            Dictionary mapping parameter names to their values
+            
+        Raises:
+            Exception: If any parameter value is None, empty, or invalid
+        """
+        response = self._ssm_client.get_parameters(
+            Names=parameter_names,
+            WithDecryption=with_decryption
+        )
+        
+        # Check for invalid parameters
+        invalid_params = response.get('InvalidParameters', [])
+        if invalid_params:
+            error_message = f"Invalid SSM parameters: {', '.join(invalid_params)}"
+            logger.error(error_message)
+            raise Exception(error_message)
+        
+        # Process and cache all parameters
+        result = {}
+        parameters = response.get('Parameters', [])
+        
+        if len(parameters) != len(parameter_names):
+            error_message = f"Expected {len(parameter_names)} parameters but got {len(parameters)}"
+            logger.error(error_message)
+            raise Exception(error_message)
+        
+        for param in parameters:
+            param_name = param.get('Name')
+            param_value = param.get('Value')
+            
+            if not param_value:
+                error_message = f"API key not found or empty in {param_name}"
+                logger.error(error_message)
+                raise Exception(error_message)
+            
+            # Cache the parameter
+            self._cached_parameters[param_name] = param_value
+            result[param_name] = param_value
+        
+        logger.info(f"Successfully fetched and cached {len(parameters)} parameters in batch")
+        
+        return result
