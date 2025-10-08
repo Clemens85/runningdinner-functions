@@ -7,20 +7,49 @@ from langchain_core.runnables import RunnableConfig
 class Configuration(BaseModel):
     """The configuration for the agent."""
 
-    answer_model: str = Field(
+    openai_model: str = Field(
         default="gpt-4o-mini",
         metadata={
-            "description": "The name of the language model to use for the agent's answer."
+            "description": "The name of the OpenAI LLM to use for the agent's answer."
         },
     )
 
-    temperature: float = Field(
+    openai_temperature: float = Field(
         default=0.2,
-        metadata={"description": "The temperature to use for the language models."},
+        metadata={"description": "The temperature to use for the OpenAI model."},
+    )
+
+    gemini_model: str = Field(
+        default="gemini-1.5-pro",
+        metadata={
+            "description": "The name of the Gemini LLM to use for the agent's answer."
+        },
+    )
+
+    gemini_temperature: float = Field(
+        default=0.2,
+        metadata={"description": "The temperature to use for the Gemini model."},
+    )
+
+    openai_enabled: bool = Field(
+        default=True,
+        metadata={"description": "Whether to enable OpenAI as a model option."},
+    )
+
+    gemini_enabled: bool = Field(
+        default=False,
+        metadata={"description": "Whether to enable Gemini as a model option."},
+    )
+
+    model_preference: str = Field(
+        default="openai",
+        metadata={
+            "description": "The preferred LLM model to use ('openai' or 'gemini')."
+        },
     )
 
     max_similar_docs: int = Field(
-        default=1,
+        default=3,
         metadata={"description": "The maximum number of similar documents to retrieve."},
     )
 

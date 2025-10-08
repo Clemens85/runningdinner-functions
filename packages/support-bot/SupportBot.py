@@ -11,20 +11,15 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from Prompts import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE, EXAMPLE_CONVERSATION_DOC_TEMPLATE, ADMIN_SOFTWARE_FEATURES
 from UserRequest import UserRequest
 from VectorDbRepository import VectorDbRepository
+from llm.ChatModelDispatcher import ChatModelDispatcher
 
 from memory.MemoryProvider import MemoryProvider
 from Configuration import Configuration
 from RequestParamsParser import RequestParamsParser
 
-from ChatOpenAI import ChatOpenAI
-
 from api.RunningDinnerApi import RunningDinnerApi
 from logger.Log import Log
-
 # from IPython.display import Image, display
-
-OPENAI_MODEL = "gpt-4o-mini"
-TEMPERATURE = 0.2
 
 class State(TypedDict, total=False):
   messages: Annotated[Sequence[BaseMessage], add_messages]
@@ -39,7 +34,7 @@ class State(TypedDict, total=False):
 class SupportBot:
   
   def __init__(self, memory_provider: MemoryProvider, vector_db_repository: VectorDbRepository):
-    self.model = ChatOpenAI(model = OPENAI_MODEL, temperature = TEMPERATURE)
+    self.llm_model_dispatcher = ChatModelDispatcher()
     self.vector_db = vector_db_repository
     self.memory_provider = memory_provider
 
@@ -132,7 +127,7 @@ class SupportBot:
     ])
     prompt: ChatPromptValue = prompt_template.invoke({ "all_messages": messages })
 
-    response = self.model.invoke(prompt)
+    response = self.llm_model_dispatcher.invoke(prompt)
 
     final_messages = messages + [AIMessage(content=response.content)]
     # Log.debug("\n*** STATE IS ***")

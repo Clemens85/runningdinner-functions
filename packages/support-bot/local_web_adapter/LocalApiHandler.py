@@ -2,6 +2,7 @@ import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 import json
 import sys
 import os
@@ -77,20 +78,22 @@ async def handle_support_request(request: Request):
         # FastAPI will automatically handle the JSON serialization
         return json.loads(lambda_response["body"])
     except Exception as e:
-        # Handle errors - extract error message from the response
+        # Handle errors - extract error message and status code from the response
         error_response = support_request_handler.process_error(e)
-        return json.loads(error_response["body"])
+        return JSONResponse(
+            status_code=error_response["statusCode"],
+            content=json.loads(error_response["body"])
+        )
 
-@app.get("/health")
+@app.get("/api/health")
 async def health_check():
     """Simple health check endpoint"""
     return {"status": "ok"}
 
 
-@app.get("/warmup")
+@app.get("/api/support/warmup")
 async def warmup():
-    return json.loads(support_request_handler.warm_up())
-
+    support_request_handler.warm_up()
 
 def start_server(host="localhost", port=8000):
     """Start the FastAPI server"""

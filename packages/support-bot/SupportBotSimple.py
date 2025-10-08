@@ -6,7 +6,7 @@ from langchain_core.messages import HumanMessage, BaseMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph.message import add_messages
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.graph import START, MessagesState, StateGraph
+from langgraph.graph import START, StateGraph
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 OPENAI_MODEL = "gpt-4o-mini"
@@ -22,7 +22,7 @@ class SupportBotSimple:
     load_dotenv(override=True)
     os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY', '')
     # Use internal ChatOpenAI wrapper instead of langchain meta package
-    from ChatOpenAI import ChatOpenAI
+    from llm.ChatOpenAI import ChatOpenAI
     self.models = [ChatOpenAI(model=OPENAI_MODEL, temperature=TEMPERATURE)]
     
     self.workflow = self.__init_workflow_graph()
@@ -32,7 +32,7 @@ class SupportBotSimple:
   
   def __init_openai(self):
     # Deprecated: kept for backward compatibility if referenced elsewhere
-    from ChatOpenAI import ChatOpenAI
+    from llm.ChatOpenAI import ChatOpenAI
     return ChatOpenAI(model=OPENAI_MODEL, temperature=TEMPERATURE)
   
   def __init_workflow_graph(self):
