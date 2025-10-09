@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Tuple
-from langchain_core.documents import Document
+from typing import List
+from SupportDocument import SupportDocument
 
 class VectorDbRepository(ABC):
     @abstractmethod
-    def retrieve(self, query: str, top_k=2) -> Tuple[str, list[Document]]:
+    def retrieve(self, query: str, top_k=2) -> List[SupportDocument]:
         pass

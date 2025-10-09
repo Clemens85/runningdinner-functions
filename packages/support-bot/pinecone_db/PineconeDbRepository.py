@@ -1,6 +1,10 @@
 import os
+from typing import List
+
 from dotenv import load_dotenv
 from pinecone import Pinecone
+
+from SupportDocument import SupportDocument
 from VectorDbRepository import VectorDbRepository
 import openai
 
@@ -37,7 +41,7 @@ class PineconeDbRepository(VectorDbRepository):
         return embedding
     
 
-    def retrieve(self, query: str, top_k: int = 3) -> list[str]:
+    def retrieve(self, query: str, top_k: int = 3) -> List[SupportDocument]:
         """
         Find similar documents in the Pinecone index based on a query string
         
@@ -58,7 +62,11 @@ class PineconeDbRepository(VectorDbRepository):
             include_metadata=True
         )
 
-        # Extract and return the document texts from the results
-        similar_texts = [match['metadata']['text'] for match in results['matches']]
-        return similar_texts
-
+        return [
+            SupportDocument(
+                content=match['metadata']['text'],
+                date=match['metadata'].get('date'),
+                support_type=match['metadata'].get('support_type')
+            )
+            for match in results['matches']
+        ]

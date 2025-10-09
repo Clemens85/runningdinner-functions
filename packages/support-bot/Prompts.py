@@ -33,7 +33,9 @@ You will also be given a comprehensive list with the features of our software re
 All those features are wrapped within a <features>...</features> tag. Use also those feature descriptions to get more relevant domain knowledge and to ask the user's question if possible.
 The features represent always the latest state of the capabilities or our software.  The given features are written in mark down format.
 If one of the given support conversation examples from the past contradicts a fact of those software features, 
-then always prefer the facts from the features and ignore the stated knowledge from the examples. This is very important to get a real up-to-date valid answer! 
+then always prefer the facts from the features and ignore the stated knowledge from the examples. This is very important to get a real up-to-date valid answer!
+Both the features and also every example conversation has a latest update date (format: yyyy-MM-dd HH:mm:ss) which denotes the date of this information.
+If single knowledge facts are contradictionary then prefer the one with most recent update date and neglect the older one.   
 
 You might get additional information about the user (which might be either the organizer of the event or a participant of the event), which might comprise the data about the event a user is asking questions.
 This data is wrapped with <user-contextd>...</user-contextd> tags and the data is typically shapes as JSON. If this data is provided, use it (if suitable) for a more helpful and contentful answer.
@@ -42,23 +44,29 @@ This data is wrapped with <user-contextd>...</user-contextd> tags and the data i
 USER_PROMPT_TEMPLATE =  PromptTemplate.from_template("""
 Relevant features of the software for organizers in the admin-panel for managing running dinner events:
 <features> 
-{features}
+    Latest Update Date: {features_date}
+    
+    {features}
 </features>
 ---
 {examples}
 ---
 <user-input>
-{input}
+    {input}
 </user-input>
 ---
 <user-context>
-{user-context}
+    {user-context}
 </user-context>
 """)
 
 
 EXAMPLE_CONVERSATION_DOC_TEMPLATE = PromptTemplate.from_template("""
-  <example>{example}</example> 
+  <example>
+    Latest Update Date: {date}
+    
+    {example}
+  </example> 
 """)
 
 

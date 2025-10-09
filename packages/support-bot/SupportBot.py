@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional, Sequence
 
 from langchain_core.prompt_values import ChatPromptValue
@@ -9,6 +10,7 @@ from langgraph.graph import START, END, StateGraph
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from Prompts import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE, EXAMPLE_CONVERSATION_DOC_TEMPLATE, ADMIN_SOFTWARE_FEATURES
+from SupportDocument import SupportDocument
 from UserRequest import UserRequest
 from VectorDbRepository import VectorDbRepository
 from llm.ChatModelDispatcher import ChatModelDispatcher
@@ -23,7 +25,7 @@ from logger.Log import Log
 
 class State(TypedDict, total=False):
   messages: Annotated[Sequence[BaseMessage], add_messages]
-  docs: List[str]
+  docs: List[SupportDocument]
   question: str
   answer: str
   request_params: dict[str, str]
@@ -107,14 +109,21 @@ class SupportBot:
 
     Log.info(f"*** Question {user_question} has {len(docs)} documents as context.***")
 
-    context_tmp = [ EXAMPLE_CONVERSATION_DOC_TEMPLATE.invoke({ "example": doc}).to_string() for doc in docs ]
-    example_support_cases = "\n".join(context_tmp)
+    # Invoke EXAMPLE_CONVERSATION_DOC_TEMPLATE for each document and join with newlines
+    fallback_example_date = "2025-01-01 00:00:00"
+    example_support_cases = "\n".join(
+      [ EXAMPLE_CONVERSATION_DOC_TEMPLATE.invoke({ "date": doc.date or fallback_example_date, "example": doc.content}).to_string() for doc in docs ]
+    )
 
     user_context_json = state.get("user_context") or ""
+
+    # Features always have the latest state
+    features_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     user_prompt = USER_PROMPT_TEMPLATE.invoke({
       "examples": example_support_cases,
       "features": ADMIN_SOFTWARE_FEATURES,
+      "features_date": features_date,
       "input": user_question,
       "user-context": user_context_json
     })

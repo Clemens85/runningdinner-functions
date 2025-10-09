@@ -1,4 +1,4 @@
-**Dinner Routen Übersicht**
+### Dinner Routen Übersicht
 
 Die "Dinner Routen Übersicht" bietet eine umfassende Visualisierung der Routen für Ihre Dinner-Veranstaltung. Hier können Sie alle Teams und deren zugehörige Routen auf einer interaktiven Karte sehen. Die Anwendung ermöglicht es Ihnen, die Routen zu optimieren, um die Laufwege der Teams zu verkürzen und somit die Effizienz der Veranstaltung zu steigern.
 
@@ -28,7 +28,7 @@ Diese Funktionen helfen Ihnen, Ihre Dinner-Veranstaltung effizient zu planen und
 ---
 
 
-**Teams**
+### Teams
 
 1. **Team Dinner Route**
 

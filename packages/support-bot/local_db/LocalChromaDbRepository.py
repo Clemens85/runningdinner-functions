@@ -1,5 +1,9 @@
+from typing import List
+
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
+
+from SupportDocument import SupportDocument
 from VectorDbRepository import VectorDbRepository
 
 DATABASE_NAME = "/home/clemens/Projects/runningdinner-support-rag/rag-data-writer/.chromadb"
@@ -15,8 +19,11 @@ class LocalChromaDbRepository(VectorDbRepository):
         )
 
     # Removed @tool decorator to fix argument passing
-    def retrieve(self, query: str, top_k: int = 2) -> list[str]:
+    def retrieve(self, query: str, top_k: int = 2) -> List[SupportDocument]:
         """Retrieve information related to a query."""
         retrieved_docs = self.vector_store.similarity_search(query, top_k)
         print(f"Found {len(retrieved_docs)} documents")
-        return [doc.page_content for doc in retrieved_docs]
+        # Convert Document List to SupportDocument list, using page_content and metadata fields for date and support_type
+        return [SupportDocument(content=doc.page_content,
+                                date=doc.metadata.get('date'),
+                                support_type=doc.metadata.get('support_type')) for doc in retrieved_docs]
