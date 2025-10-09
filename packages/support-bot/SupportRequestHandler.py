@@ -1,4 +1,6 @@
 import json
+
+from langsmith import traceable
 from SupportBot import SupportBot
 from UserRequest import UserRequest
 from UserResponse import UserResponse
@@ -14,6 +16,7 @@ class SupportRequestHandler:
         self.memory_provider = memory_provider
         self.vector_db_repository = vector_db_repository
 
+    @traceable
     def process_user_request(self, user_request: UserRequest):
         configurable = self.new_configurable_from_user_request(user_request=user_request)
         support_bot = SupportBot(memory_provider=self.memory_provider, vector_db_repository=self.vector_db_repository)

@@ -3,9 +3,9 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 import json
 import os
 
-from langsmith import traceable
 from langsmith.wrappers import OpenAIAgentsTracingProcessor
 from agents import set_trace_processors
+from langchain_core.tracers.langchain import wait_for_all_tracers
 
 from logger.Log import Log
 from UserRequest import UserRequest
@@ -48,19 +48,23 @@ support_request_handler = SupportRequestHandler(memory_provider=memory_provider,
 
 @tracer.capture_lambda_handler
 @Log.inject_lambda_context(log_event=True)
-@traceable
 def lambda_handler(event: dict, context: LambdaContext):
 
     Log.info("Processing event: %s", event)
 
     if is_http_path_match(event, "/warmup") and get_http_method(event) == "GET":
-        return support_request_handler.warm_up()
+        result = support_request_handler.warm_up()
+        return result
 
     try:
         http_body_str = event['body']
         http_body = json.loads(http_body_str)
         user_request = UserRequest(**http_body)
-        return support_request_handler.process_user_request(user_request)
-    except Exception as e:
-        Log.exception("Unhandled exception when processing request %s", str(e))
-        return support_request_handler.process_error(e)
+        result = support_request_handler.process_user_request(user_request)
+        return result
+    except Exception as exception:
+        Log.exception("Unhandled exception when processing request %s", str(exception))
+        error_result = support_request_handler.process_error(exception)
+        return error_result
+    finally:
+        wait_for_all_tracers()

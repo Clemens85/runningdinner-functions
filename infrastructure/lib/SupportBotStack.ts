@@ -6,6 +6,7 @@ import { CommonUtils } from "./CommonUtils";
 
 const PINECONE_API_KEY_PARAM_NAME = "/runningdinner/pinecone/apikey";
 const OPENAI_API_KEY_PARAM_NAME = "/runningdinner/openai/apikey";
+const LANGSMITH_API_KEY_PARAM_NAME = "/runningdinner/langsmith/apikey";
 
 export class SupportBotStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -32,6 +33,8 @@ export class SupportBotStack extends cdk.Stack {
         LANGSMITH_ENDPOINT: "https://eu.api.smith.langchain.com",
         LANGSMITH_PROJECT: "pr-stupendous-spray-96",
         RUNNING_DINNER_API_HOST: "https://runyourdinner.eu",
+        OPENAI_TEMPERATURE: "0.1",
+        OPENAI_MODEL: "gpt-4.1-mini",
       },
       bundling: {
         assetExcludes: [
@@ -67,6 +70,10 @@ export class SupportBotStack extends cdk.Stack {
     commonUtils.allowParameterStoreAccess(
       [supportBotFunc.lambdaFunction],
       OPENAI_API_KEY_PARAM_NAME
+    );
+    commonUtils.allowParameterStoreAccess(
+      [supportBotFunc.lambdaFunction],
+      LANGSMITH_API_KEY_PARAM_NAME
     );
   }
 

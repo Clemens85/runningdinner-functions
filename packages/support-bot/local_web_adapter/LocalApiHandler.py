@@ -54,7 +54,6 @@ support_request_handler = SupportRequestHandler(
 )
 
 
-@traceable
 @app.post("/api/support")
 async def handle_support_request(request: Request):
     """
