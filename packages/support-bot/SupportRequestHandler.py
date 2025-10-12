@@ -31,6 +31,7 @@ class SupportRequestHandler:
         }
 
     def process_error(self, e: Exception):
+        Log.exception(f"An error occurred while processing a request {str(e)}")
         return {
             "statusCode": 500,
             "headers": {"Content-Type": APPLICATION_JSON},
