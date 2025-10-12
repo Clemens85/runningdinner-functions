@@ -30,8 +30,8 @@ function getEnvironment(): EnvironmentType {
       dynamodb: {
         removalPolicy: RemovalPolicy.DESTROY,
         billingMode: BillingMode.PROVISIONED,
-        readCapacity: 12,
-        writeCapacity: 12,
+        readCapacity: 8,
+        writeCapacity: 8,
       },
     };
   } else if (stage === "prod") {

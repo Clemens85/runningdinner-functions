@@ -3,10 +3,9 @@ import * as sqs from "aws-cdk-lib/aws-sqs";
 import { Construct } from "constructs";
 import { NodeJsLambda } from "./NodeJsLambda";
 import * as lambdaEventSources from "aws-cdk-lib/aws-lambda-event-sources";
-import * as lambda from "aws-cdk-lib/aws-lambda";
 import { ENVIRONMENT } from "./Environment";
 import { LocalDevUser } from "./LocalDevUser";
-import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
+import { AttributeType } from "aws-cdk-lib/aws-dynamodb";
 import { HttpMethod } from "aws-cdk-lib/aws-lambda";
 import { CommonUtils } from "./CommonUtils";
 
@@ -53,7 +52,7 @@ export class GeocodingStack extends cdk.Stack {
     );
 
     const table = this.createDynamoDbTable("runningdinner-v1");
-    this.grantReadWriteDataToTable(
+    commonUtils.grantReadWriteDataToTable(
       [geocodingFuncSqs.lambdaFunction, geocodingFuncHttp.lambdaFunction],
       table
     );
@@ -80,15 +79,6 @@ export class GeocodingStack extends cdk.Stack {
           `local-dev-geocoding-ssm-policy`
         );
       }
-    }
-  }
-
-  private grantReadWriteDataToTable(
-    lambdaFunctions: Array<lambda.Function>,
-    table: Table
-  ) {
-    for (let lambdaFunc of lambdaFunctions) {
-      table.grantReadWriteData(lambdaFunc);
     }
   }
 

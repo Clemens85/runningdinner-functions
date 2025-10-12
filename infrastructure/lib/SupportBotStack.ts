@@ -3,6 +3,8 @@ import { Construct } from "constructs";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { PythonLambda } from "./PythonLambda";
 import { CommonUtils } from "./CommonUtils";
+import { AttributeType, BillingMode } from "aws-cdk-lib/aws-dynamodb";
+import { ENVIRONMENT } from "./Environment";
 
 const PINECONE_API_KEY_PARAM_NAME = "/runningdinner/pinecone/apikey";
 const OPENAI_API_KEY_PARAM_NAME = "/runningdinner/openai/apikey";
@@ -62,6 +64,12 @@ export class SupportBotStack extends cdk.Stack {
       },
     });
 
+    const table = this.createDynamoDbTable("supportbot-v1");
+    commonUtils.grantReadWriteDataToTable(
+      [supportBotFunc.lambdaFunction],
+      table
+    );
+
     // Grant access to the SSM parameter store
     commonUtils.allowParameterStoreAccess(
       [supportBotFunc.lambdaFunction],
@@ -86,5 +94,24 @@ export class SupportBotStack extends cdk.Stack {
       allowedHeaders: ["*"],
       exposedHeaders: ["*"],
     };
+  }
+
+  private createDynamoDbTable(tableName: string): cdk.aws_dynamodb.Table {
+    return new cdk.aws_dynamodb.Table(this, tableName, {
+      partitionKey: {
+        name: "PK",
+        type: AttributeType.STRING,
+      },
+      sortKey: {
+        name: "SK",
+        type: AttributeType.STRING,
+      },
+      tableName: tableName,
+      timeToLiveAttribute: "expireAt",
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      billingMode: BillingMode.PROVISIONED,
+      readCapacity: 4,
+      writeCapacity: 4,
+    });
   }
 }
