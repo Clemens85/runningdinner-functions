@@ -1,4 +1,5 @@
 import * as cdk from "aws-cdk-lib";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 
@@ -39,5 +40,14 @@ export class CommonUtils {
     }
 
     return [ssmPolicy, kmsPolicy];
+  }
+
+  public grantReadWriteDataToTable(
+    lambdaFunctions: Array<lambda.Function>,
+    table: Table
+  ) {
+    for (let lambdaFunc of lambdaFunctions) {
+      table.grantReadWriteData(lambdaFunc);
+    }
   }
 }
