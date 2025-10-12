@@ -1,3 +1,5 @@
+import os
+
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
 def to_openai_messages(chat_value) -> list:
@@ -13,3 +15,6 @@ def to_openai_messages(chat_value) -> list:
             raise ValueError(f"Unsupported message type: {type(msg)}")
         result.append({"role": role, "content": msg.content})
     return result
+
+def is_running_on_lambda():
+    return "AWS_LAMBDA_FUNCTION_NAME" in os.environ
