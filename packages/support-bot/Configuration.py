@@ -58,6 +58,13 @@ class Configuration(BaseModel):
         metadata={"description": "The host of the RunningDinner API."},
     )
 
+    use_checkpointer_in_memory: bool = Field(
+        default=False,
+        metadata={
+            "description": "Whether to use an in-memory checkpointer for the agent."
+        },
+    )
+
     @classmethod
     def from_runnable_config(
         cls, config: Optional[RunnableConfig] = None
