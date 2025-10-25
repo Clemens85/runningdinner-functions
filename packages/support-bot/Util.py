@@ -1,8 +1,10 @@
 import os
 
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain_core.prompt_values import PromptValue
 
-def to_openai_messages(chat_value) -> list:
+
+def to_openai_messages(chat_value: PromptValue) -> list:
     result = []
     for msg in chat_value.messages:
         if isinstance(msg, SystemMessage):

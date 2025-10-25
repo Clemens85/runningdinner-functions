@@ -1,5 +1,6 @@
-from typing import List
-from langchain_core.prompt_values import ChatPromptValue
+from typing import List, Optional, Type
+from langchain_core.prompt_values import PromptValue
+from pydantic import BaseModel
 
 from Configuration import Configuration
 from llm.ChatGemini import ChatGemini
@@ -33,17 +34,17 @@ class ChatModelDispatcher(ChatModel):
         if len(self.models) == 0:
             raise ValueError("No LLM models are enabled in the configuration.")
 
-    def invoke(self, prompt: ChatPromptValue) -> ChatResponse:
+    def invoke(self, prompt: PromptValue, custom_response_class: Optional[Type[BaseModel]] = None) -> ChatResponse:
         preferred_model = self.models[0]
         try:
             Log.info("Invoking preferred model: %s", str(preferred_model))
-            return preferred_model.invoke(prompt)
+            return preferred_model.invoke(prompt, custom_response_class)
         except Exception as e:
             if len(self.models) > 1:
                 Log.exception("Preferred model %s failed with error: %s", str(preferred_model), str(e))
                 fallback_model = self.models[1]
                 Log.info("Falling back to model: %s", str(fallback_model))
-                return fallback_model.invoke(prompt)
+                return fallback_model.invoke(prompt, custom_response_class)
             else:
                 raise e
 
