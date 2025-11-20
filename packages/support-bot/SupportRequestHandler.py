@@ -9,6 +9,7 @@ from VectorDbRepository import VectorDbRepository
 from memory.MemoryProvider import MemoryProvider
 from HttpUtil import APPLICATION_JSON
 from logger.Log import Log
+import langsmith as ls
 
 class SupportRequestHandler:
     
@@ -18,8 +19,10 @@ class SupportRequestHandler:
 
     @traceable
     def process_user_request(self, user_request: UserRequest):
-        configurable = self.new_configurable_from_user_request(user_request=user_request)
-        support_bot = SupportBot(memory_provider=self.memory_provider, vector_db_repository=self.vector_db_repository)
+        self._add_tracing_metadata(user_request)
+
+        configurable = self._new_configurable_from_user_request(user_request=user_request)
+        support_bot = SupportBot(memory_provider=self.memory_provider, vector_db_repository=self.vector_db_repository, thread_id=user_request.thread_id)
         response = support_bot.query(user_request, configurable)
 
         user_response = UserResponse(answer=response, thread_id=user_request.thread_id)
@@ -38,7 +41,7 @@ class SupportRequestHandler:
             "body": json.dumps({"error": str(e)})
         }
 
-    def new_configurable_from_user_request(self, user_request: UserRequest) -> RunnableConfig:
+    def _new_configurable_from_user_request(self, user_request: UserRequest) -> RunnableConfig:
         return {"configurable": {
             "thread_id": user_request.thread_id
         }}
@@ -47,7 +50,7 @@ class SupportRequestHandler:
     def warm_up(self):
         try: 
             Log.info("Warming up SupportBot and its workflow graph...")
-            support_bot = SupportBot(memory_provider=self.memory_provider, vector_db_repository=self.vector_db_repository)
+            support_bot = SupportBot(memory_provider=self.memory_provider, vector_db_repository=self.vector_db_repository, thread_id="warmup-thread")
             support_bot.build_workflow_graph()
             Log.info("... warmed up SupportBot and its workflow graph")
             return {
@@ -57,3 +60,8 @@ class SupportRequestHandler:
         except Exception as e:
             Log.exception("Exception during warm up: %s", str(e))
             return self.process_error(e)
+
+    def _add_tracing_metadata(self, user_request: UserRequest):
+        run_tree = ls.get_current_run_tree()
+        if run_tree is not None:
+            run_tree.metadata["thread_id"] = user_request.thread_id

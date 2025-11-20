@@ -20,7 +20,7 @@ class Configuration(BaseModel):
     )
 
     gemini_model: str = Field(
-        default="gemini-1.5-pro",
+        default="gemini-2.5-flash",
         metadata={
             "description": "The name of the Gemini LLM to use for the agent's answer."
         },
@@ -37,7 +37,7 @@ class Configuration(BaseModel):
     )
 
     gemini_enabled: bool = Field(
-        default=False,
+        default=True,
         metadata={"description": "Whether to enable Gemini as a model option."},
     )
 

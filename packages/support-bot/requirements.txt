@@ -12,7 +12,8 @@ openai
 langsmith[openai-agents]
 
 # LLM Providers (add selectively as needed)
-# langchain-google-genai>=2.0.0
+# Use the new unified Google Gen AI SDK (not the deprecated google-generativeai)
+google-genai>=1.51.0
 
 langgraph-checkpoint-amazon-dynamodb
 

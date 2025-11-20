@@ -1,6 +1,6 @@
 import boto3
 from aws_lambda_powertools import Logger
-from typing import Dict, Optional
+from typing import Dict
 import threading
 
 # Create a logger

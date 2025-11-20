@@ -27,11 +27,16 @@ set_trace_processors([OpenAIAgentsTracingProcessor()])
 
 # Check if required environment variables are present
 required_env_vars = ['PINECONE_API_KEY', 'OPENAI_API_KEY', 'LANGSMITH_API_KEY']
+optional_env_vars = ['GOOGLE_API_KEY']
 missing_vars = [var for var in required_env_vars if not os.getenv(var)]
 if missing_vars:
     print(f"WARNING: Missing required environment variables: {', '.join(missing_vars)}")
     print("Please create a .env file with these variables or set them in your environment.")
     print("See .env.example for the required variables.")
+missing_optional_vars = [var for var in optional_env_vars if not os.getenv(var)]
+if missing_optional_vars:
+    print(f"INFO: Missing optional environment variables: {', '.join(missing_optional_vars)}")
+    print("These are optional and only needed if you enable the corresponding LLM provider.")
 
 # Create FastAPI app
 app = FastAPI(title="Running Dinner Support Bot Local API")

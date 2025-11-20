@@ -39,11 +39,12 @@ class State(TypedDict, total=False):
   
 class SupportBot:
   
-  def __init__(self, memory_provider: MemoryProvider, vector_db_repository: VectorDbRepository):
+  def __init__(self, memory_provider: MemoryProvider, vector_db_repository: VectorDbRepository, thread_id: str):
     self.llm_model_dispatcher = ChatModelDispatcher()
     self.vector_db = vector_db_repository
     self.memory_provider = memory_provider
     self.query_refiner = QueryRefiner(self.llm_model_dispatcher)
+    self.thread_id = thread_id
 
   def build_workflow_graph(self):
     builder = StateGraph(state_schema=State)
@@ -76,19 +77,20 @@ class SupportBot:
   #   return RequestParamsParser.parse(request_params)
 
   def refine_query(self, state: State):
+    Log.info(f"Calling refine_query in Thread ID {self.thread_id}")
     question = state["question"]
     query_refined: RefinedQuery = self.query_refiner.refine_query(question)
-    Log.info(f"Refined question for language code {query_refined.detected_language}: {query_refined.refined_query}")
+    Log.info(f"Refined question for language code {query_refined.detected_language} in Thread ID {self.thread_id}")
     return { "question_refined": query_refined.refined_query, "question_language": query_refined.detected_language }
 
   def fetch_event_context(self, state: State, config: RunnableConfig):
-
+    Log.info(f"Calling fetch_event_context in Thread ID {self.thread_id}")
     request_params = state.get("request_params") or {}
     event_ids = RequestParamsParser.parse(request_params)
 
     public_event_id = event_ids.get(PUBLIC_EVENT_ID_KEY) or ""
     if len(public_event_id) <= 0:
-      Log.info("No public event context available")
+      Log.info(f"No public event context available in Thread ID {self.thread_id}")
       return {}
 
     configurable = Configuration.from_runnable_config(config)
@@ -96,34 +98,33 @@ class SupportBot:
     try:
       api = RunningDinnerApi(host)
       public_event_info = api.get_public_event_info(public_event_id)
-      Log.info(f"Retrieved public event info for {public_event_id}: {public_event_info}")
+      Log.info(f"Retrieved public event info for {public_event_id} within Thread ID f{self.thread_id}: {public_event_info}")
       return { "user_context": public_event_info }
     except Exception as e:
-      Log.error(f"Error fetching public event info for public event id {public_event_id}: {e}")
+      Log.error(f"Error fetching public event info for public event id {public_event_id} within Thread ID f{self.thread_id}: {e}")
       return {}
 
   def retrieve_example_conversations(self, state: State, config: RunnableConfig):
-
+      Log.info(f"Calling retrieve_example_conversations in Thread ID {self.thread_id}")
       question = self._get_question_from_state(state)
 
       configurable = Configuration.from_runnable_config(config)
       k = configurable.max_similar_docs
 
       if state.get("docs") is not None and len(state.get("docs")) > 0:
-        Log.info(f"Already have {len(state['docs'])} documents in state, no need to do further rag retrieval.")
+        Log.info(f"Already {len(state['docs'])} documents in state, no need to do further rag retrieval in Thread ID {self.thread_id}")
         return {}
 
-      Log.info(f"--- RETRIEVE {k} SIMILAR CONTEXT DOCUMENTS ---")
       docs = self.vector_db.retrieve(query = question, top_k = k)
       return { "docs": docs }
   
   def answer_with_context(self, state: State):
-    Log.info("--- ANSWER WITH CONTEXT ---")
+    Log.info(f"Calling answer_with_context in Thread ID {self.thread_id}")
 
     user_question = self._get_question_from_state(state)
     docs = state.get("docs") or []
 
-    Log.info(f"*** Question {user_question} has {len(docs)} documents as context.***")
+    Log.info(f"Got {len(docs)} documents as context in Thread ID {self.thread_id}")
 
     features_section = ""
     if not self._is_followup_question(state):
@@ -168,15 +169,12 @@ class SupportBot:
     final_answer = self.query_refiner.translate_message_if_needed(response.content, question_language)
 
     final_messages = messages + [AIMessage(content=final_answer)]
-    # Log.debug("\n*** STATE IS ***")
-    # for msg in final_messages:
-    #   Log.debug(msg.to_json())
 
-    Log.info("\n*** MESSAGES ARE ***")
-    for m in final_messages:
-      m.pretty_print()
-    Log.info("\n*** END OF MESSAGES ***")
-
+    # Log.info("\n*** MESSAGES ARE ***")
+    # for m in final_messages:
+    #   m.pretty_print()
+    # Log.info("\n*** END OF MESSAGES ***")
+    Log.info(f"Returning final answer in Thread ID {self.thread_id}")
     return { "messages": final_messages, "answer": final_answer }
   
   def query(self, user_request: UserRequest, config: RunnableConfig) -> str:

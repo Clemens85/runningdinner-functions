@@ -140,5 +140,5 @@ Translate the following text to the language identified by the language code '{l
 Return only the translation.
 Return no further explanations and no further informations. 
 **IMPORTANT**: Before translating, check if the text is already in the target language. If so, return it as is without any changes.                                                  
-Here is the text:\n\n{text}\n\Translation:
+Here is the text:\n\n{text}\nTranslation:
 """)
