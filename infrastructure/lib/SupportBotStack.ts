@@ -4,11 +4,11 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import { PythonLambda } from "./PythonLambda";
 import { CommonUtils } from "./CommonUtils";
 import { AttributeType, BillingMode } from "aws-cdk-lib/aws-dynamodb";
-import { ENVIRONMENT } from "./Environment";
 
 const PINECONE_API_KEY_PARAM_NAME = "/runningdinner/pinecone/apikey";
 const OPENAI_API_KEY_PARAM_NAME = "/runningdinner/openai/apikey";
 const LANGSMITH_API_KEY_PARAM_NAME = "/runningdinner/langsmith/apikey";
+const GEMINI_API_KEY_PARAM_NAME = "/runningdinner/google/gemini/apikey";
 
 export class SupportBotStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -22,7 +22,7 @@ export class SupportBotStack extends cdk.Stack {
       packageFolderName: "support-bot",
       index: "LambdaHandler.py",
       handler: "lambda_handler",
-      memorySize: 128,
+      memorySize: 256,
       timeout: cdk.Duration.seconds(15),
       addFunctionUrl: true,
       cors: this.corsForHttpMethods([
@@ -35,8 +35,8 @@ export class SupportBotStack extends cdk.Stack {
         LANGSMITH_ENDPOINT: "https://eu.api.smith.langchain.com",
         LANGSMITH_PROJECT: "pr-stupendous-spray-96",
         RUNNING_DINNER_API_HOST: "https://runyourdinner.eu",
-        OPENAI_TEMPERATURE: "0.1",
         OPENAI_MODEL: "gpt-4.1-mini",
+        MODEL_PREFERENCE: "gemini",
       },
       bundling: {
         assetExcludes: [
@@ -60,6 +60,7 @@ export class SupportBotStack extends cdk.Stack {
           "local_web-adapter/",
           "run_local_server.py",
           ".pytest_cache/",
+          "extensions/",
         ],
       },
     });
@@ -82,6 +83,10 @@ export class SupportBotStack extends cdk.Stack {
     commonUtils.allowParameterStoreAccess(
       [supportBotFunc.lambdaFunction],
       LANGSMITH_API_KEY_PARAM_NAME
+    );
+    commonUtils.allowParameterStoreAccess(
+      [supportBotFunc.lambdaFunction],
+      GEMINI_API_KEY_PARAM_NAME
     );
   }
 

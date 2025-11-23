@@ -5,6 +5,8 @@ def __read_features_file(pure_filename) -> str:
         return file.read()
 
 ADMIN_SOFTWARE_FEATURES = __read_features_file("admin_all_features.md")
+SELF_SERVICE_SOFTWARE_FEATURES = __read_features_file("self_service_all_features.md")
+LANDING_SOFTWARE_FEATURES = __read_features_file("landing_all_features.md")
 
 SYSTEM_PROMPT = """
 # Your Role

@@ -1,143 +1,144 @@
-### Dinner Routen Übersicht
+**Einstellungen**  
+In den Einstellungen kannst du alle wichtigen Basis- und öffentlichen Details deines Running Dinner Events verwalten. Du findest das Feature im Admin-Bereich unter „Einstellungen“. Dort kannst du den Event-Titel, Datum, Sichtbarkeit (z.B. öffentlich oder geschlossen), Anmeldetyp und weitere Basisdaten anpassen. Außerdem kannst du hier die öffentlichen Informationen bearbeiten, die Teilnehmer sehen, wie z.B. Beschreibung, Kontaktinfos und Anmeldeschluss.  
 
-Die "Dinner Routen Übersicht" bietet eine umfassende Visualisierung der Routen für Ihre Dinner-Veranstaltung. Hier können Sie alle Teams und deren zugehörige Routen auf einer interaktiven Karte sehen. Die Anwendung ermöglicht es Ihnen, die Routen zu optimieren, um die Laufwege der Teams zu verkürzen und somit die Effizienz der Veranstaltung zu steigern.
+Das Feature bietet dir auch die Möglichkeit, eine After-Party-Location zu hinterlegen oder zu entfernen, die dann in der Eventbeschreibung und den Dinner-Routen angezeigt wird. Du kannst die Registrierung für dein Event aktivieren oder deaktivieren und bei Änderungen, die Teilnehmer betreffen (z.B. Datum ändern), wirst du durch Hinweise und Dialoge unterstützt, damit du deine Teilnehmer rechtzeitig informieren kannst.  
 
-**Wichtige Funktionen:**
-
-1. **Routenoptimierung**: Sie können die Routen der Teams optimieren, um die Laufwege zu verkürzen. Dies geschieht über einen speziellen Dialog, der durch einen Button in der App aufgerufen werden kann. Nach der Optimierung wird eine Vorschau der neuen Routen angezeigt, die Sie speichern können.
-
-2. **Entfernungen anzeigen**: Die Anwendung zeigt die durchschnittlichen und gesamten Entfernungen für jede Route an. Dies hilft Ihnen, die Effizienz der Routen zu bewerten und gegebenenfalls Anpassungen vorzunehmen.
-
-3. **Teamfilter**: Sie können Teams auswählen und deren Routen auf der Karte filtern. Dies ist besonders nützlich, wenn Sie sich auf bestimmte Teams konzentrieren möchten oder wenn es viele Teams gibt.
-
-4. **Nachbarnanalyse**: Die Anwendung bietet eine Analyse der Nachbarn, die Ihnen zeigt, welche Teams sich in der Nähe voneinander befinden. Dies kann helfen, Kollisionen zu vermeiden und die Planung zu optimieren.
-
-5. **Reset-Funktion**: Mit einem einfachen Klick können Sie alle Filter zurücksetzen und die ursprüngliche Ansicht wiederherstellen.
-
-6. **Hilfe-Button**: Ein Hilfe-Button ist verfügbar, um Ihnen bei Fragen oder Unsicherheiten zur Seite zu stehen.
-
-**Nutzung der Anwendung**:
-- Um die Routen zu optimieren, klicken Sie auf den entsprechenden Button in der App. 
-- Um Entfernungen anzuzeigen, navigieren Sie zur Distanzansicht.
-- Nutzen Sie die Teamfilter, um spezifische Routen anzuzeigen.
-- Bei Bedarf können Sie die Nachbarnanalyse aufrufen, um die Nähe der Teams zu überprüfen.
-- Verwenden Sie den Reset-Button, um alle Änderungen rückgängig zu machen.
-
-Diese Funktionen helfen Ihnen, Ihre Dinner-Veranstaltung effizient zu planen und durchzuführen, indem sie Ihnen eine klare Übersicht über alle Routen und Teams bieten.
+Praktisch: Du kannst dein Event hier auch endgültig absagen. Nach der Absage wirst du direkt zum Nachrichtenversand weitergeleitet, um alle Teilnehmer zu informieren. Änderungen speicherst du bequem über die jeweiligen Formulare mit einem Klick auf „Speichern“. So hast du alle wichtigen Einstellungen deines Events zentral an einem Ort und kannst flexibel reagieren.
 
 ---
 
 
-### Teams
+**Teilnehmer**  
+Dieses Feature findest du im Admin-Bereich unter „Teilnehmer“. Hier kannst du alle Teilnehmer deines Running Dinner Events verwalten: Teilnehmer ansehen, suchen, bearbeiten, neu anlegen oder löschen. Die Teilnehmerliste zeigt dir alle angemeldeten Personen übersichtlich an, inklusive Details wie Name, E-Mail, Adresse, Geschlecht und Sitzplatzanzahl. Du kannst einzelne Teilnehmer auswählen, um ihre Daten im Detail zu bearbeiten oder zu löschen. Außerdem gibt es eine praktische Suchfunktion, mit der du Teilnehmer nach Name, E-Mail oder Adresse filtern kannst. Das Feature unterstützt auch die Verwaltung von Wunschpartnern, also Teilnehmern, die zusammen in einem Team kochen möchten. Wenn du einen Teilnehmer speicherst, prüft das System automatisch, ob ein Wunschpartner besteht, und bietet dir passende Aktionen an, wie z.B. eine Einladung zu versenden oder einen neuen Teilnehmer anzulegen. So behältst du jederzeit den Überblick und kannst deine Teilnehmerliste einfach und effizient pflegen.  
 
-1. **Team Dinner Route**
+**Teilnehmerliste & Suche**  
+In der Teilnehmerübersicht findest du eine Suchleiste, mit der du schnell nach Teilnehmern anhand von Namen, E-Mail oder Adresse suchen kannst. Die Liste zeigt dir alle Teilnehmer und auch die Warteliste separat an, falls Teilnehmer noch keinem Team zugeordnet sind. Du kannst außerdem einstellen, ob sonstige Anmerkungen (z.B. Notizen) angezeigt werden sollen. Über einen Export-Button kannst du die Teilnehmerliste als Datei herunterladen.  
 
-   - Diese Funktion ermöglicht es Administratoren, die Dinner-Route für ein spezifisches Team anzuzeigen. Um diese Funktion zu nutzen, navigieren Sie zu dem entsprechenden Team im Dashboard. Dort wird die Dinner-Route angezeigt, die die geplanten Mahlzeiten und die zugehörigen Gastgeber enthält. Wenn die Daten erfolgreich abgerufen wurden, wird die Route in einer übersichtlichen Ansicht dargestellt. Bei Ladeproblemen wird ein Fortschrittsbalken angezeigt.
+**Teilnehmer bearbeiten & anlegen**  
+Wenn du einen Teilnehmer auswählst oder auf den „+“-Button klickst, öffnet sich ein Formular, in dem du persönliche Daten (Name, E-Mail, Alter, Geschlecht), Adresse, Essenswünsche und sonstige Notizen bearbeiten kannst. Das Formular unterstützt auch die Eingabe von Wunschpartnern, falls diese Funktion aktiviert ist. Du kannst Teilnehmer speichern oder löschen. Beim Löschen wirst du gewarnt, falls der Teilnehmer bereits einem Team zugeordnet ist, und es wird eine Absage-Option angeboten.  
 
-2. **Team Host Ändern**
+**Wunschpartner-Verwaltung**  
+Das System unterstützt Wunschpartner, also Teilnehmer, die zusammen in einem Team kochen wollen. Wenn ein Teilnehmer einen Wunschpartner angibt, prüft das System, ob dieser bereits angemeldet ist. Falls nicht, kannst du eine Einladung per E-Mail versenden oder den Wunschpartner direkt als neuen Teilnehmer anlegen. Besteht bereits ein passender Wunschpartner, kannst du die Daten synchronisieren. Diese Aktionen werden in einem Dialog angeboten, der nach dem Speichern eines Teilnehmers automatisch erscheint.  
 
-   - Mit dieser Funktion können Administratoren den Gastgeber eines Teams ändern. Um dies zu tun, klicken Sie auf das Team, dessen Gastgeber Sie ändern möchten. Ein Dialog öffnet sich, in dem Sie einen neuen Gastgeber aus der Liste der Teammitglieder auswählen können. Nach der Auswahl wird die Änderung gespeichert und eine Bestätigung angezeigt. Beachten Sie, dass diese Änderung nicht möglich ist, wenn der aktuelle Gastgeber ein fest angemeldeter Wunschpartner ist.
+**Teilnehmernummern tauschen**  
+Über das Kontextmenü eines Teilnehmers kannst du die Reihenfolge der Teilnehmernummern tauschen. Das ist besonders praktisch, um Teilnehmer von der Warteliste in die Hauptliste zu verschieben oder umgekehrt. Teilnehmer, die bereits einem Team zugeordnet sind, können nicht getauscht werden, um Inkonsistenzen zu vermeiden.  
 
-3. **Speisen Tauschen**
+**Wartelisten-Management**  
+Wenn nicht alle Teilnehmer in Teams eingeteilt werden können, zeigt das System eine Warteliste an. Über eine Warnmeldung kannst du die Wartelisten-Verwaltung öffnen, um Teilnehmer gezielt Teams zuzuordnen oder neue Teams zu generieren. So hast du die volle Kontrolle über die Teamzusammenstellung auch bei hoher Teilnehmerzahl.  
 
-   - Diese Funktion erlaubt es, die Speisen zwischen zwei Teams zu tauschen. Um dies zu tun, öffnen Sie den Dialog zum Tauschen der Speisen, wählen Sie das Quellteam und das Zielteam aus der Liste aus. Nach Bestätigung des Tausches wird die Änderung gespeichert und eine Erfolgsmeldung angezeigt. Diese Funktion ist nützlich, um die Speisenverteilung flexibel zu gestalten.
+**Wo findest du das Feature?**  
+Im Admin-Dashboard klickst du auf „Teilnehmer“. Dort findest du die Liste, Suchfunktion und den Button zum Anlegen neuer Teilnehmer. Ein Klick auf einen Teilnehmer öffnet das Bearbeitungsformular. Das Kontextmenü bietet weitere Aktionen wie das Tauschen der Teilnehmernummern.  
 
-4. **Team Zeitplan**
+**Wie nutzt du es?**  
+- Teilnehmer suchen oder aus der Liste auswählen  
+- Teilnehmerdaten im Formular bearbeiten und speichern  
+- Wunschpartner verwalten über den eingeblendeten Dialog nach dem Speichern  
+- Teilnehmer löschen mit Warnhinweis bei Teamzuweisung  
+- Teilnehmernummern tauschen über das Kontextmenü  
+- Warteliste verwalten über den Hinweis unter der Teilnehmerliste  
 
-   - Der Team-Zeitplan bietet eine Übersicht über die geplanten Mahlzeiten und deren Zeiten für jedes Team. Um den Zeitplan anzuzeigen, wählen Sie das Team aus, und der Zeitplan wird angezeigt, einschließlich der Gastgeber und der Gäste. Bei Ladeproblemen wird ein Fortschrittsbalken angezeigt. Diese Übersicht hilft, die Koordination der Mahlzeiten zu optimieren.
-
-5. **Team Details**
-
-   - In den Team-Details können Administratoren Informationen über die Teammitglieder, den aktuellen Gastgeber und den Zeitplan einsehen. Hier können auch Aktionen wie das Ändern des Gastgebers oder das Absagen von Teammitgliedern durchgeführt werden. Bei Bedarf können auch Dialoge zur Bestätigung von Absagen geöffnet werden.
-
-6. **Teams Nicht Vorhanden**
-
-   - Diese Funktion zeigt eine Übersicht, wenn keine Teams vorhanden sind. Hier können Administratoren neue Teams generieren, indem sie auf die Schaltfläche "Teameinteilung vornehmen!" klicken. Es wird auch angezeigt, ob es genügend Teilnehmer gibt, um Teams zu bilden.
-
-7. **Teams Liste**
-
-   - Die Team-Liste zeigt alle Teams in einer tabellarischen Ansicht an. Administratoren können auf ein Team klicken, um dessen Details anzuzeigen oder Aktionen wie das Tauschen von Teammitgliedern durchzuführen. Diese Funktion erleichtert die Verwaltung der Teams und deren Mitglieder.
-
-8. **Teameinteilungen Aktionen**
-   - Diese Funktion ermöglicht es Administratoren, die Teameinteilungen zurückzusetzen oder zu löschen. Bei der Auswahl einer dieser Aktionen wird eine Bestätigungsdialog angezeigt, um sicherzustellen, dass die Administratoren die Auswirkungen verstehen, bevor sie fortfahren.
-
-Diese Funktionen bieten eine umfassende Verwaltung und Organisation von Dinner-Events, indem sie Administratoren die Kontrolle über die Teamstrukturen und deren Interaktionen ermöglichen.
-
+So kannst du deine Teilnehmer einfach verwalten, Wunschpartner koordinieren und die Teamzusammenstellung optimal steuern.
 
 ---
 
 
-### Dashboard
+**Teams**
+Das Teams-Feature findest du im Admin-Bereich unter dem Menüpunkt „Teams“. Hier siehst du eine übersichtliche Liste aller Teams, die für dein Running Dinner Event gebildet wurden. Du kannst ein Team auswählen, um dessen Details einzusehen, wie Mitglieder, Gastgeber, zugewiesene Speise und den Ablaufplan. Praktisch ist auch die Drag & Drop-Funktion, mit der du Teilnehmer zwischen Teams tauschen kannst, um die Zusammensetzung flexibel anzupassen. Außerdem kannst du den Gastgeber eines Teams ändern, einzelne Teammitglieder absagen oder ganze Teams stornieren. Das Feature hilft dir, die Teamorganisation einfach zu verwalten, Änderungen vorzunehmen und den Überblick über alle Teams und deren Ablauf zu behalten.  
 
-**Öffentlicher Running Dinner Link**
-Im Dashboard können Sie den öffentlichen Link zu Ihrem Running Dinner finden. Dieser Link ermöglicht es Teilnehmern, sich für Ihr Event anzumelden. Klicken Sie einfach auf den Link, um ihn in einem neuen Tab zu öffnen. Teilen Sie diesen Link mit Ihren Freunden und Bekannten, damit sie sich ebenfalls anmelden können.
+**Team-Details anzeigen und bearbeiten**  
+Wenn du in der Team-Liste ein Team anklickst, öffnet sich die Detailansicht. Dort findest du alle Teammitglieder mit ihren Sitzplatzangaben und Geschlecht, den Gastgeber mit der Möglichkeit, ihn zu wechseln, sowie den Zeitplan für die einzelnen Mahlzeiten. Du kannst einzelne Teammitglieder absagen oder das gesamte Team stornieren. Außerdem gibt es Aktionen wie das Tauschen der Speisen zwischen Teams oder das Versenden von Nachrichten an das Team. So hast du alle wichtigen Informationen und Steuerungsmöglichkeiten an einem Ort.  
 
----
+**Gastgeber ändern**  
+Im Team-Detailbereich kannst du den Gastgeber eines Teams ändern. Klicke dazu auf den Link „(ändern)“ neben dem aktuellen Gastgeber. Es öffnet sich ein Dialog, in dem du aus den Teammitgliedern einen neuen Gastgeber auswählen kannst. Falls das Team ein fest angemeldetes Wunschpartner-Team ist, ist die Änderung nicht möglich und wird entsprechend angezeigt. Nach dem Speichern wird der neue Gastgeber übernommen und du bekommst eine Bestätigung.  
 
-**Dashboard Titel**
-Das Dashboard zeigt den Titel Ihres Running Dinner Events zusammen mit dem Datum und dem Standort an. Dies hilft Ihnen, einen schnellen Überblick über die wichtigsten Informationen Ihres Events zu erhalten.
+**Teilnehmer zwischen Teams tauschen**  
+In der Team-Liste kannst du Teilnehmer per Drag & Drop zwischen Teams verschieben. Ziehe einfach den Namen eines Teilnehmers auf einen anderen Teilnehmer in einem anderen Team, um die Plätze zu tauschen. Das ist besonders praktisch, wenn du die Teams manuell anpassen möchtest, z.B. um Wunschpartner zusammenzuführen oder Sitzplatzkapazitäten zu optimieren. Nach dem Tausch erhältst du eine Erfolgsmeldung.  
 
----
+**Speisen zwischen Teams tauschen**  
+Im Team-Detailbereich gibt es die Möglichkeit, die Speisen zweier Teams zu tauschen. Über den Button „Speise tauschen“ öffnet sich ein Dialog, in dem du ein anderes Team auswählst, mit dem du die Speisen tauschen möchtest. Nach Bestätigung werden die Speisen der beiden Teams vertauscht, was dir hilft, den Ablauf flexibler zu gestalten.  
 
-**Aktivitäten-Timeline für Administratoren**
-In der Aktivitäten-Timeline sehen Sie eine chronologische Übersicht über alle wichtigen Aktivitäten, die im Zusammenhang mit Ihrem Running Dinner stehen. Hier werden Ereignisse wie die Erstellung oder Stornierung von Dinners, das Versenden von Nachrichten und die Erstellung von Teamarrangements angezeigt. Jede Aktivität wird mit einem Datum und einem entsprechenden Symbol dargestellt, sodass Sie schnell erkennen können, was wann passiert ist.
+**Team-Absage und Ersatzteilnehmer verwalten**  
+Wenn ein Team oder einzelne Teammitglieder absagen, kannst du dies direkt im Team-Detailbereich erledigen. Für einzelne Mitglieder gibt es einen Absagedialog mit Informationen, ob das ganze Team betroffen ist. Bei einer kompletten Team-Absage kannst du Ersatzteilnehmer aus der Warteliste auswählen, um das Team wieder aufzufüllen. Vor der endgültigen Absage kannst du eine Vorschau sehen, welche Teams und Teilnehmer betroffen sind.  
 
----
+**Team-Ablaufplan einsehen**  
+In der Team-Detailansicht findest du den Ablaufplan, der zeigt, wann und wo die einzelnen Mahlzeiten stattfinden und welche Teams zusammenkommen. Du siehst den Gastgeber, die Speise und die Gäste für jede Mahlzeit. Aktuelle und abgesagte Teams werden farblich hervorgehoben. Über einen Button kannst du direkt die Dinner-Route des Teams in einem neuen Tab öffnen. So hast du den kompletten Zeitplan und die Team-Zusammenstellung jederzeit im Blick.  
 
-**Teilnehmerregistrierungen**
-In diesem Bereich können Sie die Registrierungen der Teilnehmer für Ihr Running Dinner verwalten. Sie sehen eine Liste aller registrierten Teilnehmer, einschließlich ihrer Kontaktdaten und des Status ihrer Registrierung. Wenn ein Teilnehmer noch nicht aktiviert ist, können Sie eine Bestätigungsmail senden oder die Registrierung manuell aktivieren. Bei Bedarf können Sie auch Teilnehmer aus der Liste entfernen oder deren Status ändern.
+**Teams generieren und verwalten**  
+Falls noch keine Teams existieren, zeigt das System eine Übersicht mit Teilnehmerzahlen und gibt dir die Möglichkeit, die Teams automatisch generieren zu lassen. Dabei werden alle Teilnehmer passend zu den eingestellten Teamgrößen aufgeteilt. Du bekommst Hinweise, wenn die Teilnehmerzahl nicht ausreicht oder die Registrierung noch läuft. Nach der Generierung kannst du die Teams in der Liste verwalten und bei Bedarf neu generieren oder löschen.  
 
----
+**Teams-Liste und Navigation**  
+Die Teams werden in einer Tabelle angezeigt, die neben Teamnummer und Speise auch die Teammitglieder, Gastgeber und Partnerwünsche zeigt. Auf größeren Bildschirmen werden zusätzliche Details wie Sitzplätze und Geschlecht eingeblendet. Über die Liste kannst du ein Team auswählen, um dessen Details zu sehen, oder direkt Aktionen wie Gastgeberwechsel starten. Die Navigation unterstützt dich auch mit Buttons zum Zurückkehren zur Übersicht oder zum Öffnen der Dinner-Routen-Übersicht.  
 
-**Speisenliste**
-Die Speisenliste zeigt alle Gerichte an, die während des Running Dinners serviert werden. Jedes Gericht wird mit seinem Namen und der entsprechenden Zeit angezeigt. Sie können die Zeiten der Speisen anpassen, um sicherzustellen, dass alles rechtzeitig zubereitet wird.
+**Hinweise zu Wunschpartnern**  
+Teams mit erfüllten Wunschpartner-Wünschen werden mit einem Herz-Symbol gekennzeichnet. Das erleichtert dir die Kontrolle, ob Teilnehmer, die zusammen kochen wollen, auch im gleichen Team sind. Bei fest angemeldeten Wunschpartner-Teams ist z.B. der Gastgeberwechsel eingeschränkt, um die Integrität des Teams zu wahren.  
 
----
+**Aktionen für Team-Einteilungen**  
+Über einen Aktions-Button kannst du die gesamte Teameinteilung zurücksetzen oder löschen. Dabei bekommst du Warnhinweise, wenn bereits Benachrichtigungen an Teilnehmer oder Teams versandt wurden. So kannst du die Teamzusammenstellung komplett neu vornehmen, wenn sich z.B. Teilnehmerzahlen geändert haben oder du die Teams anders zusammenstellen möchtest.  
 
-**Zeitplan bearbeiten**
-Im Editierdialog für den Zeitplan können Sie die Zeiten der Speisen ändern. Hier können Sie auch neue Speisen hinzufügen oder bestehende Speisen entfernen. Beachten Sie, dass Änderungen am Zeitplan Auswirkungen auf die Teamarrangements haben können, weshalb eine Bestätigung erforderlich sein kann, wenn Teams betroffen sind.
-
----
-
-**Checkliste**
-Die Checkliste hilft Ihnen, den Überblick über alle erforderlichen Schritte zur Vorbereitung Ihres Running Dinners zu behalten. Sie zeigt an, welche Aufgaben bereits erledigt sind, wie das Erstellen des Dinners oder das Versenden von Nachrichten an Teilnehmer. So stellen Sie sicher, dass Sie nichts Wichtiges vergessen.
-
----
-
-**Überblick**
-Der Überblick bietet eine Zusammenfassung der wichtigsten Informationen zu Ihrem Running Dinner, einschließlich des Anmeldetyps, des Enddatums der Registrierung und einer kurzen Beschreibung des Events. Dies ist eine nützliche Zusammenstellung, um schnell auf die wichtigsten Details zugreifen zu können.
-
----
-
-Diese Funktionen im Dashboard bieten Ihnen eine umfassende Übersicht und Kontrolle über Ihr Running Dinner Event, sodass Sie alles effizient verwalten können.
+**Zusammenfassung**  
+Das Teams-Feature ist dein zentrales Werkzeug zur Verwaltung aller Teams in deinem Running Dinner Event. Du kannst Teams ansehen, bearbeiten, Gastgeber wechseln, Teilnehmer tauschen, Speisen tauschen, Teams absagen und Ersatzteilnehmer verwalten. Die übersichtliche Darstellung und die vielfältigen Aktionen helfen dir, dein Event optimal zu organisieren und flexibel auf Änderungen zu reagieren.
 
 ---
 
 
-### Nachrichtenversand
+**Dinner Routen Übersicht**  
+Dieses Feature findest du auf der Seite „Dinner Routen Cockpit“ in der Admin-Oberfläche deines Running Dinner Events. Dort siehst du eine interaktive Karte mit allen Gastgeber-Standorten und den Verbindungen zwischen den Teams. Über die Steuerungsschaltflächen unten links kannst du verschiedene Ansichten und Filter aktivieren, z.B. einzelne Teams auswählen, Entfernungen anzeigen oder eine Analyse von nahe beieinander liegenden Gastgebern starten. Außerdem kannst du hier die Routen optimieren lassen, um die Laufwege der Teams zu verkürzen. Die Bedienung erfolgt über ein übersichtliches Menü mit Symbolen, das sich je nach Gerät (Desktop oder Mobil) anpasst. So behältst du jederzeit den Überblick über alle Dinner-Routen und kannst gezielt einzelne Teams oder Routenabschnitte hervorheben.  
 
-**Nachrichteninhalt**  
-Hier kannst du den Inhalt deiner Nachrichten für den Versand an Teilnehmer oder Teams erstellen. Du hast die Möglichkeit, vordefinierte Nachrichtenvorlagen zu nutzen, die Platzhalter wie `{firstname}`, `{lastname}` und `{meal}` enthalten. Diese Platzhalter werden beim Versand durch die entsprechenden Daten der Teilnehmer ersetzt. Um eine Vorlage zu verwenden, klicke einfach auf die gewünschte Vorlage, und sie wird an der aktuellen Cursorposition in das Textfeld eingefügt. 
+**Routen-Optimierung und Vorschau**  
+In der Dinner Routen Übersicht kannst du über den Button „Optimieren...“ eine automatische Neuberechnung der Dinner-Routen starten. Das Ziel ist, die Laufwege der Teams möglichst kurz zu halten. Nach dem Start der Optimierung läuft ein Hintergrundprozess, der dich mit einem Fortschrittsbalken informiert. Sobald die Berechnung abgeschlossen ist, öffnet sich eine Vorschau in einem neuen Browser-Tab, in der du die optimierten Routen mit den bisherigen vergleichen kannst. Dort kannst du die neuen Routen speichern, wenn sie dir gefallen. So kannst du deine Dinner-Routen effizient verbessern, ohne die aktuelle Planung zu verlieren.  
 
-**Nachrichtenvorschau**  
-Während du deine Nachricht schreibst, kannst du eine Vorschau der Nachricht sehen. Diese Vorschau zeigt dir, wie die Nachricht für die Empfänger aussehen wird, einschließlich aller Platzhalter, die durch die tatsächlichen Daten ersetzt werden. Dies hilft dir, sicherzustellen, dass alles korrekt ist, bevor du die Nachricht versendest.
+**Sidebar mit Filter- und Analysefunktionen**  
+Neben der Karte gibt es eine Sidebar, die du über das Menü öffnen kannst. Dort findest du drei Tabs: Teams, Entfernungen und Erweitert. Im Tab „Teams“ kannst du einzelne Teams per Checkbox auswählen oder abwählen, um deren Routen auf der Karte gezielt anzuzeigen. Außerdem kannst du hier einstellen, ob die After-Party-Location angezeigt wird. Im Tab „Entfernungen“ bekommst du eine Übersicht über die Distanzen der einzelnen Teams und Routenabschnitte, inklusive Hervorhebung der längsten Strecken. Der Tab „Erweitert“ bietet eine Analyse von Gastgebern, die sich in unmittelbarer Nähe zueinander befinden, was dir hilft, mögliche Überschneidungen oder Konflikte zu erkennen.  
 
-**Empfängerauswahl**  
-Du kannst auswählen, an wen die Nachricht gesendet werden soll. Es gibt verschiedene Optionen, wie z.B. alle Teilnehmer oder spezifische Teams. Die Auswahl wird durch ein Dropdown-Menü ermöglicht, sodass du die gewünschten Empfänger schnell und einfach auswählen kannst.
+**Interaktive Kartensteuerung**  
+Die Karte zeigt alle Gastgeber-Standorte als Marker an, farblich nach Team oder Cluster gruppiert. Du kannst auf Marker klicken, um Details zu sehen oder die Karte automatisch auf einen bestimmten Gastgeber zoomen zu lassen. Die Verbindungen zwischen Teams werden als Linien dargestellt, die du ein- oder ausblenden kannst. Über die Steuerungsschaltflächen unten links kannst du außerdem die Ansicht zurücksetzen, Hilfefenster öffnen oder die Sidebar mit den Filtern ein- und ausblenden. So steuerst du die Darstellung der Dinner-Routen ganz nach deinen Bedürfnissen.  
 
-**Betreff**  
-Vergiss nicht, einen Betreff für deine Nachricht anzugeben. Der Betreff ist wichtig, um den Empfängern einen ersten Eindruck von der Nachricht zu geben. Er wird ebenfalls in der Vorschau angezeigt, sodass du sicherstellen kannst, dass er ansprechend und informativ ist.
+**Benachrichtigungen bei nicht aufgelösten Adressen**  
+Wenn es Gastgeber gibt, deren Adresse nicht korrekt geokodiert werden konnte, zeigt das System eine kleine Benachrichtigung mit der Anzahl der betroffenen Teams an. Über einen Klick auf das Glocken-Symbol öffnet sich ein Dialog mit Details, damit du die Adressen überprüfen und korrigieren kannst. So stellst du sicher, dass alle Routen korrekt auf der Karte dargestellt werden.  
+
+**Hilfe und Support**  
+Über das Hilfe-Symbol in der Steuerung kannst du jederzeit ein Hilfefenster öffnen, das dir die wichtigsten Funktionen und Symbole erklärt. Außerdem findest du dort Tipps zur Interpretation der Routenübersicht und Hinweise zur Nutzung der Filter und Optimierungen. So bist du nie auf dich allein gestellt und kannst das Feature optimal nutzen.
+
+---
+
+
+**Dashboard**  
+Das Dashboard ist die zentrale Übersichtsseite für dein Running Dinner Event, die du im Admin-Bereich findest. Hier bekommst du auf einen Blick alle wichtigen Informationen und Statusmeldungen zu deinem Event: den Titel und das Datum, eine Übersicht der Mahlzeiten mit Zeiten, eine praktische Checkliste mit den wichtigsten To-Dos sowie eine Timeline deiner letzten Aktivitäten. Außerdem kannst du hier die neuesten Teilnehmerregistrierungen einsehen und bei Bedarf manuell bestätigen. Das Dashboard hilft dir, dein Event effizient zu verwalten, indem es alle relevanten Daten und Aktionen übersichtlich an einem Ort bündelt. Du kannst Mahlzeitenzeiten direkt bearbeiten, den öffentlichen Anmeldelink teilen und den Status deines Events jederzeit prüfen.
+
+---
+
 
 **Nachrichtenversand**  
-Sobald du mit dem Erstellen deiner Nachricht zufrieden bist, kannst du sie über die Schaltfläche „Nachrichten schicken“ versenden. Achte darauf, dass alle erforderlichen Felder ausgefüllt sind, bevor du auf „Senden“ klickst. Nach dem Versand erhältst du eine Bestätigung, dass die Nachricht erfolgreich verschickt wurde.
+Mit diesem Feature kannst du individuelle E-Mail-Nachrichten an Teilnehmer, Teams oder Dinner-Routen deines Running Dinner Events versenden. Du findest es im Admin-Bereich unter „Nachrichtenversand“, wo du zunächst den Nachrichtentyp (Teilnehmer, Teams oder Dinner-Routen) auswählst. Dort kannst du Empfänger gezielt auswählen, den Betreff und den Nachrichtentext eingeben und dabei praktische Platzhalter (Templates) nutzen, die automatisch mit den jeweiligen Empfängerdaten gefüllt werden. Eine Vorschau zeigt dir, wie die Nachricht für einzelne Empfänger aussieht, bevor du sie abschickst. So sparst du Zeit und kannst deine Teilnehmer persönlich und passgenau informieren.  
 
-**Vorschau der gesendeten Nachrichten**  
-Nach dem Versand kannst du die Historie der gesendeten Nachrichten einsehen. Dies hilft dir, den Überblick über alle Kommunikationen zu behalten und sicherzustellen, dass alle Teilnehmer die notwendigen Informationen erhalten haben.
+**Empfängerauswahl**  
+Im Nachrichtenversand kannst du genau bestimmen, wer deine Nachricht erhalten soll: Alle Teilnehmer, nur bestimmte Teams oder individuelle Einzelauswahlen. Über ein Dropdown-Menü wählst du die Empfängergruppe aus, und bei Bedarf kannst du eine individuelle Auswahl treffen, die du in einem Dialogfenster bequem bearbeitest. So stellst du sicher, dass deine Nachricht nur die richtigen Personen erreicht.  
 
-**Wichtige Hinweise**  
-- Achte darauf, dass du die richtigen Empfänger auswählst, um Verwirrung zu vermeiden.
-- Überprüfe deine Nachricht auf Rechtschreibfehler und stelle sicher, dass alle Platzhalter korrekt sind, bevor du sie versendest.
-- Bei Problemen mit dem Versand kannst du dich an den Support wenden, um Hilfe zu erhalten.
+**Nachrichtentext mit Vorlagen**  
+Beim Verfassen deiner Nachricht kannst du aus vordefinierten Platzhaltern wählen, z.B. {firstname} für den Vornamen oder {meal} für die Speise. Diese Templates fügst du per Klick in den Text ein, und das System ersetzt sie beim Versand automatisch mit den passenden Daten. Ein Hilfesymbol erklärt dir die Bedeutung der Platzhalter, damit du deine Nachricht optimal personalisieren kannst.  
+
+**Nachrichtenvorschau**  
+Bevor du deine Nachricht verschickst, kannst du dir eine Vorschau anzeigen lassen. Dort siehst du, wie die E-Mail für verschiedene ausgewählte Empfänger aussehen wird – inklusive Betreff und personalisiertem Inhalt. So kannst du Fehler vermeiden und sicherstellen, dass alles korrekt formatiert ist.  
+
+**Testversand an dich selbst**  
+Du kannst dir deine Nachricht vor dem Massenversand auch als Testmail an deine eigene E-Mail-Adresse schicken lassen. So bekommst du ein Gefühl dafür, wie die Nachricht beim Empfänger ankommt und kannst letzte Anpassungen vornehmen.  
+
+**Versand und Protokoll**  
+Nach dem Absenden werden die Nachrichten im System verarbeitet und verschickt. Du kannst den Versandstatus und frühere Versandprotokolle jederzeit im Nachrichtenprotokoll einsehen. Dort siehst du, ob der Versand erfolgreich war oder ob es Probleme gab, z.B. bei ungültigen E-Mail-Adressen.  
+
+**Wo findest du das Feature?**  
+Das Nachrichtenversand-Feature erreichst du im Admin-Dashboard unter dem Menüpunkt „Nachrichten“ oder „Nachrichtenversand“. Dort wählst du den gewünschten Nachrichtentyp aus (Teilnehmer, Teams oder Dinner-Routen) und gelangst zur Eingabemaske mit Empfängerauswahl, Betreff, Nachrichtentext, Vorlagen und Vorschau.  
+
+**Wie nutzt du es?**  
+1. Wähle den Nachrichtentyp aus (Teilnehmer, Teams, Dinner-Routen).  
+2. Bestimme die Empfängergruppe oder wähle einzelne Empfänger aus.  
+3. Gib den Betreff ein.  
+4. Verfasse deine Nachricht und füge bei Bedarf Platzhalter aus den Vorlagen ein.  
+5. Prüfe die Vorschau für einzelne Empfänger.  
+6. Optional: Sende dir eine Testmail.  
+7. Klicke auf „Nachrichten schicken“, um den Versand zu starten.  
+
+So kannst du deine Teilnehmer und Teams einfach, schnell und persönlich per E-Mail informieren und koordinieren.
 
 ---
 

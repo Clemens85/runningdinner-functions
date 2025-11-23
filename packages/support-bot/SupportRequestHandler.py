@@ -5,6 +5,8 @@ from SupportBot import SupportBot
 from UserRequest import UserRequest
 from UserResponse import UserResponse
 from langchain_core.runnables import RunnableConfig
+
+from Util import is_running_on_lambda
 from VectorDbRepository import VectorDbRepository
 from memory.MemoryProvider import MemoryProvider
 from HttpUtil import APPLICATION_JSON
@@ -63,5 +65,8 @@ class SupportRequestHandler:
 
     def _add_tracing_metadata(self, user_request: UserRequest):
         run_tree = ls.get_current_run_tree()
+        stage = "prod" if is_running_on_lambda() else "local"
         if run_tree is not None:
             run_tree.metadata["thread_id"] = user_request.thread_id
+            run_tree.metadata["stage"] = stage
+            run_tree.tags.extend([stage])

@@ -23,7 +23,7 @@ metrics = Metrics(namespace="runningdinner-functions", service="support-bot")
 # Constants for SSM Parameter Store paths
 SSM_PARAMETER_PINECONE_API_KEY = "/runningdinner/pinecone/apikey"
 SSM_PARAMETER_OPENAI_API_KEY = "/runningdinner/openai/apikey"
-SSM_PARAMETER_GOOGLE_API_KEY = "/runningdinner/google/apikey"
+SSM_PARAMETER_GEMINI_API_KEY = "/runningdinner/google/gemini/apikey"
 SSM_PARAMETER_LANGSMITH_API_KEY = "/runningdinner/langsmith/apikey"
 
 # Get API keys from SSM Parameter Store using batch call for better cold start performance
@@ -33,12 +33,12 @@ try:
     api_keys = api_keys_factory.get_api_keys_batch([
         SSM_PARAMETER_PINECONE_API_KEY,
         SSM_PARAMETER_OPENAI_API_KEY,
-        SSM_PARAMETER_GOOGLE_API_KEY,
+        SSM_PARAMETER_GEMINI_API_KEY,
         SSM_PARAMETER_LANGSMITH_API_KEY
     ])
     os.environ["PINECONE_API_KEY"] = api_keys[SSM_PARAMETER_PINECONE_API_KEY]
     os.environ["OPENAI_API_KEY"] = api_keys[SSM_PARAMETER_OPENAI_API_KEY]
-    os.environ["GOOGLE_API_KEY"] = api_keys[SSM_PARAMETER_GOOGLE_API_KEY]
+    os.environ["GOOGLE_API_KEY"] = api_keys[SSM_PARAMETER_GEMINI_API_KEY]
     os.environ["LANGSMITH_API_KEY"] = api_keys[SSM_PARAMETER_LANGSMITH_API_KEY]
 except Exception as e:
     raise EnvironmentError(f"Failed to retrieve API keys from SSM Parameter Store: {str(e)}")

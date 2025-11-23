@@ -10,7 +10,7 @@ from langgraph.graph import START, END, StateGraph
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from PromptsV2 import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE, EXAMPLE_CONVERSATION_DOC_TEMPLATE, ADMIN_SOFTWARE_FEATURES, \
-    FEATURES_SECTION_TEMPLATE, EXAMPLES_SECTION_TEMPLATE
+    FEATURES_SECTION_TEMPLATE, EXAMPLES_SECTION_TEMPLATE, SELF_SERVICE_SOFTWARE_FEATURES, LANDING_SOFTWARE_FEATURES
 from QueryRefiner import QueryRefiner, RefinedQuery
 from SupportDocument import SupportDocument
 from UserRequest import UserRequest
@@ -128,10 +128,11 @@ class SupportBot:
 
     features_section = ""
     if not self._is_followup_question(state):
+        all_features = ADMIN_SOFTWARE_FEATURES + "\n\n" + SELF_SERVICE_SOFTWARE_FEATURES + "\n\n" + LANDING_SOFTWARE_FEATURES
         # Features always have the latest state
         features_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         features_section = FEATURES_SECTION_TEMPLATE.invoke({
-            "features": ADMIN_SOFTWARE_FEATURES,
+            "features": all_features,
             "features_date": features_date,
         }).to_string()
 
@@ -170,10 +171,6 @@ class SupportBot:
 
     final_messages = messages + [AIMessage(content=final_answer)]
 
-    # Log.info("\n*** MESSAGES ARE ***")
-    # for m in final_messages:
-    #   m.pretty_print()
-    # Log.info("\n*** END OF MESSAGES ***")
     Log.info(f"Returning final answer in Thread ID {self.thread_id}")
     return { "messages": final_messages, "answer": final_answer }
   
