@@ -29,6 +29,8 @@ class SupportRequestHandler:
 
         user_response = UserResponse(answer=response, thread_id=user_request.thread_id)
 
+        # Remove thread_id context after request is done
+        Log.remove_keys(["thread_id"])
         return {
             "statusCode": 200,
             "headers": {"Content-Type": APPLICATION_JSON},
@@ -37,6 +39,8 @@ class SupportRequestHandler:
 
     def process_error(self, e: Exception):
         Log.exception(f"An error occurred while processing a request {str(e)}")
+        # Remove thread_id context after request is done
+        Log.remove_keys(["thread_id"])
         return {
             "statusCode": 500,
             "headers": {"Content-Type": APPLICATION_JSON},
@@ -70,3 +74,6 @@ class SupportRequestHandler:
             run_tree.metadata["thread_id"] = user_request.thread_id
             run_tree.metadata["stage"] = stage
             run_tree.tags.extend([stage])
+
+        # Add thread_id to all subsequent logs
+        Log.append_keys(thread_id=user_request.thread_id)
