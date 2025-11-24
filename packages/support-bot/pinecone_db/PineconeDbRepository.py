@@ -11,10 +11,6 @@ import openai
 INDEX_NAME = "support-documents-v1"
 EMBEDDING_MODEL = 'text-embedding-3-small'
 
-# TODO This is for local usage
-# load_dotenv(override=True)
-# os.environ['PINECONE_API_KEY'] = os.getenv('PINECONE_API_KEY', '')
-
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_CLOUD = os.getenv('PINECONE_CLOUD', 'aws')
 PINECONE_REGION = os.getenv('PINECONE_REGION', 'us-east-1') 

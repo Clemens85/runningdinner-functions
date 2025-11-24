@@ -18,17 +18,6 @@ class ChatOpenAI(ChatModel):
 
         messages = to_openai_messages(prompt)
 
-        # response_format = NOT_GIVEN
-        # if custom_response_class is not None:
-        #     response_format = {
-        #         "type": "json_schema",
-        #         "json_schema": {
-        #             "name": custom_response_class.__name__.lower(),
-        #             "strict": True,
-        #             "schema": custom_response_class.model_json_schema()
-        #         }
-        #     }
-
         if custom_response_class is not None:
             response = self.openai_client.responses.parse(
                 model=self.model,
