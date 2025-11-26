@@ -1,0 +1,5 @@
+Hallo,
+
+gibt es irgendeine Möglichkeit anzupassen, wie viele Personen in jedem Team sind?
+
+Kann man die Teamgröße von der Standardeinstellung ändern?

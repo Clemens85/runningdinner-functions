@@ -1,0 +1,3 @@
+Ist es möglich, die Teilnehmerliste als Tabellendatei herunterzuladen?
+
+Wir haben viele wichtige Informationen im Feld "Weitere Anmerkungen" gesammelt, die wir gerne auf einen Blick sehen würden, anstatt jeden Teilnehmer einzeln durchklicken zu müssen.

@@ -1,0 +1,5 @@
+Bietet ihr eine Funktion an, um mehrere Teilnehmer auf einmal hochzuladen?
+
+Ich habe ungefähr 150 Personen in einer Tabelle, die ich zu meinem Running Dinner Event hinzufügen muss.
+
+Gibt es eine Möglichkeit, diese automatisch zu importieren, oder muss ich jede Person einzeln manuell eingeben?

@@ -9,6 +9,8 @@ from SupportRequestHandler import SupportRequestHandler
 from UserRequest import UserRequest
 from tests.ModelConfiguration import ModelConfiguration
 
+ANSWER_SUB_FOLDER = "reference-answers"
+
 # Load .env from the tests directory
 load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
@@ -63,6 +65,9 @@ class TestReferenceQuestions:
 
 
   def _execute_test_with_model_configurations(self, question_filename_pure: str):
+
+    answer_files_by_model = {}
+
     for model_config in model_configurations:
       self._setup_environment_for_model_configuration(model_config)
       
@@ -73,7 +78,16 @@ class TestReferenceQuestions:
       body = response["body"]
       answer = json.loads(body)['answer']
 
-      self._write_answer_file(question_filename_pure, answer, model_config.model_name)
+      answer_file = self._write_answer_file(question_filename_pure, answer, model_config.model_name)
+      answer_files_by_model[model_config.model_name] = answer_file
+
+    parent_folder = Path(answer_file).parent
+    combined_answer_file = parent_folder / f"{question_filename_pure}-all-models.md"
+    with combined_answer_file.open("w", encoding="utf-8") as combined_file:
+      for model_name, answer_file in sorted(answer_files_by_model.items()):
+        answer_content = answer_file.read_text(encoding="utf-8")
+        combined_file.write(f"# {model_name}\n")
+        combined_file.write(answer_content + "\n\n---\n\n")
 
 
   def _setup_environment_for_model_configuration(self, model_config: ModelConfiguration):
@@ -97,9 +111,10 @@ class TestReferenceQuestions:
     return question_file.read_text(encoding="utf-8")
 
 
-  def _write_answer_file(self, answer_filename: str, answer_text: str, llm_model: str):
+  def _write_answer_file(self, answer_filename: str, answer_text: str, llm_model: str) -> Path:
     test_dir = Path(__file__).parent
     reference_questions_dir = test_dir / "reference_questions"
-    answers_dir = reference_questions_dir / "reference-answers"
-    answer_file = answers_dir / f"{answer_filename}-{llm_model}.txt"
+    answers_dir = reference_questions_dir / ANSWER_SUB_FOLDER
+    answer_file = answers_dir / f"{answer_filename}-{llm_model}.md"
     answer_file.write_text(answer_text, encoding="utf-8")
+    return answer_file

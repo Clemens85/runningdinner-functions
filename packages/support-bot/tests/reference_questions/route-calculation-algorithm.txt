@@ -1,0 +1,3 @@
+Berechnet euer System eigentlich die bestmöglichen Routen basierend auf den Adressen, die die Teilnehmer angeben?
+
+Ich frage deshalb, weil wir dann möglicherweise jedes Jahr sehr ähnliche Team-Konstellationen bekommen würden, da alle an den gleichen Orten wohnen.

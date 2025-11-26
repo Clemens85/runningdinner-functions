@@ -1,0 +1,5 @@
+Ich habe ein Test-Running-Dinner-Event erstellt, um mir alles vorab anzuschauen, und möchte jetzt einige Änderungen vornehmen.
+
+Das Problem ist, dass ich die Option zur Geschlechterverteilung bei der Team-Zuteilung nicht mehr ändern kann.
+
+Gibt es eine Möglichkeit, diese Einstellung nachträglich zu bearbeiten, oder muss ich alles löschen und mit einem neuen Event von vorne anfangen?

@@ -1,0 +1,9 @@
+Guten Tag,
+
+zunächst einmal möchte ich sagen, dass ich eure Plattform wirklich toll finde!
+
+Allerdings habe ich gerade ein technisches Problem - alle meine Teilnehmer bekommen eine Fehlermeldung, wenn sie versuchen sich anzumelden. Es erscheinen doppelte rote Fehlerboxen, sowohl auf Mobilgeräten als auch auf dem Computer.
+
+Dadurch kann niemand die Registrierung abschließen.
+
+Gibt es eine Möglichkeit, wie ihr mir bei der Lösung dieses Problems helfen könnt?
