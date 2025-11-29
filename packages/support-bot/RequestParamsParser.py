@@ -2,7 +2,7 @@ import re
 from UserRequest import PAGE_NAME_KEY, PUBLIC_EVENT_REGISTRATIONS_KEY
 from logger.Log import Log
 
-PUBLIC_EVENT_ID_KEY = "public_event_id"
+PUBLIC_EVENT_ID_KEY = "public_event_registrations"
 ADMIN_ID_KEY = "admin_id"
 
 class RequestParamsParser:
