@@ -23,7 +23,7 @@ export class SupportBotStack extends cdk.Stack {
       index: "LambdaHandler.py",
       handler: "lambda_handler",
       memorySize: 256,
-      timeout: cdk.Duration.seconds(15),
+      timeout: cdk.Duration.seconds(20),
       addFunctionUrl: true,
       cors: this.corsForHttpMethods([
         lambda.HttpMethod.HEAD,

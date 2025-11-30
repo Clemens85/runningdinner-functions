@@ -55,27 +55,17 @@ class SupportBot:
     builder.add_node("answer_with_context", self.answer_with_context)
     
     builder.add_edge(START, "refine_query")
-    builder.add_edge("refine_query", "fetch_event_context")
+    builder.add_edge(START, "fetch_event_context")
 
-    # builder.add_conditional_edges(
-    #   "parse_request_params", 
-    #   self.get_action,
-    #   {
-    #     "no_additional_context": "retrieve_example_conversations",
-    #     "fetch_public_event_info": "fetch_public_event_info"
-    #   }
-    # )
+    builder.add_edge("refine_query", "retrieve_example_conversations")
 
-    builder.add_edge("fetch_event_context", "retrieve_example_conversations")
-    builder.add_edge("retrieve_example_conversations", "answer_with_context")
+    # builder.add_edge("refine_query", "fetch_event_context")
+
+    builder.add_edge(["retrieve_example_conversations", "fetch_event_context"], "answer_with_context")
     builder.add_edge("answer_with_context", END)
     
     return builder.compile(checkpointer=self.memory_provider.get())
   
-  # def parse_request_params(self, state: State):
-  #   request_params = state.get("request_params") or {}
-  #   return RequestParamsParser.parse(request_params)
-
   def refine_query(self, state: State):
     Log.info(f"Calling refine_query in Thread ID {self.thread_id}")
     question = state["question"]
