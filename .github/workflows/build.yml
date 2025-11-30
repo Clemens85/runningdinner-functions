@@ -9,7 +9,10 @@ jobs:
     name: 'Typecheck, lint & test'
 
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write
+      contents: read
+      
     steps:
       - uses: actions/checkout@v4
         name: Check-out repository
@@ -34,8 +37,18 @@ jobs:
       - name: Build
         run: pnpm build
 
-#      - name: Test
-#        run: pnpm test:ci
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-central-1
+          role-to-assume: arn:aws:iam::${{ env.BUILD_AWS_ACCOUNT_ID }}:role/github
+        env:
+          BUILD_AWS_ACCOUNT_ID: ${{ vars.BUILD_AWS_ACCOUNT_ID }}
+
+      - name: Test
+        run: |
+          cd packages/geocoding
+          pnpm test
 
 #      - name: Upload Test Report
 #        uses: actions/upload-artifact@v4  # upload test results

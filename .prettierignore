@@ -18,3 +18,5 @@ packages/support-bot
 packages/optimization
 
 __pycache__
+
+.github
