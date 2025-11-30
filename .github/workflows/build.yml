@@ -28,14 +28,14 @@ jobs:
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
 
-      - name: Lint
-        run: cd packages/geocoding && pnpm lint
+      - name: Lint All Node Packages
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build
 
 #      - name: Test
 #        run: pnpm test:ci
-
-      - name: Build
-        run: cd packages/geocoding && pnpm build
 
 #      - name: Upload Test Report
 #        uses: actions/upload-artifact@v4  # upload test results
