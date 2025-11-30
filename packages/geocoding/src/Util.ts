@@ -1,5 +1,6 @@
-import { logger } from './aws/Logger';
 import { v4 as uuidv4 } from 'uuid';
+
+import { logger } from './aws/Logger';
 
 export class Util {
   public static logAndThrowError(message: string): never {

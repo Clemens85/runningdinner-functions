@@ -1,9 +1,10 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { AwsTestUtil } from '../test/AwsTestUtil';
-import { GeocodingResultCacheRepository } from './GeocodingResultCacheRepository';
-import { Util } from '../Util';
 import { addMinutes } from 'date-fns';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { toUnixTimestamp } from '../DateUtil';
+import { AwsTestUtil } from '../test/AwsTestUtil';
+import { Util } from '../Util';
+import { GeocodingResultCacheRepository } from './GeocodingResultCacheRepository';
 
 describe('GeocodingResultCacheRepository', () => {
   beforeEach(() => {

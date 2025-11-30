@@ -1,6 +1,7 @@
 import { GetParameterCommand, GetParameterCommandOutput } from '@aws-sdk/client-ssm';
-import { ssmClient } from './aws/SSMClientFactory';
+
 import { logger } from './aws/Logger';
+import { ssmClient } from './aws/SSMClientFactory';
 
 const SSM_PARAMETER = '/runningdinner/googlemaps/apikey';
 

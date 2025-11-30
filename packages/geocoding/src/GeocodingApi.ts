@@ -1,10 +1,11 @@
 import axios from 'axios';
+
 import { Address } from './Address';
+import { logger } from './aws/Logger';
 import { EXACTNESS_TYPE, GeocodingResult } from './GeocodingResult';
 import { GoogleMapsApiKeyFactory } from './GoogleMapsApiKeyFactory';
-import { logger } from './aws/Logger';
-import { Validator } from './Validator';
 import { Util } from './Util';
+import { Validator } from './Validator';
 
 const googleMapsApiKeyFactory = GoogleMapsApiKeyFactory.getInstance();
 
@@ -85,9 +86,11 @@ export class GeocodingApi {
     let exactness: EXACTNESS_TYPE = 'NONE';
     if (result.geometry?.location_type === 'ROOFTOP') {
       exactness = 'EXACT';
-    } else if (result.geometry?.location_type === 'APPROXIMATE' ||
-               result.geometry?.location_type === 'GEOMETRIC_CENTER' ||
-               result.geometry?.location_type === 'RANGE_INTERPOLATED') {
+    } else if (
+      result.geometry?.location_type === 'APPROXIMATE' ||
+      result.geometry?.location_type === 'GEOMETRIC_CENTER' ||
+      result.geometry?.location_type === 'RANGE_INTERPOLATED'
+    ) {
       exactness = 'NOT_EXACT';
     }
 

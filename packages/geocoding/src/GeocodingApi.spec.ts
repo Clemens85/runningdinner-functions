@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { GeocodingApi } from './GeocodingApi';
+
 import { Address } from './Address';
+import { GeocodingApi } from './GeocodingApi';
 import { AwsTestUtil } from './test/AwsTestUtil';
 
 describe('GeocodingResultCacheRepository', () => {

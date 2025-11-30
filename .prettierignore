@@ -1,0 +1,20 @@
+# Dependencies
+node_modules
+pnpm-lock.yaml
+
+# Build outputs
+dist
+build
+*.zip
+cdk.out
+
+# Generated files
+*.d.ts
+
+# Test coverage
+coverage
+
+packages/support-bot
+packages/optimization
+
+__pycache__

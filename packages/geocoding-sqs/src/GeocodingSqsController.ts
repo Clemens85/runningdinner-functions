@@ -1,18 +1,19 @@
-import { SQSRecord } from 'aws-lambda';
 import {
   Address,
-  GeocodingResponse,
-  Validator,
-  GeocodingApiServiceCached,
-  GeocodingRequest,
+  ADMIN_ID_FIELD,
   ENTITY_ID_FIELD,
   ENTITY_TYPE_FIELD,
+  GeocodingApiServiceCached,
   GeocodingEntityType,
-  ADMIN_ID_FIELD,
+  GeocodingRequest,
+  GeocodingResponse,
   RESPONSE_QUEUE_URL_FIELD,
+  Validator,
 } from '@runningdinner/geocoding';
-import { SQSResponseHandler } from './SQSResponseHandler';
+import { SQSRecord } from 'aws-lambda';
+
 import { logger } from './aws/Logger';
+import { SQSResponseHandler } from './SQSResponseHandler';
 
 export class GeocodingSqsController {
   public static async processSqsRecords(sqsRecords: SQSRecord[]): Promise<any> {

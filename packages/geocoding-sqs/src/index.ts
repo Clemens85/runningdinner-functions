@@ -1,4 +1,5 @@
 import { SQSEvent, SQSHandler } from 'aws-lambda';
+
 import { GeocodingSqsController } from './GeocodingSqsController';
 
 export const handler: SQSHandler = async (event: SQSEvent) => {

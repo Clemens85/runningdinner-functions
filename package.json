@@ -1,10 +1,13 @@
 {
   "name": "runningdinner-functions-ng",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "typecheck": "pnpm recursive run typecheck"
+    "typecheck": "pnpm recursive run typecheck",
+    "lint": "pnpm recursive run lint",
+    "build": "pnpm recursive run build"
   },
   "keywords": [],
   "author": "",
@@ -25,15 +28,15 @@
     "vite": "^6.3.5",
     "@types/uuid": "9.0.8",
     "@types/http-errors": "^2.0.4",
-    "eslint": "^9.27.0",
-    "@types/lodash-es": "^4.17.12",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-import-resolver-typescript": "^4.3.4",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.4.0",
+    "eslint": "^9.39.0",
+    "@eslint/js": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-unused-imports": "^4.3.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-sort-keys-fix": "1.1.2",
-    "eslint-plugin-tsdoc": "^0.4.0",
-    "eslint-plugin-unused-imports": "^4.1.4"
+    "globals": "^15.9.0",
+    "prettier": "^3.6.2",
+    "typescript-eslint": "^8.46.2",
+    "@types/lodash-es": "^4.17.12"
   }
 }

@@ -1,7 +1,8 @@
 import { SendMessageCommand } from '@aws-sdk/client-sqs';
-import { sqsClient } from './aws/SQSClientFactory';
 import { ADMIN_ID_FIELD, ENTITY_ID_FIELD, ENTITY_TYPE_FIELD, GeocodingResponse } from '@runningdinner/geocoding';
+
 import { logger } from './aws/Logger';
+import { sqsClient } from './aws/SQSClientFactory';
 
 export class SQSResponseHandler {
   public static async sendResponse(response: GeocodingResponse) {

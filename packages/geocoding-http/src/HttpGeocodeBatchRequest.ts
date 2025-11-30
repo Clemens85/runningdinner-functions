@@ -2,8 +2,8 @@ import { Address, ENTITY_ID_FIELD, ENTITY_TYPE_FIELD, GeocodingEntityType } from
 
 export type HttpGeocodeBatchRequest = {
   adminId: string;
-  requests: HttpGeocodeRequestLine[]
-}
+  requests: HttpGeocodeRequestLine[];
+};
 
 export type HttpGeocodeRequestLine = {
   [ENTITY_ID_FIELD]: string;
