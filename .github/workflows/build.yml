@@ -48,7 +48,7 @@ jobs:
       - name: Test
         run: |
           cd packages/geocoding
-          pnpm test
+          pnpm test:ci
 
 #      - name: Upload Test Report
 #        uses: actions/upload-artifact@v4  # upload test results
