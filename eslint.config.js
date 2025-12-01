@@ -12,7 +12,7 @@ import tseslint from 'typescript-eslint';
 export const baseNodeConfig = [
   { files: ['**/*.{js,mjs,cjs,ts}'] },
   {
-    ignores: ['**/*.config.{js,mjs,cjs}', '**/eslint.config.{js,mjs,cjs}'],
+    ignores: ['**/*.config.{js,mjs,cjs,}', '**/eslint.config.{js,mjs,cjs}', '**/vitest.config.{js,ts}'],
   },
   {
     languageOptions: {
