@@ -34,7 +34,7 @@ export class GithubOidcStack extends cdk.Stack {
     const region = this.region;
     const accountId = this.account;
 
-    const roleName = 'runningdiner-functions-github-oidc-role';
+    const roleName = 'runningdinner-functions-github-oidc-role';
     const githubActionsRole = new iam.Role(this, roleName, {
       roleName: roleName,
       description: 'This role is used via GitHub Actions to build and deploy runningdinner-functions',

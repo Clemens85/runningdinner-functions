@@ -41,7 +41,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::${{ env.BUILD_AWS_ACCOUNT_ID }}:role/github
+          role-to-assume: arn:aws:iam::${{ env.BUILD_AWS_ACCOUNT_ID }}:role/runningdinner-functions-github-oidc-role
         env:
           BUILD_AWS_ACCOUNT_ID: ${{ vars.BUILD_AWS_ACCOUNT_ID }}
 
