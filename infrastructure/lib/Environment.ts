@@ -1,6 +1,6 @@
-import { RemovalPolicy } from "aws-cdk-lib";
-import { BillingMode } from "aws-cdk-lib/aws-dynamodb";
-import * as cdk from "aws-cdk-lib";
+import { RemovalPolicy } from 'aws-cdk-lib';
+import * as cdk from 'aws-cdk-lib';
+import { BillingMode } from 'aws-cdk-lib/aws-dynamodb';
 
 export type EnvironmentType = {
   stage: string;
@@ -18,10 +18,10 @@ export type EnvironmentType = {
 };
 
 function getEnvironment(): EnvironmentType {
-  const stage = process.env.RUNNINGDINNER_FUNCTIONS_STAGE || "";
-  if (stage === "dev") {
+  const stage = process.env.RUNNINGDINNER_FUNCTIONS_STAGE || '';
+  if (stage === 'dev') {
     return {
-      stage: "dev",
+      stage: 'dev',
       s3: {
         autoDeleteObjects: true,
         removalPolicy: RemovalPolicy.DESTROY,
@@ -34,9 +34,9 @@ function getEnvironment(): EnvironmentType {
         writeCapacity: 8,
       },
     };
-  } else if (stage === "prod") {
+  } else if (stage === 'prod') {
     return {
-      stage: "prod",
+      stage: 'prod',
       s3: {
         autoDeleteObjects: false,
         removalPolicy: RemovalPolicy.RETAIN,
@@ -49,9 +49,7 @@ function getEnvironment(): EnvironmentType {
       },
     };
   }
-  throw new Error(
-    `Passed invalid stage, only dev or prod is allowed, but was: ${stage}`
-  );
+  throw new Error(`Passed invalid stage, only dev or prod is allowed, but was: ${stage}`);
 }
 
 export const ENVIRONMENT = getEnvironment();

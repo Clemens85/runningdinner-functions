@@ -1,27 +1,33 @@
 #!/usr/bin/env node
-import * as cdk from "aws-cdk-lib";
-import { GeocodingStack } from "../lib/GeocodingStack";
-import { ENVIRONMENT } from "../lib/Environment";
-import { LocalDevUserStack } from "../lib/LocalDevUserStack";
-import { RouteOptimizationStack } from "../lib/RouteOptimizationStack";
-import { SupportBotStack } from "../lib/SupportBotStack";
+import * as cdk from 'aws-cdk-lib';
+
+import { ENVIRONMENT } from '../lib/Environment';
+import { GeocodingStack } from '../lib/GeocodingStack';
+import { GithubOidcStack } from '../lib/GithubOidcStack';
+import { LocalDevUserStack } from '../lib/LocalDevUserStack';
+import { RouteOptimizationStack } from '../lib/RouteOptimizationStack';
+import { SupportBotStack } from '../lib/SupportBotStack';
 
 const app = new cdk.App();
 
 // Create the dev user stack first (if needed)
-const devUserStack = new LocalDevUserStack(app, "LocalDevUserStack", {});
+const devUserStack = new LocalDevUserStack(app, 'LocalDevUserStack', {});
 
-new GeocodingStack(app, "GeocodingStack", {
+const geocodingStack = new GeocodingStack(app, 'GeocodingStack', {
   localDevUser: devUserStack.localDevUser,
 });
 
-new RouteOptimizationStack(app, "RouteOptimizationStack", {
+new RouteOptimizationStack(app, 'RouteOptimizationStack', {
   localDevUser: devUserStack.localDevUser,
 });
 
-new SupportBotStack(app, "SupportBotStack", {});
+new SupportBotStack(app, 'SupportBotStack', {});
 
-cdk.Tags.of(app).add("stage", ENVIRONMENT.stage);
+new GithubOidcStack(app, 'GithubOidcStack', {
+  table: geocodingStack.table,
+});
+
+cdk.Tags.of(app).add('stage', ENVIRONMENT.stage);
 
 /* If you don't specify 'env', this stack will be environment-agnostic.
  * Account/Region-dependent features and context lookups will not work,
