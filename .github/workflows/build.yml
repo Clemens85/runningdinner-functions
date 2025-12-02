@@ -21,6 +21,11 @@ jobs:
       - uses: gensecaihq/Shai-Hulud-2.0-Detector@v2
         with:
           fail-on-critical: true
+
+      - uses: gensecaihq/Shai-Hulud-2.0-Detector@v2
+        with:
+          fail-on-critical: true
+          working-directory: 'infrastructure'
           
       - uses: pnpm/action-setup@v3
         name: Install pnpm package manager
