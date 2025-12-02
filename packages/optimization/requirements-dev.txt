@@ -1,0 +1,7 @@
+-r requirements.txt
+scikit-learn
+numpy
+pydantic
+boto3
+python-dotenv
+pytest
