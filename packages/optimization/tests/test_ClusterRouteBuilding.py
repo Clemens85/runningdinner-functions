@@ -6,7 +6,7 @@ from RouteBuilder import calculate_distance_sum
 from RouteBuilder import RouteBuilder
 from local_adapter.LocalFileDataLoader import LocalFileDataLoader
 
-WORKSPACE_BASE_DIR = '../test-data'
+WORKSPACE_BASE_DIR = 'test-data'
 
 def load_sample_data(filename: str) -> DataProvider:
   data = DataProvider(LocalFileDataLoader(f'{WORKSPACE_BASE_DIR}/{filename}'))

@@ -4,7 +4,7 @@ from RouteOptimizer import RouteOptimizer
 from local_adapter.LocalFileDataLoader import LocalFileDataLoader
 from response.ResponseHandler import ResponseHandler
 
-WORKSPACE_BASE_DIR = '../test-data'
+WORKSPACE_BASE_DIR = 'test-data'
 
 class InMemoryResponseHandler(ResponseHandler):
     def __init__(self):
