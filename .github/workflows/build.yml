@@ -5,8 +5,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  typescript:
-    name: 'TypeScript: Typecheck, lint & test'
+  build_test_geocoding:
+    name: 'Geocoding: Typecheck, lint & test'
 
     runs-on: ubuntu-latest
     permissions:
@@ -51,25 +51,25 @@ jobs:
           cd packages/geocoding
           pnpm test:ci
 
-      - name: Upload Test Report
+      - name: Upload Geocoding Test Report
         uses: actions/upload-artifact@v4  # upload test results
         if: success() || failure()        # run this step even if previous step failed
         with:
           name: test-results
           path: packages/geocoding/reports/
 
-      - name: Test Report
+      - name: Geocoding Test Report
         uses: dorny/test-reporter@v1
         if: always()
         with:
-          name: Test Results               # Name of the check run which will be created
+          name: Geocoding Results               # Name of the check run which will be created
           path: packages/geocoding/reports/junit.xml         # Path to test results
           reporter: java-junit             # Format of test results
           fail-on-error: "false"
           fail-on-empty: "false"
 
-  python:
-    name: 'Python: Lint & test'
+  build_test_route_optimization:
+    name: 'Route Optimization'
 
     runs-on: ubuntu-latest
     permissions:
@@ -93,29 +93,29 @@ jobs:
           pip install -r requirements-dev.txt
           pip install pytest-cov
 
-      - name: Run tests with coverage
+      - name: Run Route Optimization tests with coverage
         run: |
           cd packages/optimization
           PYTHONPATH=. pytest --junitxml=reports/junit.xml --cov=. --cov-report=xml --cov-report=term
 
-      - name: Upload Test Report
+      - name: Upload Route Optimization Test Report
         uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
           name: python-test-results
           path: packages/optimization/reports/
 
-      - name: Python Test Report
+      - name: Route Optimization Test Report
         uses: dorny/test-reporter@v1
         if: always()
         with:
-          name: Python Test Results
+          name: Route Optimization Test Results
           path: packages/optimization/reports/junit.xml
           reporter: java-junit
           fail-on-error: "false"
           fail-on-empty: "false"
 
-      - name: Upload Coverage Report
+      - name: Upload Route Optimization Coverage Report
         uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
