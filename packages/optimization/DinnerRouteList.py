@@ -41,7 +41,7 @@ class TeamsOnRoute(BaseModel):
         return hash((self.teamNumber, self.teamId))
 
     def __eq__(self, other):
-        if not isinstance(other, DinnerRoute):
+        if not isinstance(other, (DinnerRoute, TeamsOnRoute)):
             return False
         return self.teamNumber == other.teamNumber and self.teamId == other.teamId
 
@@ -66,7 +66,7 @@ class DinnerRoute(BaseModel):
         return hash((self.teamNumber, self.teamId))
 
     def __eq__(self, other):
-        if not isinstance(other, DinnerRoute):
+        if not isinstance(other, (DinnerRoute, TeamsOnRoute)):
             return False
         return self.teamNumber == other.teamNumber and self.teamId == other.teamId
 

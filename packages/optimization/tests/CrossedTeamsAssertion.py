@@ -20,12 +20,4 @@ class CrossedTeamsAssertion:
     def assert_no_crossed_teams(self):
         for team_number, crossed_teams in self.crossed_teams_by_team_number.items():
             unique_crossed_teams = set(crossed_teams)
-            assert len(unique_crossed_teams) == len(crossed_teams), f"Team {team_number} has has duplicated crossings with those teams: {crossed_teams}"
-
-
-        # TODO
-        # for team_number, crossed_teams_lists in self.crossed_teams_by_team_number.items():
-        #     flattened_crossed_teams = [item for sublist in crossed_teams_lists for item in sublist]
-        #     unique_crossed_teams = set(flattened_crossed_teams)
-        #     assert len(unique_crossed_teams) == len(flattened_crossed_teams), f"Team {team_number} has crossed teams: {flattened_crossed_teams}"
-
+            assert len(unique_crossed_teams) == len(crossed_teams), f"Team {team_number} has duplicated crossings with these teams: {crossed_teams}"
