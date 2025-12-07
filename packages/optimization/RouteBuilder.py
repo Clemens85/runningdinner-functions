@@ -147,7 +147,7 @@ class RouteBuilder:
         return total_distance
 
 
-    def _apply_assignment(self, matrix_number_to_team: Dict[int, DinnerRoute], matrix) -> List[DinnerRoute]:
+    def _apply_assignment(self, matrix_number_to_team: Dict[int, DinnerRoute], matrix: List[List[List[int]]]) -> List[DinnerRoute]:
         """
         Apply the optimal assignment to create the final routes with populated teamsOnRoute.
         """
