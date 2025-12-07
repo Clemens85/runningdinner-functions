@@ -90,12 +90,19 @@ def test_predict_2_team_clusters_different_sizes():
         assert sum_meal == 3
 
     cluster_12 = unique_cluster_labels[1]
-    _get_routes_of_cluster_with_expected_size(final_routes, cluster_12, 12)
+    cluster_12_routes = _get_routes_of_cluster_with_expected_size(final_routes, cluster_12, 12)
     for _, meal_class in enumerate(["Vorspeise", "Hauptspeise", "Nachspeise"]):
         print(f"Asserting cluster {cluster_12} has 4 occurrences of {meal_class}")
         route_hosts_with_meal_class = _get_routes_of_cluster_with_meal(final_routes, cluster_12, meal_class)
         sum_meal = len(route_hosts_with_meal_class)
         assert sum_meal == 4
+
+    _clear_teams_on_route(cluster_12_routes)
+
+    route_builder = RouteBuilder(data, data.get_routes())
+    routes_of_cluster, _ = route_builder.build_route_for_cluster_label(2)
+    assert_routes_of_cluster(routes_of_cluster, cluster_label=2, expected_meals_size=4)
+
 
 def test_predict_only_one_cluster():
     data = load_sample_data("15_teams.json")
@@ -130,16 +137,16 @@ def test_route_building():
         route_builder = RouteBuilder(data, data.get_routes())
         routes_of_cluster, optimized_distance_sum = route_builder.build_route_for_cluster_label(cluster_label)
         print(f"OPTIMIZED DISTANCE SUM: {optimized_distance_sum}")
-        assert_routes_of_cluster(routes_of_cluster, cluster_label)
+        assert_routes_of_cluster(routes_of_cluster, cluster_label=cluster_label, expected_meals_size=3)
         assert optimized_distance_sum < original_distance_sum, f"Optimized distance sum {optimized_distance_sum} should be less than original {original_distance_sum}"
 
-def assert_routes_of_cluster(routes_of_cluster: List[DinnerRoute], cluster_label: int):
+def assert_routes_of_cluster(routes_of_cluster: List[DinnerRoute], cluster_label: int, expected_meals_size: int):
     crossed_teams_assertion = CrossedTeamsAssertion()
 
     # Check appetizer hosts
     hosts_appetizer = _get_routes_of_cluster_with_meal(routes_of_cluster, cluster_label, "Vorspeise")
-    assert len(hosts_appetizer) == 3
-    assert len(set([h.teamNumber for h in hosts_appetizer])) == 3
+    assert len(hosts_appetizer) == expected_meals_size
+    assert len(set([h.teamNumber for h in hosts_appetizer])) == expected_meals_size
     for host_appetizer in hosts_appetizer:
         assert len(host_appetizer.teamsOnRoute) == 2
         visiting_meals = [other_team_on_route.meal.label for other_team_on_route in host_appetizer.teamsOnRoute]
@@ -153,8 +160,8 @@ def assert_routes_of_cluster(routes_of_cluster: List[DinnerRoute], cluster_label
 
     # Check main course hosts
     hosts_main_course = _get_routes_of_cluster_with_meal(routes_of_cluster, cluster_label, "Hauptspeise")
-    assert len(hosts_main_course) == 3
-    assert len(set([h.teamNumber for h in hosts_main_course])) == 3
+    assert len(hosts_main_course) == expected_meals_size
+    assert len(set([h.teamNumber for h in hosts_main_course])) == expected_meals_size
     for host_main_course in hosts_main_course:
         assert len(host_main_course.teamsOnRoute) == 2
         visiting_meals = [other_team_on_route.meal.label for other_team_on_route in host_main_course.teamsOnRoute]
@@ -167,8 +174,8 @@ def assert_routes_of_cluster(routes_of_cluster: List[DinnerRoute], cluster_label
 
     # Check dessert course hosts
     hosts_dessert_course = _get_routes_of_cluster_with_meal(routes_of_cluster, cluster_label, "Nachspeise")
-    assert len(hosts_dessert_course) == 3
-    assert len(set([h.teamNumber for h in hosts_dessert_course])) == 3
+    assert len(hosts_dessert_course) == expected_meals_size
+    assert len(set([h.teamNumber for h in hosts_dessert_course])) == expected_meals_size
     for host_dessert_course in hosts_dessert_course:
         assert len(host_dessert_course.teamsOnRoute) == 2
         visiting_meals = [other_team_on_route.meal.label for other_team_on_route in host_dessert_course.teamsOnRoute]
@@ -200,50 +207,7 @@ def test_predict_1_team_cluster_15_teams():
     route_builder = RouteBuilder(data, routes_of_cluster)
     routes_of_cluster, _ = route_builder.build_route_for_cluster_label(0)
 
-    crossed_teams_assertion = CrossedTeamsAssertion()
-
-    # Check appetizer hosts
-    hosts_appetizer = _get_routes_of_cluster_with_meal(routes_of_cluster, 0, "Vorspeise")
-    assert len(hosts_appetizer) == 5
-    assert len( set([ h.teamNumber for h in hosts_appetizer ]) ) == 5
-    for host_appetizer in hosts_appetizer:
-        assert len(host_appetizer.teamsOnRoute) == 2
-        visiting_meals = [ other_team_on_route.meal.label for other_team_on_route in host_appetizer.teamsOnRoute ]
-        print(f"Asserting {host_appetizer} which visits {host_appetizer.teamsOnRoute} meets constraints")
-        assert len(visiting_meals) == 2
-        assert set(visiting_meals) == { "Hauptspeise", "Nachspeise" }
-        crossed_teams_assertion.record_crossed_teams(host_appetizer)
-
-    print ("Asserting no crossed for teams hosting appetizer")
-    crossed_teams_assertion.assert_no_crossed_teams()
-
-    # Check Hauptspeise hosts
-    hosts_main_course = _get_routes_of_cluster_with_meal(routes_of_cluster, 0, "Hauptspeise")
-    assert len(hosts_main_course) == 5
-    assert len( set([ h.teamNumber for h in hosts_main_course ]) ) == 5
-    for host_main_course in hosts_main_course:
-        assert len(host_main_course.teamsOnRoute) == 2
-        visiting_meals = [ other_team_on_route.meal.label for other_team_on_route in host_main_course.teamsOnRoute ]
-        assert len(visiting_meals) == 2
-        assert set(visiting_meals) == { "Vorspeise", "Nachspeise" }
-        crossed_teams_assertion.record_crossed_teams(host_main_course)
-
-    print ("Asserting no crossed for teams hosting Hauptspeise")
-    crossed_teams_assertion.assert_no_crossed_teams()
-
-    # Check Nachspeise hosts
-    hosts_dessert_course = _get_routes_of_cluster_with_meal(routes_of_cluster, 0, "Nachspeise")
-    assert len(hosts_dessert_course) == 5
-    assert len( set([ h.teamNumber for h in hosts_dessert_course ]) ) == 5
-    for host_dessert_course in hosts_dessert_course:
-        assert len(host_dessert_course.teamsOnRoute) == 2
-        visiting_meals = [ other_team_on_route.meal.label for other_team_on_route in host_dessert_course.teamsOnRoute ]
-        assert len(visiting_meals) == 2
-        assert set(visiting_meals) == { "Vorspeise", "Hauptspeise" }
-        crossed_teams_assertion.record_crossed_teams(host_dessert_course)
-
-    print ("Asserting no crossed for teams hosting Nachspeise")
-    crossed_teams_assertion.assert_no_crossed_teams()
+    assert_routes_of_cluster(routes_of_cluster, cluster_label=0, expected_meals_size=5)
 
 
 def _clear_teams_on_route(routes):
