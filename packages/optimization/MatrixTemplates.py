@@ -35,40 +35,40 @@ matrix9_2 = [
         [ 9, 5, 6 ] 
     ]
 ]
-matrix9_3 = [
-    [   # Vorspeise hosts: 1, 6, 8
-        [1, 4, 9],    # 1 hosts Hauptspeise (4) and Nachspeise (9)
-        [6, 2, 7],    # 6 hosts Hauptspeise (2) and Nachspeise (7)
-        [8, 3, 5],    # 8 hosts Hauptspeise (3) and Nachspeise (5)
-    ],
-    [   # Hauptspeise hosts: 4, 2, 3
-        [4, 8, 5],    # 4 hosts Vorspeise (8) and Nachspeise (5)
-        [2, 6, 9],    # 2 hosts Vorspeise (6) and Nachspeise (9)
-        [3, 1, 7],    # 3 hosts Vorspeise (1) and Nachspeise (7)
-    ],
-    [   # Nachspeise hosts: 9, 7, 5
-        [9, 4, 2],    # 9 hosts Hauptspeise (4) and Vorspeise (2)
-        [7, 3, 6],    # 7 hosts Hauptspeise (3) and Vorspeise (6)
-        [5, 8, 1],    # 5 hosts Hauptspeise (8) and Vorspeise (1)
-    ]
-]
-matrix9_4 = [
-    [   # Vorspeise hosts: 2, 5, 7
-        [2, 6, 9],    # 2 hosts Hauptspeise (6) and Nachspeise (9)
-        [5, 1, 8],    # 5 hosts Hauptspeise (1) and Nachspeise (8)
-        [7, 3, 4],    # 7 hosts Hauptspeise (3) and Nachspeise (4)
-    ],
-    [   # Hauptspeise hosts: 6, 1, 3
-        [6, 2, 7],    # 6 hosts Vorspeise (2) and Nachspeise (7)
-        [1, 5, 9],    # 1 hosts Vorspeise (5) and Nachspeise (9)
-        [3, 4, 8],    # 3 hosts Vorspeise (4) and Nachspeise (8)
-    ],
-    [   # Nachspeise hosts: 9, 8, 4
-        [9, 1, 5],    # 9 hosts Hauptspeise (1) and Vorspeise (5)
-        [8, 3, 2],    # 8 hosts Hauptspeise (3) and Vorspeise (2)
-        [4, 6, 7],    # 4 hosts Hauptspeise (6) and Vorspeise (7)
-    ]
-]
+# matrix9_3 = [
+#     [   # Vorspeise hosts: 1, 6, 8
+#         [1, 4, 9],    # 1 hosts Hauptspeise (4) and Nachspeise (9)
+#         [6, 2, 7],    # 6 hosts Hauptspeise (2) and Nachspeise (7)
+#         [8, 3, 5],    # 8 hosts Hauptspeise (3) and Nachspeise (5)
+#     ],
+#     [   # Hauptspeise hosts: 4, 2, 3
+#         [4, 8, 7],    # 4 hosts Vorspeise (8) and Nachspeise (7)
+#         [2, 5, 9],    # 2 hosts Nachspeise (5) and Nachspeise (9)
+#         [3, 1, 6],    # 3 hosts Vorspeise (1) and Vorspeise (6)
+#     ],
+#     [   # Nachspeise hosts: 9, 7, 5
+#         [9, 3, ],    # 9 hosts Hauptspeise (3) and Vorspeise (6) ---- 9 darf nicht 1,4,5,2,7,5 haben
+#         [7, 1, 6],    # 7 hosts Vorspeise (1) and Vorspeise (6) ---- 7 darf nicht 4,8,6,2,9,5,3 haben
+#         [5, 4, 6],    # 5 hosts Hauptspeise (4) and Vorspeise (6)
+#     ]
+# ]
+# matrix9_4 = [
+#     [   # Vorspeise hosts: 2, 5, 7
+#         [2, 6, 9],    # 2 hosts Hauptspeise (6) and Nachspeise (9)
+#         [5, 1, 8],    # 5 hosts Hauptspeise (1) and Nachspeise (8)
+#         [7, 3, 4],    # 7 hosts Hauptspeise (3) and Nachspeise (4)
+#     ],
+#     [   # Hauptspeise hosts: 6, 1, 3
+#         [6, 2, 7],    # 6 hosts Vorspeise (2) and Nachspeise (7)
+#         [1, 5, 9],    # 1 hosts Vorspeise (5) and Nachspeise (9)
+#         [3, 4, 8],    # 3 hosts Vorspeise (4) and Nachspeise (8)
+#     ],
+#     [   # Nachspeise hosts: 9, 8, 4
+#         [9, 1, 5],    # 9 hosts Hauptspeise (1) and Vorspeise (5)
+#         [8, 3, 2],    # 8 hosts Hauptspeise (3) and Vorspeise (2)
+#         [4, 6, 7],    # 4 hosts Hauptspeise (6) and Vorspeise (7)
+#     ]
+# ]
 
 
 matrix12_1 = [
@@ -111,26 +111,26 @@ matrix12_2 = [
         [ 12, 5, 6 ]
     ]	
 ]
-matrix12_3 = [
-    [   # Vorspeise hosts: 1, 6, 10, 12
-        [1, 8, 3],    # 1 hosts Hauptspeise (8) and Nachspeise (3)
-        [6, 11, 2],   # 6 hosts Hauptspeise (11) and Nachspeise (2)
-        [10, 4, 9],   # 10 hosts Hauptspeise (4) and Nachspeise (9)
-        [12, 7, 5],   # 12 hosts Hauptspeise (7) and Nachspeise (5)
-    ],
-    [   # Hauptspeise hosts: 8, 11, 4, 7
-        [8, 1, 9],    # 8 hosts Vorspeise (1) and Nachspeise (9)
-        [11, 6, 5],   # 11 hosts Vorspeise (6) and Nachspeise (5)
-        [4, 10, 3],   # 4 hosts Vorspeise (10) and Nachspeise (3)
-        [7, 12, 2],   # 7 hosts Vorspeise (12) and Nachspeise (2)
-    ],
-    [   # Nachspeise hosts: 3, 2, 9, 5
-        [3, 1, 4],    # 3 hosts Vorspeise (1) and Hauptspeise (4)
-        [2, 6, 7],    # 2 hosts Vorspeise (6) and Hauptspeise (7)
-        [9, 10, 8],   # 9 hosts Vorspeise (10) and Hauptspeise (8)
-        [5, 12, 11],  # 5 hosts Vorspeise (12) and Hauptspeise (11)
-    ]
-]
+# matrix12_3 = [
+#     [   # Vorspeise hosts: 1, 6, 10, 12
+#         [1, 8, 3],    # 1 hosts Hauptspeise (8) and Nachspeise (3)
+#         [6, 11, 2],   # 6 hosts Hauptspeise (11) and Nachspeise (2)
+#         [10, 4, 9],   # 10 hosts Hauptspeise (4) and Nachspeise (9)
+#         [12, 7, 5],   # 12 hosts Hauptspeise (7) and Nachspeise (5)
+#     ],
+#     [   # Hauptspeise hosts: 8, 11, 4, 7
+#         [8, 1, 9],    # 8 hosts Vorspeise (1) and Nachspeise (9)
+#         [11, 6, 5],   # 11 hosts Vorspeise (6) and Nachspeise (5)
+#         [4, 10, 3],   # 4 hosts Vorspeise (10) and Nachspeise (3)
+#         [7, 12, 2],   # 7 hosts Vorspeise (12) and Nachspeise (2)
+#     ],
+#     [   # Nachspeise hosts: 3, 2, 9, 5
+#         [3, 1, 4],    # 3 hosts Vorspeise (1) and Hauptspeise (4)
+#         [2, 6, 7],    # 2 hosts Vorspeise (6) and Hauptspeise (7)
+#         [9, 10, 8],   # 9 hosts Vorspeise (10) and Hauptspeise (8)
+#         [5, 12, 11],  # 5 hosts Vorspeise (12) and Hauptspeise (11)
+#     ]
+# ]
 
 matrix15_1 = [
     [
@@ -205,8 +205,8 @@ matrix6 = [
 ]
 
 matrixes_per_size = {
-    9: [matrix9_1, matrix9_2, matrix9_3, matrix9_4],
-    12: [matrix12_1, matrix12_2, matrix12_3],
+    9: [matrix9_1, matrix9_2],  # matrix9_3 and matrix9_4 removed - they cause duplicate team crossings
+    12: [matrix12_1, matrix12_2],
     15: [matrix15_1],
     4: [matrix4],
     6: [matrix6]

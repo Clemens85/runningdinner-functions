@@ -1,10 +1,12 @@
+from pathlib import Path
 from typing import Dict
 
 from RouteOptimizer import RouteOptimizer
 from local_adapter.LocalFileDataLoader import LocalFileDataLoader
 from response.ResponseHandler import ResponseHandler
 
-WORKSPACE_BASE_DIR = 'test-data'
+WORKSPACE_BASE_DIR = test_dir = Path(__file__).parent.parent / "test-data"
+WORKSPACE_BASE_DIR = WORKSPACE_BASE_DIR.resolve()
 
 class InMemoryResponseHandler(ResponseHandler):
     def __init__(self):

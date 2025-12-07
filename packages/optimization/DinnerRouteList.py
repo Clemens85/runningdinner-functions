@@ -37,6 +37,14 @@ class TeamsOnRoute(BaseModel):
     clusterNumber: int
     teamsOnRoute: List["TeamsOnRoute"] = [] # Will always be empty in this context
     
+    def __hash__(self):
+        return hash((self.teamNumber, self.teamId))
+
+    def __eq__(self, other):
+        if not isinstance(other, (DinnerRoute, TeamsOnRoute)):
+            return False
+        return self.teamNumber == other.teamNumber and self.teamId == other.teamId
+
     def __str__(self):
         return self.__repr__()
 
@@ -50,10 +58,18 @@ class DinnerRoute(BaseModel):
     status: str
     geocodingResult: GeocodingResult
     clusterNumber: int
-    teamsOnRoute: List[TeamsOnRoute]
+    teamsOnRoute: List[TeamsOnRoute] # List of teams which this host will visit on his route to take the other meals
     mealClass: Optional[str] = None
     originalIndex: Optional[int] = None
     
+    def __hash__(self):
+        return hash((self.teamNumber, self.teamId))
+
+    def __eq__(self, other):
+        if not isinstance(other, (DinnerRoute, TeamsOnRoute)):
+            return False
+        return self.teamNumber == other.teamNumber and self.teamId == other.teamId
+
     def __str__(self):
         return self.__repr__()
     
