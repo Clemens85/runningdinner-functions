@@ -1,14 +1,14 @@
 Hallo!
 
-Das ist eine gute Frage und ein häufiges Thema bei der Teamzusammenstellung.
+Das ist eine gute Frage und ich kann verstehen, dass du die 6 Personen von der Warteliste gerne aktivieren möchtest.
 
-Das System ist darauf ausgelegt, Teams in einer bestimmten Größe (meistens 6 Personen) zu bilden, um einen reibungslosen Ablauf zu gewährleisten. Wenn du Personen auf der Warteliste hast, bedeutet das, dass sie aktuell nicht automatisch in bestehende Teams integriert oder zu neuen Teams zusammengefasst werden können, ohne die Teamgrößen zu sprengen oder unvollständige Teams zu bilden.
+Mit den aktuellen Funktionen von runyourdinner ist das tatsächlich möglich, da du mit 6 Personen (3 Paare) genau die richtige Anzahl für ein weiteres Team hast (vorausgesetzt, die Standard-Teamgröße ist 6).
 
-Aber keine Sorge, dafür gibt es eine Lösung im Admin-Bereich:
+So gehst du vor:
 
-1.  **Wartelisten-Management nutzen:** Wenn Teilnehmer auf der Warteliste sind, erscheint unter der Teilnehmerliste eine Warnmeldung. Klicke darauf, um die **Wartelisten-Verwaltung** zu öffnen. Dort kannst du Teilnehmer gezielt Teams zuordnen oder, falls genügend Personen auf der Warteliste sind (z.B. 6 Personen für ein neues Team), neue Teams generieren lassen.
-2.  **Teams neu generieren:** Eine weitere Möglichkeit ist, im Admin-Bereich unter **„Teams“** die Option **„Teams neu generieren“** zu nutzen. Dabei wird die gesamte Teameinteilung neu berechnet und alle angemeldeten Teilnehmer, inklusive derer auf der Warteliste, werden berücksichtigt, um neue, passende Teams zu bilden. Beachte, dass dabei die bestehende Teameinteilung verworfen wird.
+1.  **Wartelisten-Verwaltung nutzen:** Wenn Teilnehmer auf der Warteliste sind, sollte dir im Admin-Bereich unter "Teilnehmer" eine Warnmeldung angezeigt werden. Klicke auf diese Warnmeldung, um die **Wartelisten-Verwaltung** zu öffnen.
+2.  **Neues Team generieren:** In der Wartelisten-Verwaltung hast du die Möglichkeit, Teilnehmer gezielt Teams zuzuordnen oder **neue Teams zu generieren**. Wähle die Option, um neue Teams zu generieren. Das System sollte dann die 6 Personen von der Warteliste zu einem neuen, 10. Team zusammenfassen.
 
-So kannst du sicherstellen, dass alle deine angemeldeten Teilnehmer auch am Event teilnehmen können!
+Alternativ könntest du auch im Admin-Bereich unter **"Teams"** die Funktion **"Teams generieren"** nutzen. Dabei wird die gesamte Teameinteilung neu erstellt und alle verfügbaren Teilnehmer, inklusive derer von der Warteliste, werden berücksichtigt. Das ist praktisch, wenn du die gesamte Teamzusammenstellung neu mischen möchtest.
 
-Ich hoffe, das hilft dir weiter!
+Ich hoffe, das hilft dir weiter, die Wartelisten-Teilnehmer erfolgreich in dein Event zu integrieren! Wenn du weitere Fragen hast, melde dich gerne.

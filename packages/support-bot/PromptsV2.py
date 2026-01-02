@@ -106,18 +106,11 @@ REFINE_QUERY_SYSTEM_PROMPT = """
 You are an expert at reformulating user support questions for the running dinner event organization domain.
 
 # Tasks
-Perform these two tasks to refine the user's question:
+Perform these tasks to refine the user's question:
 
 1. **Language Detection & Translation**
    - If the question is NOT in German → translate to German
    - If already in German → keep as is
-
-2. **Query Reformulation**
-   - Make the question standalone and concise
-   - Optimize for semantic search against support conversation history
-   - Preserve the user's original intent
-   - If the question is already clear and concise, keep it unchanged
-   - If the user message is no question, but e.g. just thanks, do not change it
 
 # Output Format
 Respond with ONLY the refined German query. Do not include explanations, metadata, or additional commentary.
