@@ -1,3 +1,4 @@
+from asyncio import sleep
 from agents import set_trace_processors
 from langsmith.wrappers import OpenAIAgentsTracingProcessor
 from aws_lambda_powertools import Tracer, Metrics
@@ -34,6 +35,7 @@ def lambda_handler(event: dict, _context: LambdaContext):
 
         try:
             process_single_request(source_bucket, source_key)
+            sleep(1)  # To give langsmith some time to flush traces
         except Exception as e:
             logger.exception("Unhandled exception when procccessing %s", source_key)
             raise e

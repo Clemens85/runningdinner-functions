@@ -5,6 +5,7 @@ import { ENVIRONMENT } from '../lib/Environment';
 import { GeocodingStack } from '../lib/GeocodingStack';
 import { GithubOidcStack } from '../lib/GithubOidcStack';
 import { LocalDevUserStack } from '../lib/LocalDevUserStack';
+import { MessageProposalStack } from '../lib/MessageProposalStack';
 import { RouteOptimizationStack } from '../lib/RouteOptimizationStack';
 import { SupportBotStack } from '../lib/SupportBotStack';
 
@@ -22,6 +23,10 @@ new RouteOptimizationStack(app, 'RouteOptimizationStack', {
 });
 
 new SupportBotStack(app, 'SupportBotStack', {});
+
+new MessageProposalStack(app, 'MessageProposalStack', {
+  localDevUser: devUserStack.localDevUser,
+});
 
 new GithubOidcStack(app, 'GithubOidcStack', {
   table: geocodingStack.table,

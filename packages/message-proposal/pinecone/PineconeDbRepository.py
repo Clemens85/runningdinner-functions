@@ -1,10 +1,9 @@
 import os
 from typing import List
 
-from dotenv import load_dotenv
 from pinecone import Pinecone, ServerlessSpec
-from ..DocumentVectorizable import DocumentVectorizable
-from ..VectorDbRepository import VectorDbRepository
+from DocumentVectorizable import DocumentVectorizable
+from VectorDbRepository import VectorDbRepository
 from llm.ChatOpenAI import ChatOpenAI
 
 os.environ['PINECONE_API_KEY'] = os.getenv('PINECONE_API_KEY', '')
@@ -12,9 +11,10 @@ PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 PINECONE_CLOUD = os.getenv('PINECONE_CLOUD', 'aws')
 PINECONE_REGION = os.getenv('PINECONE_REGION', 'us-east-1') 
 
-INDEX_NAME = "TODO" # TODO: set your index name here
+INDEX_NAME = "event-descriptions-v1"
 
 EMBEDDING_MODEL = 'text-embedding-3-small'
+EMBEDDING_DIMENSIONS = 1536  # Dimension for OpenAI text-embedding-3-small
 
 class PineconeDbRepository(VectorDbRepository):
 
@@ -32,7 +32,7 @@ class PineconeDbRepository(VectorDbRepository):
             print(f"Creating new Pinecone index: {self.index_name}")
             self.pc.create_index(
                 name=self.index_name,
-                dimension=1536,  # OpenAI text-embedding-3-small dimension
+                dimension=EMBEDDING_DIMENSIONS,
                 metric="cosine",
                 spec=ServerlessSpec(
                     cloud=PINECONE_CLOUD,
