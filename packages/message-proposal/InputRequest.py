@@ -9,12 +9,12 @@ class InputRequest:
         if "EVENT_DESCRIPTION" in storage_path.upper():
             return ProposalFileType.EVENT_DESCRIPTION
         elif "PARTICIPANT" in storage_path.upper():
-            return ProposalFileType.PARTICIPANT_MESSAGE
+            return ProposalFileType.PARTICIPANT
         elif "TEAM" in storage_path.upper():
-            return ProposalFileType.TEAM_MESSAGE
+            return ProposalFileType.TEAM
         elif "DINNER_ROUTE" in storage_path.upper():
-            return ProposalFileType.DINNER_ROUTE_MESSAGE
-        raise ValueError(f"Unknown proposal file type for storage path: {storage_path}")
+            return ProposalFileType.DINNER_ROUTE
+        raise ValueError(f"Unknown proposal file proposal_type for storage path: {storage_path}")
 
     def get_processed_path(self) -> str:
         """
@@ -39,11 +39,11 @@ class InputRequest:
 
     def get_path_for_generated_message(self, proposal_file_type: ProposalFileType) -> str:
         """
-        Builds the storage path for a given message type and the admin-id of this request for a generated message (proposal).
+        Builds the storage path for a given message proposal_type and the admin-id of this request for a generated message (proposal).
         Example: admin123, PARTICIPANT_MESSAGE -> generated/PARTICIPANT_MESSAGE/admin123.md
         """
         if proposal_file_type is None or proposal_file_type == ProposalFileType.EVENT_DESCRIPTION:
-            raise ValueError(f"Cannot handle proposal file type: {proposal_file_type}")
+            raise ValueError(f"Cannot handle proposal file proposal_type: {proposal_file_type}")
         
         admin_id = self.get_admin_id()
         if admin_id is None or admin_id == "":
@@ -54,11 +54,11 @@ class InputRequest:
     
     def build_path_for_processed_message_type(self, admin_id: str, proposal_file_type: ProposalFileType) -> str:
         """
-        Builds the storage path for a given message type and admin id.
+        Builds the storage path for a given message proposal_type and admin id.
         Example: admin123, PARTICIPANT_MESSAGE -> input/PARTICIPANT_MESSAGE/admin123.md
         """
         if proposal_file_type is None or proposal_file_type == ProposalFileType.EVENT_DESCRIPTION:
-            raise ValueError(f"Cannot handle proposal file type: {proposal_file_type}")
+            raise ValueError(f"Cannot handle proposal file proposal_type: {proposal_file_type}")
         
         if admin_id is None or admin_id == "":
             raise ValueError(f"Invalid admin id: {admin_id}")

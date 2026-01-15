@@ -25,21 +25,21 @@ class MessageProposalGenerator:
         logger.info(f"Found {len(similar_event_desc_docs)} similar event descriptions in vector database for event description")
         examples: List[ExampleMessage] = []
         for similar_event_desc_doc in similar_event_desc_docs:
-            message_content = self.__get_message_content(similar_event_desc_doc, request, ProposalFileType.TEAM_MESSAGE)
+            message_content = self.__get_message_content(similar_event_desc_doc, request, ProposalFileType.TEAM)
             if message_content:
-                examples.append(ExampleMessage(message=message_content, event_description=similar_event_desc_doc.page_content, type=ProposalFileType.TEAM_MESSAGE))
+                examples.append(ExampleMessage(message=message_content, event_description=similar_event_desc_doc.page_content, type=ProposalFileType.TEAM))
 
-            message_content = self.__get_message_content(similar_event_desc_doc, request, ProposalFileType.DINNER_ROUTE_MESSAGE)
+            message_content = self.__get_message_content(similar_event_desc_doc, request, ProposalFileType.DINNER_ROUTE)
             if message_content:
-                examples.append(ExampleMessage(message=message_content, event_description=similar_event_desc_doc.page_content, type=ProposalFileType.DINNER_ROUTE_MESSAGE))
+                examples.append(ExampleMessage(message=message_content, event_description=similar_event_desc_doc.page_content, type=ProposalFileType.DINNER_ROUTE))
 
-            message_content = self.__get_message_content(similar_event_desc_doc, request, ProposalFileType.PARTICIPANT_MESSAGE)
+            message_content = self.__get_message_content(similar_event_desc_doc, request, ProposalFileType.PARTICIPANT)
             if message_content:
-                examples.append(ExampleMessage(message=message_content, event_description=similar_event_desc_doc.page_content, type=ProposalFileType.PARTICIPANT_MESSAGE))
+                examples.append(ExampleMessage(message=message_content, event_description=similar_event_desc_doc.page_content, type=ProposalFileType.PARTICIPANT))
 
-        self.__generate_message_proposal(event_description=event_description, examples=examples, type=ProposalFileType.TEAM_MESSAGE, request=request)
-        self.__generate_message_proposal(event_description=event_description, examples=examples, type=ProposalFileType.DINNER_ROUTE_MESSAGE)
-        self.__generate_message_proposal(event_description=event_description, examples=examples, type=ProposalFileType.PARTICIPANT_MESSAGE)
+        self.__generate_message_proposal(event_description=event_description, examples=examples, proposal_type=ProposalFileType.TEAM, request=request)
+        self.__generate_message_proposal(event_description=event_description, examples=examples, proposal_type=ProposalFileType.DINNER_ROUTE, request=request)
+        self.__generate_message_proposal(event_description=event_description, examples=examples, proposal_type=ProposalFileType.PARTICIPANT, request=request)
 
 
     def __get_message_content(self, event_description_document: DocumentVectorizable, request: InputRequest, proposal_file_type: ProposalFileType) -> str | None:
@@ -52,14 +52,17 @@ class MessageProposalGenerator:
             logger.exception(f"Failed to load message content from {message_storage_path}. This maybe also be due to file does not exist: {str(e)}")
             return None
 
-    def __generate_message_proposal(self, event_description: str, examples: List[ExampleMessage], type: ProposalFileType, request: InputRequest):
+    def __generate_message_proposal(self, event_description: str, examples: List[ExampleMessage], proposal_type: ProposalFileType, request: InputRequest):
 
-        examples_for_type = [ex for ex in examples if ex.type == type]    
+        examples_for_type = [ex for ex in examples if ex.type == proposal_type]
         if len(examples_for_type) == 0:
-            logger.warning(f"No example messages available to generate proposal for type {type}")
+            logger.warning(f"No example messages available to generate proposal for type {proposal_type}")
             return
         
-        logger.info(f"Generating message proposal for type {type} using {len(examples_for_type)} example messages")
+        logger.info(f"Generating message proposal for type {proposal_type} using {len(examples_for_type)} example messages")
+
+        generation_prompt = get_message_generation_user_prompt(input_event_description=event_description, examples=examples_for_type,
+                                                                proposal_type=proposal_type)
         result = self.llm.invoke(
             prompt=[
                 {
@@ -68,12 +71,12 @@ class MessageProposalGenerator:
                 },
                 {
                     "role": "user",
-                    "content": get_message_generation_user_prompt(input_event_description=event_description, examples=examples_for_type, type=type)
+                    "content": generation_prompt
                 }
             ]
         )
         proposal_text = result.content
-        proposal_storage_path = request.get_path_for_generated_message(type)
-        logger.info(f"Storing generated message proposal for type {type} at {proposal_storage_path}")
+        proposal_storage_path = request.get_path_for_generated_message(proposal_type)
+        logger.info(f"Storing generated message proposal for type {proposal_type} at {proposal_storage_path}")
         self.data_accessor.write_string_to_path(proposal_text, proposal_storage_path)
 

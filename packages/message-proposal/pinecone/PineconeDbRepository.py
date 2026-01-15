@@ -56,7 +56,7 @@ class PineconeDbRepository(VectorDbRepository):
         metadata = {
             "text": document.page_content,
             "id": document.id,
-            "type": document.type,
+            "proposal_type": document.type,
             "source_path": document.source_path,
             "admin_id": document.admin_id,
             **document.metadata
@@ -113,10 +113,10 @@ class PineconeDbRepository(VectorDbRepository):
             DocumentVectorizable(
                 page_content=match['metadata']['text'],
                 id=match['metadata'].get('id'),
-                type=match['metadata'].get('type'),
+                type=match['metadata'].get('proposal_type'),
                 source_path=match['metadata'].get('source_path'),
                 admin_id=match['metadata'].get('admin_id'),
-                metadata={k: v for k, v in match['metadata'].items() if k not in ['text', 'id', 'type', 'source_path', 'admin_id']}
+                metadata={k: v for k, v in match['metadata'].items() if k not in ['text', 'id', 'proposal_type', 'source_path', 'admin_id']}
             )
             for match in results['matches']
         ]

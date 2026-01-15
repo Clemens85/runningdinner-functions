@@ -3,9 +3,9 @@
 10.11.2026
 
 ## Ablauf
-17:30 Uhr:  Vorspeise
-18:45 Uhr:  Hauptgericht
-20:30 Uhr:  Dessert
+17:30 Uhr: Vorspeise
+18:45 Uhr: Hauptgericht
+20:30 Uhr: Dessert
 
 ## Beschreibung
 Du magst leckeres Essen?
@@ -29,7 +29,7 @@ Nach dem Dessert würden wir uns freuen, euch zum Finale im Kandelhof (im Harmon
 
 Wir freuen uns auf euch in Freiburg!
 
-Gemeinsames Finale um 21:30 Uhr
+### Gemeinsames Finale um 21:30 Uhr
 Harmonie im Kandelhof
 Fakestr. 3
 79098 Freiburg

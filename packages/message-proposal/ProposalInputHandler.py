@@ -36,9 +36,11 @@ class ProposalInputHandler:
         processed_storage_path = input_file_path.get_processed_path()
         self.data_accessor.write_string_to_path(content_anonymized, processed_storage_path)
 
-        self.message_proposal_generator.generate_proposals(content_anonymized, input_file_path)
+        # Workflow 1): Trigger message proposal generation
+        # Very Important: Use original content (not anonymized) for proposal generation to ensure high quality proposals
+        self.message_proposal_generator.generate_proposals(content, input_file_path)
 
-        # Store event description in vector DB
+        # Workflow 2): Store event description in vector DB (for future proposal generations)
         admin_id = input_file_path.get_admin_id()
         doc_id = f"{ProposalFileType.EVENT_DESCRIPTION.value}_{admin_id}"
         document = DocumentVectorizable(

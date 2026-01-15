@@ -1,28 +1,24 @@
 from dotenv import load_dotenv
 import os
 
-from ProposalFileType import ProposalFileType
 from ProposalInputHandler import ProposalInputHandler
 from TestUtil import build_absolute_path, ensure_subfolder
 from llm.ChatOpenAI import ChatOpenAI
 from local_adapter.LocalDataAccessor import LocalDataAccessor
 from local_adapter.LocalInMemoryDbRepository import LocalInMemoryDbRepository
 
-
 # Load .env from the tests directory
 load_dotenv(dotenv_path=build_absolute_path(".env"))
 
 class TestProposalInputHandler:
 
-    def __init__(self):
-        self.llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.3)
-
     def setup_method(self):
+        self.llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.3)
         source_bucket = build_absolute_path("fixtures")
-        ensure_subfolder(source_bucket, "generated/message/TEAM_MESSAGE", True)
-        ensure_subfolder(source_bucket, "generated/message/DINNER_ROUTE_MESSAGE", True)
-        ensure_subfolder(source_bucket, "processed/message/TEAM_MESSAGE", True)
-        ensure_subfolder(source_bucket, "processed/message/DINNER_ROUTE_MESSAGE", True)
+        ensure_subfolder(source_bucket, "generated/message/TEAM", True)
+        ensure_subfolder(source_bucket, "generated/message/DINNER_ROUTE", True)
+        ensure_subfolder(source_bucket, "processed/message/TEAM", True)
+        ensure_subfolder(source_bucket, "processed/message/DINNER_ROUTE", True)
         ensure_subfolder(source_bucket, "processed/EVENT_DESCRIPTION", True)
 
         self.data_accessor = LocalDataAccessor(root_path=source_bucket)
@@ -32,6 +28,7 @@ class TestProposalInputHandler:
             vector_db_repository=self.vector_db,
             llm=self.llm
         )
+        self.source_bucket = source_bucket
 
     def test_complete_workflow(self):
 
@@ -49,46 +46,48 @@ class TestProposalInputHandler:
         assert similar_docs[0].page_content == processed_content
 
         # Ensure no generated messages are created yet
-        self.__assert_no_files_in_folder("generated/message/TEAM_MESSAGE")
-        self.__assert_no_files_in_folder("generated/message/DINNER_ROUTE_MESSAGE")
-        self.__assert_no_files_in_folder("generated/message/PARTICIPANT_MESSAGE")
+        self.__assert_no_files_in_folder("generated/message/TEAM")
+        self.__assert_no_files_in_folder("generated/message/DINNER_ROUTE")
 
         # *** REQUEST 2: Process initial team message ***
-        self.proposal_input_handler.process_request("input/message/TEAM_MESSAGE/event_1.md")
-        processed_team_message_path = "processed/message/TEAM_MESSAGE/event_1.md"
+        self.proposal_input_handler.process_request("input/message/TEAM/event_1.md")
+        processed_team_message_path = "processed/message/TEAM/event_1.md"
         processed_team_content = self.data_accessor.load_string(processed_team_message_path)
-        assert "Teilnehmer" in processed_team_content
+        assert "Non Host Template" in processed_team_content
+        assert "Message Template" in processed_team_content
 
         # *** REQUEST 3: Process initial dinner route message ***
-        self.proposal_input_handler.process_request("input/message/DINNER_ROUTE_MESSAGE/event_1.md")
-        processed_dinner_route_path = "processed/message/DINNER_ROUTE_MESSAGE/event_1.md"
+        self.proposal_input_handler.process_request("input/message/DINNER_ROUTE/event_1.md")
+        processed_dinner_route_path = "processed/message/DINNER_ROUTE/event_1.md"
         processed_dinner_content = self.data_accessor.load_string(processed_dinner_route_path)
-        assert "Abendessen" in processed_dinner_content
+        assert "Message Template" in processed_dinner_content
+        assert "Self Template" in processed_dinner_content
 
         # Ensure no generated messages are created yet
-        self.__assert_no_files_in_folder("generated/message/TEAM_MESSAGE")
-        self.__assert_no_files_in_folder("generated/message/DINNER_ROUTE_MESSAGE")
-        self.__assert_no_files_in_folder("generated/message/PARTICIPANT_MESSAGE")
+        self.__assert_no_files_in_folder("generated/message/TEAM")
+        self.__assert_no_files_in_folder("generated/message/DINNER_ROUTE")
 
         # *** REQUEST 4: Process other event description to trigger message generation ***
         self.proposal_input_handler.process_request("input/EVENT_DESCRIPTION/event_2.md")
 
         # Ensure generated team message is created
-        generated_team_path = "generated/message/TEAM_MESSAGE/event_2.md"
+        generated_team_path = "generated/message/TEAM/event_2.md"
         generated_team_content = self.data_accessor.load_string(generated_team_path)
         assert len(generated_team_content) > 0
         print ("*** Generated Team Message Content: ***")
         print (generated_team_content)
+        assert "Heidelberg" in generated_team_content
 
         # Ensure generated dinner route message is created
-        generated_dinner_route_path = "generated/message/DINNER_ROUTE_MESSAGE/event_2.md"
+        generated_dinner_route_path = "generated/message/DINNER_ROUTE/event_2.md"
         generated_dinner_content = self.data_accessor.load_string(generated_dinner_route_path)
         assert len(generated_dinner_content) > 0
         print ("*** Generated Dinner Route Message Content: ***")
         print (generated_dinner_content)
+        assert "Heidelberg" in generated_dinner_content
 
     def __assert_no_files_in_folder(self, folder_path: str):
-        files = os.listdir(build_absolute_path(folder_path))
+        files = os.listdir(self.source_bucket + "/" + folder_path)
         assert len(files) == 0, f"Expected no files in {folder_path}, but found: {files}"
 
 

@@ -1,6 +1,6 @@
 from typing import List, Dict
-from ..DocumentVectorizable import DocumentVectorizable
-from ..VectorDbRepository import VectorDbRepository
+from DocumentVectorizable import DocumentVectorizable
+from VectorDbRepository import VectorDbRepository
 
 
 class LocalInMemoryDbRepository(VectorDbRepository):

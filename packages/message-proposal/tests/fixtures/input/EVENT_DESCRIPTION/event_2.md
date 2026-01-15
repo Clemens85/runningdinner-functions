@@ -3,9 +3,9 @@
 15.11.2026
 
 ## Ablauf
-18:00 Uhr:  Vorspeise
-19:30 Uhr:  Hauptgericht
-21:15 Uhr:  Dessert
+18:00 Uhr: Vorspeise
+19:30 Uhr: Hauptgericht
+21:15 Uhr: Dessert
 
 ## Beschreibung
 Lust auf kulinarische Abenteuer?
@@ -29,7 +29,7 @@ Nach dem Dessert laden wir euch herzlich ein, ab 22.45 Uhr zum großen Finale in
 
 Wir freuen uns riesig auf euch in Heidelberg!
 
-Gemeinsames Finale um 22:45 Uhr
+### After Party um 22:45 Uhr
 Kulturbrauerei
 Bergstr. 17
 69115 Heidelberg
