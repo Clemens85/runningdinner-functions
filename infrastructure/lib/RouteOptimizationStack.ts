@@ -7,6 +7,7 @@ import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import { Construct } from 'constructs';
 
+import { CommonUtils } from './CommonUtils';
 import { ENVIRONMENT } from './Environment';
 import { LocalDevUser } from './LocalDevUser';
 import { PythonLambda } from './PythonLambda';
@@ -19,8 +20,10 @@ export class RouteOptimizationStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: RouteOptimizationStackProps) {
     super(scope, id, props);
 
+    const commonUtils = new CommonUtils(this);
+
     const bucketName = `route-optimization-${ENVIRONMENT.stage.toLowerCase()}`;
-    const bucket = this.createBucket(bucketName, [
+    const bucket = commonUtils.createBucket(bucketName, [
       {
         id: 'ExpireAfter14Days',
         expiration: cdk.Duration.days(14),
@@ -93,17 +96,5 @@ export class RouteOptimizationStack extends cdk.Stack {
     if (localDevUser) {
       localDevUser.grantBucketReadWrite(bucket);
     }
-  }
-
-  createBucket(bucketName: string, lifecycleRules: cdk.aws_s3.LifecycleRule[]): s3.Bucket {
-    return new s3.Bucket(this, bucketName, {
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      enforceSSL: true,
-      versioned: false,
-      removalPolicy: ENVIRONMENT.s3.removalPolicy,
-      autoDeleteObjects: ENVIRONMENT.s3.autoDeleteObjects,
-      bucketName: bucketName,
-      lifecycleRules,
-    });
   }
 }

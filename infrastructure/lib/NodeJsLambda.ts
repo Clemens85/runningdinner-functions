@@ -1,8 +1,9 @@
-import { Construct } from "constructs";
-import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as cdk from "aws-cdk-lib";
-import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-import * as path from "node:path";
+import * as path from 'node:path';
+
+import * as cdk from 'aws-cdk-lib';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { Construct } from 'constructs';
 
 export type LambdaFunctionUrlProps = {
   name: string;
@@ -10,7 +11,7 @@ export type LambdaFunctionUrlProps = {
   addFunctionUrl?: boolean;
   cors?: cdk.aws_lambda.FunctionUrlCorsOptions;
   runtime?: lambda.Runtime;
-} & Omit<lambda.FunctionProps, "runtime" | "handler" | "code">;
+} & Omit<lambda.FunctionProps, 'runtime' | 'handler' | 'code'>;
 
 export class NodeJsLambda extends Construct {
   public lambdaFunction: lambda.Function;
@@ -20,22 +21,12 @@ export class NodeJsLambda extends Construct {
   constructor(scope: Construct, id: string, props: LambdaFunctionUrlProps) {
     super(scope, id);
 
-    const {
-      name,
-      packageFolderName,
-      addFunctionUrl,
-      cors,
-      environment,
-      timeout,
-      deadLetterQueueEnabled,
-      runtime,
-      ...remainder
-    } = props;
+    const { name, packageFolderName, addFunctionUrl, cors, environment, timeout, deadLetterQueueEnabled, runtime, ...remainder } = props;
 
     let environmentToSet = environment || {};
     environmentToSet = {
       ...environmentToSet,
-      NODE_OPTIONS: "--enable-source-maps",
+      NODE_OPTIONS: '--enable-source-maps',
     };
 
     const timeoutToSet = timeout || cdk.Duration.seconds(30);
@@ -62,11 +53,8 @@ export class NodeJsLambda extends Construct {
       environment: environmentToSet,
       timeout: timeoutToSet,
       logGroup: this.logGroup,
-      handler: "handler",
-      entry: path.join(
-        __dirname,
-        `../../packages/${packageFolderName}/src/index.ts`
-      ),
+      handler: 'handler',
+      entry: path.join(__dirname, `../../packages/${packageFolderName}/src/index.ts`),
       bundling: {
         sourceMap: true,
         minify: true,
@@ -82,10 +70,7 @@ export class NodeJsLambda extends Construct {
         cors,
       });
       // Remove all non-alphanumeric chars from packageFolderName
-      const normalizedPackageFolderName = packageFolderName.replace(
-        /[^a-zA-Z0-9]/g,
-        ""
-      );
+      const normalizedPackageFolderName = packageFolderName.replace(/[^a-zA-Z0-9]/g, '');
       new cdk.CfnOutput(this, `${normalizedPackageFolderName}FunctionUrl`, {
         value: functionUrl.url,
         key: `${normalizedPackageFolderName}FunctionUrl`,
