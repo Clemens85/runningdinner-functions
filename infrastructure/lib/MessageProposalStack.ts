@@ -70,7 +70,7 @@ export class MessageProposalStack extends cdk.Stack {
 
     const localDevUser = props?.localDevUser;
     if (localDevUser) {
-      localDevUser.grantBucketReadWrite(bucket);
+      localDevUser.grantBucketReadWrite(bucket, 'MessageProposalLocalDevS3Policy');
     }
   }
 }
