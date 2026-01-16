@@ -130,3 +130,57 @@ jobs:
         with:
           name: python-coverage
           path: packages/optimization/coverage.xml
+
+  build_test_message_proposal:
+    name: 'Message Proposal'
+
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
+    
+    steps:
+      - uses: actions/checkout@v4
+        name: Check-out repository
+
+      - uses: actions/setup-python@v5
+        name: Set up Python
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: 'packages/message-proposal/requirements-dev.txt'
+
+      - name: Install dependencies
+        run: |
+          cd packages/message-proposal
+          pip install -r requirements-dev.txt
+          pip install pytest-cov
+
+      - name: Run Message Proposal tests with coverage
+        run: |
+          cd packages/message-proposal
+          PYTHONPATH=. pytest --junitxml=reports/junit.xml --cov=. --cov-report=xml --cov-report=term
+
+      - name: Upload Message Proposal Test Report
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: python-test-results
+          path: packages/message-proposal/reports/
+
+      - name: Message Proposal Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Message Proposal Test Results
+          path: packages/message-proposal/reports/junit.xml
+          reporter: java-junit
+          fail-on-error: "false"
+          fail-on-empty: "false"
+
+      - name: Upload Message Proposal Coverage Report
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: python-coverage
+          path: packages/message-proposal/coverage.xml

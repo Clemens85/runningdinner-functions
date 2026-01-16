@@ -7,6 +7,7 @@ from urllib.parse import unquote_plus
 from aws_adapter.S3DataAccessor import S3DataAccessor
 from ProposalInputHandler import ProposalInputHandler
 from Environment import setup_environment
+from aws_adapter.SNSNotificationHandler import SNSNotificationHandler
 from logger.Log import logger
 from pinecone.PineconeDbRepository import PineconeDbRepository
 from llm.ChatOpenAI import ChatOpenAI
@@ -37,7 +38,7 @@ def lambda_handler(event: dict, _context: LambdaContext):
             process_single_request(source_bucket, source_key)
             sleep(1)  # To give langsmith some time to flush traces
         except Exception as e:
-            logger.exception("Unhandled exception when procccessing %s", source_key)
+            logger.exception("Unhandled exception when processing %s", source_key)
             raise e
 
 def _add_tracing_metadata():
@@ -52,6 +53,7 @@ def process_single_request(source_bucket: str, source_key: str):
     data_accessor = S3DataAccessor(source_bucket)
     llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.3)
     vector_db_repository = PineconeDbRepository(llm=llm)
-    proposal_input_handler = ProposalInputHandler(data_accessor=data_accessor, vector_db_repository=vector_db_repository, llm=llm)
+    notification_handler = SNSNotificationHandler()
+    proposal_input_handler = ProposalInputHandler(data_accessor=data_accessor, vector_db_repository=vector_db_repository, llm=llm, notification_handler=notification_handler)
     proposal_input_handler.process_request(source_key)
 

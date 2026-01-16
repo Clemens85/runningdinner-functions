@@ -15,10 +15,14 @@ export type EnvironmentType = {
     removalPolicy: cdk.RemovalPolicy;
     autoDeleteObjects: boolean;
   };
+  sns: {
+    notificationEmail?: string;
+  };
 };
 
 function getEnvironment(): EnvironmentType {
   const stage = process.env.RUNNINGDINNER_FUNCTIONS_STAGE || '';
+  const notificationEmail = 'runyourdinner@gmail.com';
   if (stage === 'dev') {
     return {
       stage: 'dev',
@@ -33,6 +37,9 @@ function getEnvironment(): EnvironmentType {
         readCapacity: 8,
         writeCapacity: 8,
       },
+      sns: {
+        notificationEmail,
+      },
     };
   } else if (stage === 'prod') {
     return {
@@ -46,6 +53,9 @@ function getEnvironment(): EnvironmentType {
         billingMode: BillingMode.PROVISIONED,
         readCapacity: 12,
         writeCapacity: 12,
+      },
+      sns: {
+        notificationEmail,
       },
     };
   }

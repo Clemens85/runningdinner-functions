@@ -6,6 +6,7 @@ from TestUtil import build_absolute_path, ensure_subfolder
 from llm.ChatOpenAI import ChatOpenAI
 from local_adapter.LocalDataAccessor import LocalDataAccessor
 from local_adapter.LocalInMemoryDbRepository import LocalInMemoryDbRepository
+from local_adapter.LocalNotificationHandler import LocalNotificationHandler
 
 # Load .env from the tests directory
 load_dotenv(dotenv_path=build_absolute_path(".env"))
@@ -23,10 +24,12 @@ class TestProposalInputHandler:
 
         self.data_accessor = LocalDataAccessor(root_path=source_bucket)
         self.vector_db = LocalInMemoryDbRepository()
+        self.notification_handler = LocalNotificationHandler()
         self.proposal_input_handler = ProposalInputHandler(
             data_accessor=self.data_accessor,
             vector_db_repository=self.vector_db,
-            llm=self.llm
+            llm=self.llm,
+            notification_handler=self.notification_handler
         )
         self.source_bucket = source_bucket
 
@@ -67,6 +70,9 @@ class TestProposalInputHandler:
         self.__assert_no_files_in_folder("generated/message/TEAM")
         self.__assert_no_files_in_folder("generated/message/DINNER_ROUTE")
 
+        # Ensure no notifications were sent so far
+        assert len(self.notification_handler.get_messages()) == 0
+
         # *** REQUEST 4: Process other event description to trigger message generation ***
         self.proposal_input_handler.process_request("input/EVENT_DESCRIPTION/event_2.md")
 
@@ -85,6 +91,12 @@ class TestProposalInputHandler:
         print ("*** Generated Dinner Route Message Content: ***")
         print (generated_dinner_content)
         assert "Heidelberg" in generated_dinner_content
+
+        assert len(self.notification_handler.get_messages()) == 1
+        notification_message = self.notification_handler.get_messages()[0]
+        # assert notification message contains event description
+        event2_description = self.data_accessor.load_string("input/EVENT_DESCRIPTION/event_2.md")
+        assert event2_description in notification_message
 
     def __assert_no_files_in_folder(self, folder_path: str):
         files = os.listdir(self.source_bucket + "/" + folder_path)
