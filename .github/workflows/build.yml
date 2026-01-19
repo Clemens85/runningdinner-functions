@@ -167,8 +167,10 @@ jobs:
 
       - name: Retrieve secrets from AWS Parameter Store
         run: |
-          echo "OPENAI_API_KEY=$(aws ssm get-parameter --name /runningdinner/openai/apikey --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
-          echo "PINECONE_API_KEY=$(aws ssm get-parameter --name /runningdinner/pinecone/apikey --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+          OPENAI_API_KEY=$(aws ssm get-parameter --name /runningdinner/openai/apikey --with-decryption --query Parameter.Value --output text)
+          PINECONE_API_KEY=$(aws ssm get-parameter --name /runningdinner/pinecone/apikey --with-decryption --query Parameter.Value --output text)
+          echo "OPENAI_API_KEY=$OPENAI_API_KEY" > packages/message-proposal/tests/.env
+          echo "PINECONE_API_KEY=$PINECONE_API_KEY" >> packages/message-proposal/tests/.env
 
       - name: Run Message Proposal tests with coverage
         run: |
@@ -198,3 +200,7 @@ jobs:
         with:
           name: message-proposal-coverage
           path: packages/message-proposal/coverage.xml
+
+      - name: Cleanup secrets
+        if: always()
+        run: rm -f packages/message-proposal/tests/.env
