@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 
 from ProposalInputHandler import ProposalInputHandler
-from TestUtil import build_absolute_path, ensure_subfolder
+from tests.TestUtil import build_absolute_path, ensure_subfolder
 from llm.ChatOpenAI import ChatOpenAI
 from local_adapter.LocalDataAccessor import LocalDataAccessor
 from local_adapter.LocalInMemoryDbRepository import LocalInMemoryDbRepository
