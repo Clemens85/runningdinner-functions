@@ -8,7 +8,11 @@ from TestUtil import build_absolute_path
 from llm.ChatOpenAI import ChatOpenAI
 from local_adapter.LocalDataAccessor import LocalDataAccessor
 
-load_dotenv(dotenv_path=Path(__file__).parent / ".env")
+# Load .env file if it exists (for local development)
+# In CI, environment variables are set via AWS Parameter Store
+env_file = Path(__file__).parent / ".env"
+if env_file.exists():
+    load_dotenv(dotenv_path=env_file)
 
 class TestAnonymizer:
 

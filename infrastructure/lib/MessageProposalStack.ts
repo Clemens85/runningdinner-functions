@@ -1,5 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Construct } from 'constructs';
@@ -26,7 +28,7 @@ export class MessageProposalStack extends cdk.Stack {
     const bucket = commonUtils.createBucket(bucketName, []);
 
     const topicName = `message-proposal-notifications-${ENVIRONMENT.stage.toLowerCase()}`;
-    this.createSnsTopicWithEmailSubscription(topicName);
+    const topic = this.createSnsTopicWithEmailSubscription(topicName);
 
     const messageProposalFunc = new PythonLambda(this, 'message-proposal', {
       name: 'message-proposal',
@@ -66,6 +68,12 @@ export class MessageProposalStack extends cdk.Stack {
           'extensions/',
         ],
       },
+    });
+
+    topic.grantPublish(messageProposalFunc.lambdaFunction);
+
+    bucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(messageProposalFunc.lambdaFunction), {
+      prefix: 'input/',
     });
 
     // Grant access to the SSM parameter store

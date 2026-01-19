@@ -1,3 +1,4 @@
+from pathlib import Path
 from dotenv import load_dotenv
 import os
 
@@ -8,8 +9,12 @@ from local_adapter.LocalDataAccessor import LocalDataAccessor
 from local_adapter.LocalInMemoryDbRepository import LocalInMemoryDbRepository
 from local_adapter.LocalNotificationHandler import LocalNotificationHandler
 
-# Load .env from the tests directory
-load_dotenv(dotenv_path=build_absolute_path(".env"))
+# Load .env file if it exists (for local development)
+# In CI, environment variables are set via AWS Parameter Store
+env_file = Path(__file__).parent / ".env"
+if env_file.exists():
+    load_dotenv(dotenv_path=env_file)
+
 
 class TestProposalInputHandler:
 

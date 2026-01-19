@@ -111,7 +111,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
-          name: python-test-results
+          name: route-optimization-test-results
           path: packages/optimization/reports/
 
       - name: Route Optimization Test Report
@@ -128,7 +128,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
-          name: python-coverage
+          name: route-optimization-coverage
           path: packages/optimization/coverage.xml
 
   build_test_message_proposal:
@@ -179,7 +179,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
-          name: python-test-results
+          name: message-proposal-test-results
           path: packages/message-proposal/reports/
 
       - name: Message Proposal Test Report
@@ -196,5 +196,5 @@ jobs:
         uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
-          name: python-coverage
+          name: message-proposal-coverage
           path: packages/message-proposal/coverage.xml
