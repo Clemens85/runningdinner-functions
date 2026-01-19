@@ -156,6 +156,19 @@ jobs:
           pip install -r requirements-dev.txt
           pip install pytest-cov
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-central-1
+          role-to-assume: arn:aws:iam::${{ env.BUILD_AWS_ACCOUNT_ID }}:role/runningdinner-functions-github-oidc-role
+        env:
+          BUILD_AWS_ACCOUNT_ID: ${{ vars.BUILD_AWS_ACCOUNT_ID }}
+
+      - name: Retrieve secrets from AWS Parameter Store
+        run: |
+          echo "OPENAI_API_KEY=$(aws ssm get-parameter --name /runningdinner/openai/apikey --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "PINECONE_API_KEY=$(aws ssm get-parameter --name /runningdinner/pinecone/apikey --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+
       - name: Run Message Proposal tests with coverage
         run: |
           cd packages/message-proposal
