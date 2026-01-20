@@ -1,5 +1,5 @@
 from aws_adapter.S3Client import s3_client
-from ..DataAccessor import DataAccessor
+from DataAccessor import DataAccessor
 
 class S3DataAccessor(DataAccessor):
     def __init__(self, bucket):

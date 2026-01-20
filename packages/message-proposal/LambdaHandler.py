@@ -1,4 +1,3 @@
-from asyncio import sleep
 from aws_lambda_powertools import Tracer, Metrics
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from urllib.parse import unquote_plus
@@ -33,7 +32,6 @@ def lambda_handler(event: dict, _context: LambdaContext):
 
         try:
             process_single_request(source_bucket, source_key)
-            sleep(1)  # To give langsmith some time to flush traces
         except Exception as e:
             logger.exception("Unhandled exception when processing %s", source_key)
             raise e
