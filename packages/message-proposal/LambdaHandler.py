@@ -1,6 +1,4 @@
 from asyncio import sleep
-from agents import set_trace_processors
-from langsmith.wrappers import OpenAIAgentsTracingProcessor
 from aws_lambda_powertools import Tracer, Metrics
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from urllib.parse import unquote_plus
@@ -16,7 +14,6 @@ import langsmith as ls
 tracer = Tracer()
 metrics = Metrics(namespace="runningdinner-functions", service="message-proposal")
 
-set_trace_processors([OpenAIAgentsTracingProcessor()])
 setup_environment()
 
 @tracer.capture_lambda_handler
