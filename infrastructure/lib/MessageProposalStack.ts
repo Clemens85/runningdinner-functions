@@ -40,6 +40,7 @@ export class MessageProposalStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(60),
       allowAccessToBucket: bucket,
       addFunctionUrl: false,
+      deadLetterQueueEnabled: true,
       environment: {
         LANGSMITH_TRACING: 'true',
         LANGSMITH_ENDPOINT: 'https://eu.api.smith.langchain.com',
