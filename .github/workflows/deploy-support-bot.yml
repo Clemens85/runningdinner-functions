@@ -1,0 +1,69 @@
+name: 'Deploy Support Bot Stack'
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy against"
+        type: environment
+        required: true
+
+jobs:
+  deploy-geocoding:
+    name: 'Deploy Support Bot Stack'
+    runs-on: ubuntu-latest
+   
+    if: |
+      (github.event_name == 'workflow_dispatch')
+
+    environment:
+      name: ${{ github.event.inputs.environment }}
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - uses: actions/checkout@v4
+        name: Check-out repository
+
+      # Stack code for NodeJS functions is also run through during deployment (although not really applied)
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm package manager
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        name: 'Install Node.js & cache pnpm store'
+        with:
+          cache: 'pnpm'
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Set AWS_ACCOUNT_ID to Env
+        run: |
+          echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
+        env:
+          AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-central-1
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github
+
+      - name: Create placeholder for route optimization layer
+        run: mkdir -p infrastructure/lib/layers/route_optimization
+
+      - name: Deploy Support Bot Stack
+        run: |
+          cd infrastructure
+          npm install
+          export RUNNINGDINNER_FUNCTIONS_STAGE=${{ github.event.inputs.environment }}
+          npx cdk deploy SupportBotStack \
+            --context region=eu-central-1 \
+            --require-approval never \
+            --verbose
+
