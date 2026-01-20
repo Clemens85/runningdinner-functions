@@ -60,9 +60,9 @@ jobs:
       - name: Deploy Geocoding Stack to Dev
         run: |
           cd infrastructure
-          pnpm install
+          npm install
           export RUNNINGDINNER_FUNCTIONS_STAGE=dev
-          pnpm cdk deploy GeocodingStack \
+          npx cdk deploy GeocodingStack \
             --context region=eu-central-1 \
             --require-approval never \
             --verbose
