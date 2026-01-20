@@ -57,6 +57,9 @@ jobs:
           aws-region: eu-central-1
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github
 
+      - name: Create placeholder for route optimization layer
+        run: mkdir -p infrastructure/lib/layers/route_optimization
+
       - name: Deploy Geocoding Stack to Dev
         run: |
           cd infrastructure
