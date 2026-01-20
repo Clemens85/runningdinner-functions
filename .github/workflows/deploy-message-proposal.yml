@@ -1,4 +1,4 @@
-name: 'Deploy Geocoding Stack'
+name: 'Deploy Message Proposal Stack'
 
 on:
   workflow_dispatch:
@@ -10,12 +10,11 @@ on:
 
 jobs:
   deploy-geocoding:
-    name: 'Deploy Geocoding Stack'
+    name: 'Deploy Message Proposal Stack'
     runs-on: ubuntu-latest
    
     if: |
       (github.event_name == 'workflow_dispatch')
-     # || (github.event_name == 'push' && github.ref == 'refs/heads/main')
 
     environment:
       name: ${{ github.event.inputs.environment }}
@@ -27,23 +26,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: Check-out repository
-
-      - uses: pnpm/action-setup@v3
-        name: Install pnpm package manager
-        with:
-          version: 9.15.0
-
-      - uses: actions/setup-node@v4
-        name: 'Install Node.js & cache pnpm store'
-        with:
-          cache: 'pnpm'
-          node-version-file: '.nvmrc'
-
-      - name: Install dependencies
-        run: pnpm i --frozen-lockfile
-
-      - name: Build
-        run: pnpm build
 
       - name: Set AWS_ACCOUNT_ID to Env
         run: |
@@ -60,12 +42,12 @@ jobs:
       - name: Create placeholder for route optimization layer
         run: mkdir -p infrastructure/lib/layers/route_optimization
 
-      - name: Deploy Geocoding Stack
+      - name: Deploy Message Proposal Stack
         run: |
           cd infrastructure
           npm install
           export RUNNINGDINNER_FUNCTIONS_STAGE=${{ github.event.inputs.environment }}
-          npx cdk deploy GeocodingStack \
+          npx cdk deploy MessageProposalStack \
             --context region=eu-central-1 \
             --require-approval never \
             --verbose
