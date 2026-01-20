@@ -6,7 +6,7 @@ from ProposalInputHandler import ProposalInputHandler
 from Environment import setup_environment
 from aws_adapter.SNSNotificationHandler import SNSNotificationHandler
 from logger.Log import logger
-from pinecone.PineconeDbRepository import PineconeDbRepository
+from pinecone_vectordb_adapter.PineconeDbRepository import PineconeDbRepository
 from llm.ChatOpenAI import ChatOpenAI
 import langsmith as ls
 
