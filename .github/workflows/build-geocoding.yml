@@ -1,0 +1,86 @@
+name: 'Geocoding - Build & Test'
+
+on:
+  push:
+    paths:
+    - 'packages/geocoding/**'
+    - 'packages/geocoding-http/**'
+    - 'packages/geocoding-sqs/**'
+    - 'infrastructure/lib/GeocodingStack.ts'
+    - 'infrastructure/lib/NodeJsLambda.ts'
+    - 'infrastructure/lib/CommonUtils.ts'
+    - 'infrastructure/lib/Environment.ts'
+  workflow_dispatch:
+
+jobs:
+  build_test_geocoding:
+    name: 'Geocoding: Typecheck, lint & test'
+
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
+      
+    steps:
+      - uses: actions/checkout@v4
+        name: Check-out repository
+
+      - uses: gensecaihq/Shai-Hulud-2.0-Detector@v2
+        with:
+          fail-on-critical: true
+
+      - uses: gensecaihq/Shai-Hulud-2.0-Detector@v2
+        with:
+          fail-on-critical: true
+          working-directory: 'infrastructure'
+          
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm package manager
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        name: 'Install Node.js & cache pnpm store'
+        with:
+          cache: 'pnpm'
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Lint All Node Packages
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-central-1
+          role-to-assume: arn:aws:iam::${{ env.BUILD_AWS_ACCOUNT_ID }}:role/github
+        env:
+          BUILD_AWS_ACCOUNT_ID: ${{ vars.BUILD_AWS_ACCOUNT_ID }}
+
+      - name: Test
+        run: |
+          cd packages/geocoding
+          pnpm test:ci
+
+      - name: Upload Geocoding Test Report
+        uses: actions/upload-artifact@v4  # upload test results
+        if: success() || failure()        # run this step even if previous step failed
+        with:
+          name: test-results
+          path: packages/geocoding/reports/
+
+      - name: Geocoding Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Geocoding Results               # Name of the check run which will be created
+          path: packages/geocoding/reports/junit.xml         # Path to test results
+          reporter: java-junit             # Format of test results
+          fail-on-error: "false"
+          fail-on-empty: "false"

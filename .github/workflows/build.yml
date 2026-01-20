@@ -1,206 +1,206 @@
-name: 'Build & Test'
+# name: 'Build & Test'
 
-on:
-  push:
-  workflow_dispatch:
+# on:
+#   push:
+#   workflow_dispatch:
 
-jobs:
-  build_test_geocoding:
-    name: 'Geocoding: Typecheck, lint & test'
+# jobs:
+#   build_test_geocoding:
+#     name: 'Geocoding: Typecheck, lint & test'
 
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-      checks: write
+#     runs-on: ubuntu-latest
+#     permissions:
+#       id-token: write
+#       contents: read
+#       checks: write
       
-    steps:
-      - uses: actions/checkout@v4
-        name: Check-out repository
+#     steps:
+#       - uses: actions/checkout@v4
+#         name: Check-out repository
 
-      - uses: gensecaihq/Shai-Hulud-2.0-Detector@v2
-        with:
-          fail-on-critical: true
+#       - uses: gensecaihq/Shai-Hulud-2.0-Detector@v2
+#         with:
+#           fail-on-critical: true
 
-      - uses: gensecaihq/Shai-Hulud-2.0-Detector@v2
-        with:
-          fail-on-critical: true
-          working-directory: 'infrastructure'
+#       - uses: gensecaihq/Shai-Hulud-2.0-Detector@v2
+#         with:
+#           fail-on-critical: true
+#           working-directory: 'infrastructure'
           
-      - uses: pnpm/action-setup@v3
-        name: Install pnpm package manager
-        with:
-          version: 9.15.0
+#       - uses: pnpm/action-setup@v3
+#         name: Install pnpm package manager
+#         with:
+#           version: 9.15.0
 
-      - uses: actions/setup-node@v4
-        name: 'Install Node.js & cache pnpm store'
-        with:
-          cache: 'pnpm'
-          node-version-file: '.nvmrc'
+#       - uses: actions/setup-node@v4
+#         name: 'Install Node.js & cache pnpm store'
+#         with:
+#           cache: 'pnpm'
+#           node-version-file: '.nvmrc'
 
-      - name: Install dependencies
-        run: pnpm i --frozen-lockfile
+#       - name: Install dependencies
+#         run: pnpm i --frozen-lockfile
 
-      - name: Lint All Node Packages
-        run: pnpm lint
+#       - name: Lint All Node Packages
+#         run: pnpm lint
 
-      - name: Build
-        run: pnpm build
+#       - name: Build
+#         run: pnpm build
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::${{ env.BUILD_AWS_ACCOUNT_ID }}:role/github
-        env:
-          BUILD_AWS_ACCOUNT_ID: ${{ vars.BUILD_AWS_ACCOUNT_ID }}
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v4
+#         with:
+#           aws-region: eu-central-1
+#           role-to-assume: arn:aws:iam::${{ env.BUILD_AWS_ACCOUNT_ID }}:role/github
+#         env:
+#           BUILD_AWS_ACCOUNT_ID: ${{ vars.BUILD_AWS_ACCOUNT_ID }}
 
-      - name: Test
-        run: |
-          cd packages/geocoding
-          pnpm test:ci
+#       - name: Test
+#         run: |
+#           cd packages/geocoding
+#           pnpm test:ci
 
-      - name: Upload Geocoding Test Report
-        uses: actions/upload-artifact@v4  # upload test results
-        if: success() || failure()        # run this step even if previous step failed
-        with:
-          name: test-results
-          path: packages/geocoding/reports/
+#       - name: Upload Geocoding Test Report
+#         uses: actions/upload-artifact@v4  # upload test results
+#         if: success() || failure()        # run this step even if previous step failed
+#         with:
+#           name: test-results
+#           path: packages/geocoding/reports/
 
-      - name: Geocoding Test Report
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: Geocoding Results               # Name of the check run which will be created
-          path: packages/geocoding/reports/junit.xml         # Path to test results
-          reporter: java-junit             # Format of test results
-          fail-on-error: "false"
-          fail-on-empty: "false"
+#       - name: Geocoding Test Report
+#         uses: dorny/test-reporter@v1
+#         if: always()
+#         with:
+#           name: Geocoding Results               # Name of the check run which will be created
+#           path: packages/geocoding/reports/junit.xml         # Path to test results
+#           reporter: java-junit             # Format of test results
+#           fail-on-error: "false"
+#           fail-on-empty: "false"
 
-  build_test_route_optimization:
-    name: 'Route Optimization'
+#   build_test_route_optimization:
+#     name: 'Route Optimization'
 
-    runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      contents: read
+#     runs-on: ubuntu-latest
+#     permissions:
+#       checks: write
+#       contents: read
     
-    steps:
-      - uses: actions/checkout@v4
-        name: Check-out repository
+#     steps:
+#       - uses: actions/checkout@v4
+#         name: Check-out repository
 
-      - uses: actions/setup-python@v5
-        name: Set up Python
-        with:
-          python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: 'packages/optimization/requirements-dev.txt'
+#       - uses: actions/setup-python@v5
+#         name: Set up Python
+#         with:
+#           python-version: '3.12'
+#           cache: 'pip'
+#           cache-dependency-path: 'packages/optimization/requirements-dev.txt'
 
-      - name: Install dependencies
-        run: |
-          cd packages/optimization
-          pip install -r requirements-dev.txt
-          pip install pytest-cov
+#       - name: Install dependencies
+#         run: |
+#           cd packages/optimization
+#           pip install -r requirements-dev.txt
+#           pip install pytest-cov
 
-      - name: Run Route Optimization tests with coverage
-        run: |
-          cd packages/optimization
-          PYTHONPATH=. pytest --junitxml=reports/junit.xml --cov=. --cov-report=xml --cov-report=term
+#       - name: Run Route Optimization tests with coverage
+#         run: |
+#           cd packages/optimization
+#           PYTHONPATH=. pytest --junitxml=reports/junit.xml --cov=. --cov-report=xml --cov-report=term
 
-      - name: Upload Route Optimization Test Report
-        uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: route-optimization-test-results
-          path: packages/optimization/reports/
+#       - name: Upload Route Optimization Test Report
+#         uses: actions/upload-artifact@v4
+#         if: success() || failure()
+#         with:
+#           name: route-optimization-test-results
+#           path: packages/optimization/reports/
 
-      - name: Route Optimization Test Report
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: Route Optimization Test Results
-          path: packages/optimization/reports/junit.xml
-          reporter: java-junit
-          fail-on-error: "false"
-          fail-on-empty: "false"
+#       - name: Route Optimization Test Report
+#         uses: dorny/test-reporter@v1
+#         if: always()
+#         with:
+#           name: Route Optimization Test Results
+#           path: packages/optimization/reports/junit.xml
+#           reporter: java-junit
+#           fail-on-error: "false"
+#           fail-on-empty: "false"
 
-      - name: Upload Route Optimization Coverage Report
-        uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: route-optimization-coverage
-          path: packages/optimization/coverage.xml
+#       - name: Upload Route Optimization Coverage Report
+#         uses: actions/upload-artifact@v4
+#         if: success() || failure()
+#         with:
+#           name: route-optimization-coverage
+#           path: packages/optimization/coverage.xml
 
-  build_test_message_proposal:
-    name: 'Message Proposal'
+#   build_test_message_proposal:
+#     name: 'Message Proposal'
 
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-      checks: write
+#     runs-on: ubuntu-latest
+#     permissions:
+#       id-token: write
+#       contents: read
+#       checks: write
     
-    steps:
-      - uses: actions/checkout@v4
-        name: Check-out repository
+#     steps:
+#       - uses: actions/checkout@v4
+#         name: Check-out repository
 
-      - uses: actions/setup-python@v5
-        name: Set up Python
-        with:
-          python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: 'packages/message-proposal/requirements-dev.txt'
+#       - uses: actions/setup-python@v5
+#         name: Set up Python
+#         with:
+#           python-version: '3.12'
+#           cache: 'pip'
+#           cache-dependency-path: 'packages/message-proposal/requirements-dev.txt'
 
-      - name: Install dependencies
-        run: |
-          cd packages/message-proposal
-          pip install -r requirements-dev.txt
-          pip install pytest-cov
+#       - name: Install dependencies
+#         run: |
+#           cd packages/message-proposal
+#           pip install -r requirements-dev.txt
+#           pip install pytest-cov
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::${{ env.BUILD_AWS_ACCOUNT_ID }}:role/github
-        env:
-          BUILD_AWS_ACCOUNT_ID: ${{ vars.BUILD_AWS_ACCOUNT_ID }}
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v4
+#         with:
+#           aws-region: eu-central-1
+#           role-to-assume: arn:aws:iam::${{ env.BUILD_AWS_ACCOUNT_ID }}:role/github
+#         env:
+#           BUILD_AWS_ACCOUNT_ID: ${{ vars.BUILD_AWS_ACCOUNT_ID }}
 
-      - name: Retrieve secrets from AWS Parameter Store
-        run: |
-          OPENAI_API_KEY=$(aws ssm get-parameter --name /runningdinner/openai/apikey --with-decryption --query Parameter.Value --output text)
-          PINECONE_API_KEY=$(aws ssm get-parameter --name /runningdinner/pinecone/apikey --with-decryption --query Parameter.Value --output text)
-          echo "OPENAI_API_KEY=$OPENAI_API_KEY" > packages/message-proposal/tests/.env
-          echo "PINECONE_API_KEY=$PINECONE_API_KEY" >> packages/message-proposal/tests/.env
+#       - name: Retrieve secrets from AWS Parameter Store
+#         run: |
+#           OPENAI_API_KEY=$(aws ssm get-parameter --name /runningdinner/openai/apikey --with-decryption --query Parameter.Value --output text)
+#           PINECONE_API_KEY=$(aws ssm get-parameter --name /runningdinner/pinecone/apikey --with-decryption --query Parameter.Value --output text)
+#           echo "OPENAI_API_KEY=$OPENAI_API_KEY" > packages/message-proposal/tests/.env
+#           echo "PINECONE_API_KEY=$PINECONE_API_KEY" >> packages/message-proposal/tests/.env
 
-      - name: Run Message Proposal tests with coverage
-        run: |
-          cd packages/message-proposal
-          PYTHONPATH=. pytest --junitxml=reports/junit.xml --cov=. --cov-report=xml --cov-report=term
+#       - name: Run Message Proposal tests with coverage
+#         run: |
+#           cd packages/message-proposal
+#           PYTHONPATH=. pytest --junitxml=reports/junit.xml --cov=. --cov-report=xml --cov-report=term
 
-      - name: Upload Message Proposal Test Report
-        uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: message-proposal-test-results
-          path: packages/message-proposal/reports/
+#       - name: Upload Message Proposal Test Report
+#         uses: actions/upload-artifact@v4
+#         if: success() || failure()
+#         with:
+#           name: message-proposal-test-results
+#           path: packages/message-proposal/reports/
 
-      - name: Message Proposal Test Report
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: Message Proposal Test Results
-          path: packages/message-proposal/reports/junit.xml
-          reporter: java-junit
-          fail-on-error: "false"
-          fail-on-empty: "false"
+#       - name: Message Proposal Test Report
+#         uses: dorny/test-reporter@v1
+#         if: always()
+#         with:
+#           name: Message Proposal Test Results
+#           path: packages/message-proposal/reports/junit.xml
+#           reporter: java-junit
+#           fail-on-error: "false"
+#           fail-on-empty: "false"
 
-      - name: Upload Message Proposal Coverage Report
-        uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: message-proposal-coverage
-          path: packages/message-proposal/coverage.xml
+#       - name: Upload Message Proposal Coverage Report
+#         uses: actions/upload-artifact@v4
+#         if: success() || failure()
+#         with:
+#           name: message-proposal-coverage
+#           path: packages/message-proposal/coverage.xml
 
-      - name: Cleanup secrets
-        if: always()
-        run: rm -f packages/message-proposal/tests/.env
+#       - name: Cleanup secrets
+#         if: always()
+#         run: rm -f packages/message-proposal/tests/.env

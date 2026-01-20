@@ -1,12 +1,10 @@
-import { Construct } from "constructs";
-import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as cdk from "aws-cdk-lib";
-import * as path from "node:path";
-import { Bucket } from "aws-cdk-lib/aws-s3";
-import {
-  PythonFunction,
-  PythonFunctionProps,
-} from "@aws-cdk/aws-lambda-python-alpha";
+import * as path from 'node:path';
+
+import { PythonFunction, PythonFunctionProps } from '@aws-cdk/aws-lambda-python-alpha';
+import * as cdk from 'aws-cdk-lib';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
+import { Construct } from 'constructs';
 
 export type PythonLambdaProps = {
   name: string;
@@ -16,7 +14,7 @@ export type PythonLambdaProps = {
   allowAccessToBucket?: Bucket;
   index: string;
   handler: string;
-} & Omit<PythonFunctionProps, "handler" | "code" | "entry">;
+} & Omit<PythonFunctionProps, 'handler' | 'code' | 'entry'>;
 
 export class PythonLambda extends Construct {
   public lambdaFunction: lambda.Function;
@@ -26,24 +24,12 @@ export class PythonLambda extends Construct {
   constructor(scope: Construct, id: string, props: PythonLambdaProps) {
     super(scope, id);
 
-    const {
-      name,
-      packageFolderName,
-      index,
-      handler,
-      environment,
-      timeout,
-      addFunctionUrl,
-      cors,
-      deadLetterQueueEnabled,
-      allowAccessToBucket,
-      ...remainder
-    } = props;
+    const { name, packageFolderName, index, handler, environment, timeout, addFunctionUrl, cors, deadLetterQueueEnabled, allowAccessToBucket, ...remainder } = props;
 
     let environmentToSet = environment || {};
     environmentToSet = {
       ...environmentToSet,
-      JOBLIB_MULTIPROCESSING: "0",
+      JOBLIB_MULTIPROCESSING: '0',
     };
     const timeoutToSet = timeout || cdk.Duration.seconds(30);
 
@@ -87,10 +73,7 @@ export class PythonLambda extends Construct {
         cors,
       });
       // Remove all non-alphanumeric chars from packageFolderName
-      const normalizedPackageFolderName = packageFolderName.replace(
-        /[^a-zA-Z0-9]/g,
-        ""
-      );
+      const normalizedPackageFolderName = packageFolderName.replace(/[^a-zA-Z0-9]/g, '');
       new cdk.CfnOutput(this, `${normalizedPackageFolderName}FunctionUrl`, {
         value: functionUrl.url,
         key: `${normalizedPackageFolderName}FunctionUrl`,
