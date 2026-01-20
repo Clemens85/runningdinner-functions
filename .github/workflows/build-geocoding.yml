@@ -10,6 +10,7 @@ on:
     - 'infrastructure/lib/NodeJsLambda.ts'
     - 'infrastructure/lib/CommonUtils.ts'
     - 'infrastructure/lib/Environment.ts'
+    - '.github/workflows/build-geocoding.yml'
   workflow_dispatch:
 
 jobs:
@@ -68,19 +69,9 @@ jobs:
           cd packages/geocoding
           pnpm test:ci
 
-      - name: Upload Geocoding Test Report
-        uses: actions/upload-artifact@v4  # upload test results
-        if: success() || failure()        # run this step even if previous step failed
-        with:
-          name: test-results
-          path: packages/geocoding/reports/
-
-      - name: Geocoding Test Report
-        uses: dorny/test-reporter@v1
+      - name: Publish Geocoding Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          name: Geocoding Results               # Name of the check run which will be created
-          path: packages/geocoding/reports/junit.xml         # Path to test results
-          reporter: java-junit             # Format of test results
-          fail-on-error: "false"
-          fail-on-empty: "false"
+          files: packages/geocoding/reports/junit.xml
+          check_name: Geocoding Test Results

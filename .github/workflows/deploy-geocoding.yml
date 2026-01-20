@@ -60,63 +60,10 @@ jobs:
       - name: Deploy Geocoding Stack to Dev
         run: |
           cd infrastructure
+          pnpm install
           export RUNNINGDINNER_FUNCTIONS_STAGE=dev
           npx cdk deploy GeocodingStack \
             --context region=eu-central-1 \
             --require-approval never \
             --verbose
 
-  # deploy-geocoding-prod:
-  #   name: 'Deploy to Prod'
-  #   runs-on: ubuntu-latest
-  #   # Only run on workflow_dispatch with prod environment
-  #   if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prod'
-    
-  #   environment:
-  #     name: prod
-    
-  #   permissions:
-  #     id-token: write
-  #     contents: read
-    
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       name: Check-out repository
-
-  #     - uses: pnpm/action-setup@v3
-  #       name: Install pnpm package manager
-  #       with:
-  #         version: 9.15.0
-
-  #     - uses: actions/setup-node@v4
-  #       name: 'Install Node.js & cache pnpm store'
-  #       with:
-  #         cache: 'pnpm'
-  #         node-version-file: '.nvmrc'
-
-  #     - name: Install dependencies
-  #       run: pnpm i --frozen-lockfile
-
-  #     - name: Build
-  #       run: pnpm build
-
-  #     - name: Set AWS_ACCOUNT_ID to Env
-  #       run: |
-  #         echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
-  #       env:
-  #         AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
-
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         aws-region: eu-central-1
-  #         role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github
-
-  #     - name: Deploy Geocoding Stack to Prod
-  #       run: |
-  #         cd infrastructure
-  #         export RUNNINGDINNER_FUNCTIONS_STAGE=prod
-  #         npx cdk deploy GeocodingStack \
-  #           --context region=eu-central-1 \
-  #           --require-approval never \
-  #           --verbose
