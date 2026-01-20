@@ -62,7 +62,7 @@ jobs:
           cd infrastructure
           pnpm install
           export RUNNINGDINNER_FUNCTIONS_STAGE=dev
-          npx cdk deploy GeocodingStack \
+          pnpm cdk deploy GeocodingStack \
             --context region=eu-central-1 \
             --require-approval never \
             --verbose

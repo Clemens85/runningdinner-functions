@@ -58,22 +58,12 @@ jobs:
           cd packages/message-proposal
           PYTHONPATH=. pytest --junitxml=reports/junit.xml --cov=. --cov-report=xml --cov-report=term
 
-      - name: Upload Message Proposal Test Report
-        uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: message-proposal-test-results
-          path: packages/message-proposal/reports/
-
-      - name: Message Proposal Test Report
-        uses: dorny/test-reporter@v1
+      - name: Publish Message Proposal Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          name: Message Proposal Test Results
-          path: packages/message-proposal/reports/junit.xml
-          reporter: java-junit
-          fail-on-error: "false"
-          fail-on-empty: "false"
+          files: packages/message-proposal/reports/junit.xml
+          check_name: Message Proposal Test Results
 
       - name: Upload Message Proposal Coverage Report
         uses: actions/upload-artifact@v4
