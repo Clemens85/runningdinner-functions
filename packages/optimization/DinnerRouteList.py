@@ -27,6 +27,8 @@ class GeocodingResult(BaseModel):
 class RouteOptimizationSettings(BaseModel):
     currentSumDistanceInMeters: float
     currentAverageDistanceInMeters: float
+    ignoreMealAssignments: Optional[bool] = False
+    minimumDistanceInMeters: Optional[int] = 0
 
 class TeamsOnRoute(BaseModel):
     teamNumber: int
