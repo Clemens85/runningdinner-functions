@@ -17,6 +17,6 @@ dev-dist/
 __pycache__/
 .ipynb_checkpoints/
 
-test-data/78_teams.json
+/packages/optimization/test-data/optimization/
 /packages/optimization/test-data/78_teams.json
 chroma.sqlite3

@@ -65,6 +65,7 @@ export class RouteOptimizationStack extends cdk.Stack {
           '*.pyc',
           '*.pyo',
           'test/',
+          'docs/',
           'test-data/',
           'main.py',
           'main_watcher.py',
