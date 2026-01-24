@@ -1,4 +1,5 @@
 from copy import deepcopy
+from typing import List
 import numpy as np
 import json
 import itertools
@@ -30,10 +31,12 @@ class DataProvider:
             route.mealClass = route.meal.label
 
     def get_routes(self):
+        # return copy of routes to avoid unintended modifications
         return deepcopy(self.routes)
 
     def get_distance_matrix(self):
-        return self.dist_matrix
+        # return copy of distance matrix to avoid unintended modifications
+        return deepcopy(self.dist_matrix)
     
     def get_cluster_sizes(self):
         return self.cluster_sizes
@@ -44,7 +47,7 @@ class DataProvider:
         percentiles = {p: np.percentile(dists, p) for p in [50, 70, 75, 80, 90, 95, 99]}
         return percentiles
     
-    def get_cluster_template(self):
+    def get_cluster_template(self) -> List[List[str]]:
         """ Returns a list of lists, where each inner list contains meal classes for a cluster.
         For example, if there are 3 meal classes (Vorspeise, Hauptspeise, Nachspeise) and the cluster size is 9,
         it will return:
