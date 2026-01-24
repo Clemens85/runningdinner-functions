@@ -1,12 +1,13 @@
 import json
-from Clusterer import Clusterer
+
+from ClustererFactory import get_clusterer_instance
 from DataProvider import DataProvider
 from DinnerRouteList import DinnerRoute, DinnerRouteList
 from RouteBuilder import RouteBuilder, calculate_distance_sum
 from loaders.DataLoader import  DataLoader
 from logger.Log import Log
 import itertools
-from response import ResponseHandler
+from response.ResponseHandler import ResponseHandler
 from response.EventMapper import EventMapper
 from typing import List
 
@@ -29,7 +30,7 @@ class RouteOptimizer:
         original_distance_sum = calculate_distance_sum(original_routes, self.data.get_distance_matrix())
         Log.info(f"Original distance sum: {original_distance_sum:2f} m")
 
-        clusterer = Clusterer(self.data)
+        clusterer = get_clusterer_instance(self.data)
         optimized_route_clusters, labels = clusterer.predict()
         
         Log.info(labels)

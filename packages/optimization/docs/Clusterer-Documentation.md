@@ -188,7 +188,7 @@ Internal debugging method that logs current state of clustering.
 ### DinnerRoute Attributes (relevant to Clusterer)
 
 - `originalIndex`: Index in the original data (used for distance matrix lookups)
-- `mealClass`: String indicating which course the team hosts ('APPETIZER', 'MAIN', 'DESSERT')
+- `meal`: Object indicating which course the team hosts ('APPETIZER', 'MAIN', 'DESSERT')
 - `clusterNumber`: Integer cluster label (-1 means unassigned/removed)
 - `teamNumber`: Unique team identifier
 

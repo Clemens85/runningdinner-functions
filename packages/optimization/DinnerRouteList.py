@@ -61,7 +61,6 @@ class DinnerRoute(BaseModel):
     geocodingResult: GeocodingResult
     clusterNumber: int
     teamsOnRoute: List[TeamsOnRoute] # List of teams which this host will visit on his route to take the other meals
-    mealClass: Optional[str] = None
     originalIndex: Optional[int] = None
     
     def __hash__(self):

@@ -19,7 +19,7 @@ This is a Python-based AWS Lambda function that optimizes dinner routes for a "r
 
 **Key Data Structures:**
 - `DinnerRoute` (Pydantic models in [DinnerRouteList.py](DinnerRouteList.py)): Represents a team with `meal`, `teamNumber`, `clusterNumber`, `teamsOnRoute` (visitors)
-- `DataProvider`: Wraps input data, adds `originalIndex` and `mealClass` to routes
+- `DataProvider`: Wraps input data, adds `originalIndex` to routes
 
 ## Critical Patterns
 

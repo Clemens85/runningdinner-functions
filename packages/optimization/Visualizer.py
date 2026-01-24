@@ -23,7 +23,7 @@ class Visualizer:
             'lng': route.geocodingResult.lng,
             'lat': route.geocodingResult.lat,
             'clusterNumber': route.clusterNumber,
-            'mealClass': route.mealClass
+            'mealClass': route.meal.label
         } for route in routes])
 
         jitter = 0.002

@@ -28,7 +28,6 @@ class DataProvider:
         
         for index, route in enumerate(self.routes):
             route.originalIndex = index
-            route.mealClass = route.meal.label
 
     def get_routes(self):
         # return copy of routes to avoid unintended modifications
@@ -57,7 +56,7 @@ class DataProvider:
         """
         result = []
         
-        unique_meal_classes = self.get_unique_meal_classes_ordered() # Vorspeise, Hauptspeise, Nachspeise
+        unique_meal_classes = self.get_unique_meal_labels_ordered() # Vorspeise, Hauptspeise, Nachspeise
 
         for cluster_size in self.get_cluster_sizes():
             # cluster_size is e.g. 9
@@ -68,10 +67,16 @@ class DataProvider:
             result.append(list(itertools.chain.from_iterable(meal_classes_of_cluster)))
         return result
     
-    def get_unique_meal_classes_ordered(self):
+    def get_unique_meal_labels_ordered(self):
         """ Returns a list of unique meal classes from the routes.
         """
         return [meal_class.label for meal_class in self.meal_classes]
+
+    def get_meal_class_by_label(self, label: str):
+        for meal_class in self.meal_classes:
+            if meal_class.label == label:
+                return meal_class
+        return None
     
     def get_admin_id(self):
         return self.admin_id

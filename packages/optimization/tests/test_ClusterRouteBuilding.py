@@ -2,7 +2,8 @@ from collections import Counter
 from pathlib import Path
 from typing import List
 
-from Clusterer import Clusterer
+from ClustererWithNewMealAssignments import ClustererWithNewMealAssignments
+from DefaultClusterer import DefaultClusterer
 from DataProvider import DataProvider
 from DinnerRouteList import DinnerRoute
 from RouteBuilder import calculate_distance_sum
@@ -23,9 +24,9 @@ def _get_routes_of_cluster_with_expected_size(routes, cluster_label, expected_si
     assert len(result) == expected_size
     return result
 
-def _get_routes_of_cluster_with_meal(routes, cluster_label, meal_class):
+def _get_routes_of_cluster_with_meal(routes: List[DinnerRoute], cluster_label: int, meal_label: str):
     result = [route for route in routes if route.clusterNumber == cluster_label]
-    result = [route for route in result if route.mealClass == meal_class]
+    result = [route for route in result if route.meal.label == meal_label]
     return result
 
 def test_predict_3_team_clusters():
@@ -33,7 +34,7 @@ def test_predict_3_team_clusters():
 
     assert data.get_cluster_template()[0] == ['Vorspeise', 'Vorspeise', 'Vorspeise', 'Hauptspeise', 'Hauptspeise', 'Hauptspeise', 'Nachspeise', 'Nachspeise', 'Nachspeise']
 
-    clusterer = Clusterer(data)
+    clusterer = DefaultClusterer(data)
     final_routes, final_labels = clusterer.predict()
     assert len(final_routes) == 27
     assert len(final_labels) == 27
@@ -41,15 +42,33 @@ def test_predict_3_team_clusters():
 
     for cluster_label in range (3):
         routes_of_cluster = _get_routes_of_cluster_with_expected_size(final_routes, cluster_label, 9)
-        for meal_class in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
-          print (f"Asserting cluster {cluster_label} has 3 occurrences of {meal_class}")
-          sum_meal = len([route for route in routes_of_cluster if route.mealClass == meal_class])
+        for meal_label in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
+          print (f"Asserting cluster {cluster_label} has 3 occurrences of {meal_label}")
+          sum_meal = len([route for route in routes_of_cluster if route.meal.label == meal_label])
           assert sum_meal == 3
+
+def test_predict_3_team_clusters_with_new_meal_assignments():
+    data = load_sample_data("27_teams.json")
+
+    assert data.get_cluster_template()[0] == ['Vorspeise', 'Vorspeise', 'Vorspeise', 'Hauptspeise', 'Hauptspeise', 'Hauptspeise', 'Nachspeise', 'Nachspeise', 'Nachspeise']
+
+    clusterer = ClustererWithNewMealAssignments(data)
+    final_routes, final_labels = clusterer.predict()
+    assert len(final_routes) == 27
+    assert len(final_labels) == 27
+    assert set(final_labels) == {0, 1, 2}
+
+    for cluster_label in range (3):
+        routes_of_cluster = _get_routes_of_cluster_with_expected_size(final_routes, cluster_label, 9)
+        for meal_label in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
+          print (f"Asserting cluster {cluster_label} has 3 occurrences of {meal_label}")
+          sum_meal = len([route for route in routes_of_cluster if route.meal.label == meal_label])
+          assert sum_meal == 3, f"Cluster {cluster_label} has {sum_meal} {meal_label}, expected 3"
 
 def test_predict_5_team_clusters():
     data = load_sample_data("45_teams.json")
 
-    clusterer = Clusterer(data)
+    clusterer = DefaultClusterer(data)
     num_expected_clusters = len(data.get_cluster_sizes())
     assert num_expected_clusters == 5
 
@@ -59,16 +78,55 @@ def test_predict_5_team_clusters():
 
     for cluster_label in range (5):
         routes_of_cluster = _get_routes_of_cluster_with_expected_size(final_routes, cluster_label, 9)
-        for meal_class in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
-          print (f"Asserting cluster {cluster_label} has 3 occurrences of {meal_class}")
-          sum_meal = len([route for route in routes_of_cluster if route.mealClass == meal_class])
+        for meal_label in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
+          print (f"Asserting cluster {cluster_label} has 3 occurrences of {meal_label}")
+          sum_meal = len([route for route in routes_of_cluster if route.meal.label == meal_label])
           assert sum_meal == 3
 
 
 def test_predict_2_team_clusters_different_sizes():
     data = load_sample_data("21_teams.json")
 
-    clusterer = Clusterer(data)
+    clusterer = DefaultClusterer(data)
+    num_expected_clusters = len(data.get_cluster_sizes())
+    assert num_expected_clusters == 2
+
+    final_routes, final_labels = clusterer.predict()
+    assert len(final_labels) == 21
+    unique_cluster_labels = set(final_labels)
+    assert unique_cluster_labels == {0,1}
+
+    # Create new list from unique_cluster_labels so that the order of list is desc by occurence of cluster label
+    counter = Counter(final_labels)
+    unique_cluster_labels = [item for item, count in counter.most_common()][::-1] # [::-1] reverts the list, so that it's asc
+
+    cluster_9 = unique_cluster_labels[0]
+    _get_routes_of_cluster_with_expected_size(final_routes, cluster_9, 9)
+    for _, meal_label in enumerate(["Vorspeise", "Hauptspeise", "Nachspeise"]):
+        print(f"Asserting cluster {cluster_9} has 3 occurrences of {meal_label}")
+        route_hosts_with_meal_class = _get_routes_of_cluster_with_meal(final_routes, cluster_9, meal_label)
+        sum_meal = len(route_hosts_with_meal_class)
+        assert sum_meal == 3
+
+    cluster_12 = unique_cluster_labels[1]
+    cluster_12_routes = _get_routes_of_cluster_with_expected_size(final_routes, cluster_12, 12)
+    for _, meal_label in enumerate(["Vorspeise", "Hauptspeise", "Nachspeise"]):
+        print(f"Asserting cluster {cluster_12} has 4 occurrences of {meal_label}")
+        route_hosts_with_meal_class = _get_routes_of_cluster_with_meal(final_routes, cluster_12, meal_label)
+        sum_meal = len(route_hosts_with_meal_class)
+        assert sum_meal == 4
+
+    _clear_teams_on_route(cluster_12_routes)
+
+    route_builder = RouteBuilder(data, data.get_routes())
+    routes_of_cluster, _ = route_builder.build_route_for_cluster_label(2)
+    assert_routes_of_cluster(routes_of_cluster, cluster_label=2, expected_meals_size=4)
+
+
+def test_predict_2_team_clusters_different_sizes_with_new_meal_asignments():
+    data = load_sample_data("21_teams.json")
+
+    clusterer = ClustererWithNewMealAssignments(data)
     num_expected_clusters = len(data.get_cluster_sizes())
     assert num_expected_clusters == 2
 
@@ -107,7 +165,7 @@ def test_predict_2_team_clusters_different_sizes():
 def test_predict_only_one_cluster():
     data = load_sample_data("15_teams.json")
 
-    clusterer = Clusterer(data)
+    clusterer = DefaultClusterer(data)
     num_expected_clusters = len(data.get_cluster_sizes())
     assert num_expected_clusters == 1
 
@@ -116,9 +174,9 @@ def test_predict_only_one_cluster():
     assert set(final_labels) == {0}
 
     routes_of_cluster = _get_routes_of_cluster_with_expected_size(final_routes, 0, 15)
-    for meal_class in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
-        print(f"Asserting cluster 0 has 5 occurrences of {meal_class}")
-        sum_meal = len([route for route in routes_of_cluster if route.mealClass == meal_class])
+    for meal_label in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
+        print(f"Asserting cluster 0 has 5 occurrences of {meal_label}")
+        sum_meal = len([route for route in routes_of_cluster if route.meal.label == meal_label])
         assert sum_meal == 5
 
 def test_route_building():
@@ -164,7 +222,7 @@ def assert_routes_of_cluster(routes_of_cluster: List[DinnerRoute], cluster_label
 def test_predict_1_team_cluster_15_teams():
     data = load_sample_data("15_teams.json")
 
-    clusterer = Clusterer(data)
+    clusterer = DefaultClusterer(data)
     num_expected_clusters = len(data.get_cluster_sizes())
     assert num_expected_clusters == 1
 
@@ -173,9 +231,9 @@ def test_predict_1_team_cluster_15_teams():
     assert set(final_labels) == {0}
 
     routes_of_cluster = _get_routes_of_cluster_with_expected_size(final_routes, 0, 15)
-    for meal_class in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
-        print(f"Asserting cluster 0 has 5 occurrences of {meal_class}")
-        sum_meal = len([route for route in routes_of_cluster if route.mealClass == meal_class])
+    for meal_label in (["Vorspeise", "Hauptspeise", "Nachspeise"]):
+        print(f"Asserting cluster 0 has 5 occurrences of {meal_label}")
+        sum_meal = len([route for route in routes_of_cluster if route.meal.label == meal_label])
         assert sum_meal == 5
 
 
