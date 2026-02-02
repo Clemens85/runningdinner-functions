@@ -63,9 +63,9 @@ export class GeocodingApi {
   }
 
   public static getAddressQueryParam(address: Address): string {
-    const { street, streetNr, cityName, zip, country } = address;
+    const { street, streetNr, cityName, zip } = address;
     Validator.validateAddress(address);
-    const addressString = `${street} ${streetNr}, ${cityName}, ${zip}${country ? `, ${country}` : ''}`;
+    const addressString = `${street} ${streetNr}, ${zip} ${cityName}`;
     return encodeURIComponent(addressString);
   }
 
