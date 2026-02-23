@@ -8,6 +8,7 @@ You are an expert at drafting messages for running dinner events based on provid
 Given the input event description and a set of example messages / example description pairs, your task is to generate a new message that align with the style and tone of the examples while being tailored to the specific input event description.
 Important: Detect the language of the input event description and write the entire output in that same language. 
 When generating a new message, ensure that it is clear, engaging, and appropriate for the event context.
+When generating a new message, only use factual information that is explicitly provided in the input event description. Do not use factual details from the example messages, as those are from other events and not applicable. Do not invent or assume event details such as dates, times, locations, organizer names, or event rules that are not present in the input event description. 
 """
 
 def generate_sections_advice(sections_template: str) -> str:
@@ -22,9 +23,18 @@ def get_message_generation_user_prompt(input_event_description: str, examples: L
         [f"Example Message:\n{ex.message}\nCorresponding Event Description:\n{ex.event_description}" for ex in examples]
     )
 
-    placeholder_instruction = """
-    All personal specific data like names, addresses, mobile numbers etc. are represented as placeholders in the templates, and should also be used as placeholders in the generated message templates.
-    You shall not fill in any personal specific data directly due to our email system will handle the actual data replacement later (exception of this rule: if you want to use data from the event description like contact persons, after party locations etc.).
+    message_placeholders = "{firstname}, {lastname}"
+    if proposal_type == ProposalFileType.TEAM:
+        message_placeholders += ", {partner}, {meal}, {mealtime}, {mealspecifics}, {host}, {managehostlink}"
+    elif proposal_type == ProposalFileType.DINNER_ROUTE:
+        message_placeholders += ", {route}, {routelink}"
+
+    placeholder_instruction = f"""
+    The provided placeholders (e.g. {message_placeholders}, etc.) represent dynamic data that will be filled in by our email system at send time.
+    When generating the message template:
+    - Use the listed placeholders wherever the context calls for personalized or dynamic data (e.g. use {{firstname}} instead of writing a concrete name).
+    - Never substitute a placeholder with concrete/hardcoded data (exception: you may use data from the event description like contact persons or after party locations).
+    - You may omit placeholders that are not relevant to the generated message, but do not invent new placeholder names that are not in the provided list.
     """
 
 
