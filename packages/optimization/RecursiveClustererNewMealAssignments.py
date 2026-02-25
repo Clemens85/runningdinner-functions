@@ -9,11 +9,11 @@ from DinnerRouteList import DinnerRoute
 from logger.Log import Log
 
 
-class ClustererWithNewMealAssignments(Clusterer):
+class RecursiveClustererNewMealAssignments(Clusterer):
 
     def __init__(self, data_provider: DataProvider):
         """
-        Given DataProvider instance, initializes the ClustererWithNewMealAssignments with following attributes:
+        Given DataProvider instance, initializes the RecursiveClustererNewMealAssignments with following attributes:
         routes: List with route information (from DataProvider)
         dist_matrix: 2D numpy array with pairwise distances
         cluster_sizes: list of ints, indicating the original number of clusters and the value of each element indicates the size of the cluster
