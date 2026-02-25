@@ -18,5 +18,6 @@ __pycache__/
 .ipynb_checkpoints/
 
 /packages/optimization/test-data/optimization/
+/packages/optimization/test-data/raw/
 /packages/optimization/test-data/78_teams.json
 chroma.sqlite3
