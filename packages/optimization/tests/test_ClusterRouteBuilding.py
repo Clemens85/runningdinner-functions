@@ -4,7 +4,6 @@ from typing import List
 
 from ClustererNewMealAssignments import ClustererNewMealAssignments
 from DefaultClusterer import DefaultClusterer
-from ClustererNewMealAssignmentsV2 import ClustererNewMealAssignmentsV2
 from DataProvider import DataProvider
 from DinnerRouteList import DinnerRoute
 from RouteBuilder import calculate_distance_sum
@@ -32,7 +31,7 @@ def _get_routes_of_cluster_with_meal(routes: List[DinnerRoute], cluster_label: i
     result = [route for route in result if route.meal.label == meal_label]
     return result
 
-@pytest.mark.parametrize("clusterer_class", [DefaultClusterer, ClustererNewMealAssignmentsV2, ClustererNewMealAssignments])
+@pytest.mark.parametrize("clusterer_class", [DefaultClusterer, ClustererNewMealAssignments])
 def test_predict_3_team_clusters(clusterer_class):
     data = load_sample_data("27_teams.json")
 
@@ -52,7 +51,7 @@ def test_predict_3_team_clusters(clusterer_class):
           assert sum_meal == 3
 
 # DefaultClusterer,
-@pytest.mark.parametrize("clusterer_class", [DefaultClusterer, ClustererNewMealAssignmentsV2, ClustererNewMealAssignments])
+@pytest.mark.parametrize("clusterer_class", [DefaultClusterer, ClustererNewMealAssignments])
 def test_predict_5_team_clusters(clusterer_class):
     data = load_sample_data("45_teams.json")
 
@@ -71,7 +70,7 @@ def test_predict_5_team_clusters(clusterer_class):
           sum_meal = len([route for route in routes_of_cluster if route.meal.label == meal_label])
           assert sum_meal == 3
 
-@pytest.mark.parametrize("clusterer_class", [DefaultClusterer, ClustererNewMealAssignmentsV2, ClustererNewMealAssignments])
+@pytest.mark.parametrize("clusterer_class", [DefaultClusterer, ClustererNewMealAssignments])
 def test_predict_2_team_clusters_different_sizes(clusterer_class):
     data = load_sample_data("21_teams.json")
 
@@ -110,7 +109,7 @@ def test_predict_2_team_clusters_different_sizes(clusterer_class):
     routes_of_cluster, _ = route_builder.build_route_for_cluster_label(2)
     assert_routes_of_cluster(routes_of_cluster, cluster_label=2, expected_meals_size=4)
 
-@pytest.mark.parametrize("clusterer_class", [DefaultClusterer, ClustererNewMealAssignmentsV2, ClustererNewMealAssignments])
+@pytest.mark.parametrize("clusterer_class", [DefaultClusterer, ClustererNewMealAssignments])
 def test_predict_only_one_cluster(clusterer_class):
     data = load_sample_data("15_teams.json")
 
@@ -147,7 +146,7 @@ def test_route_building():
         assert_routes_of_cluster(routes_of_cluster, cluster_label=cluster_label, expected_meals_size=3)
         assert optimized_distance_sum < original_distance_sum, f"Optimized distance sum {optimized_distance_sum} should be less than original {original_distance_sum}"
 
-@pytest.mark.parametrize("clusterer_class", [DefaultClusterer, ClustererNewMealAssignmentsV2, ClustererNewMealAssignments])
+@pytest.mark.parametrize("clusterer_class", [DefaultClusterer, ClustererNewMealAssignments])
 def test_predict_1_team_cluster_15_teams(clusterer_class):
     data = load_sample_data("15_teams.json")
 
