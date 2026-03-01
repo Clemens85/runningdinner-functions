@@ -159,6 +159,17 @@ class ClustererNewMealAssignments(Clusterer):
         other_cluster_routes = [r for r in other_cluster_routes if r.clusterNumber not in cluster_labels_already_finalized]
         other_cluster_indices = [route.originalIndex for route in other_cluster_routes]
 
+        if len(target_cluster_indices) == 0:
+            # Special case:
+            # If target cluster is empty, we can not calculate distances to other clusters. In this case, we just return the needed number of teams from the biggest other cluster.
+            other_cluster_routes_sorted_by_size = sorted(other_cluster_routes, key=lambda r: len([route for route in other_cluster_routes if route.clusterNumber == r.clusterNumber]), reverse=True)
+            closest_teams = []
+            for route in other_cluster_routes_sorted_by_size:
+                if len(closest_teams) >= num_needed_teams:
+                    break
+                closest_teams.append(route)
+            return closest_teams  
+
         mean_distances = []
         for idx in other_cluster_indices:
             mean_distance = self.dist_matrix[idx, target_cluster_indices].mean()
@@ -173,14 +184,6 @@ class ClustererNewMealAssignments(Clusterer):
                     break
         return closest_teams
 
-    # def __get_remaining_route_clusters_sorted_by_cluster_size(self, iterated_cluster_labels: Set[int]) -> List[List[DinnerRoute]]:
-    #     # cluster_labels_already_finalized = self.final_route_clusters.keys()
-    #     cluster_labels_sorted: List[int] = sorted({route.clusterNumber for route in self.routes if route.clusterNumber not in iterated_cluster_labels})
-    #     routes_by_cluster_list: List[List[DinnerRoute]] = []
-    #     for cluster_label in cluster_labels_sorted:
-    #         routes_of_cluster = [route for route in self.routes if route.clusterNumber == cluster_label]
-    #         routes_by_cluster_list.append(routes_of_cluster)
-    #     return sorted(routes_by_cluster_list, key=lambda r: len(r))
 
     def __balance_meals_in_cluster(self, routes_of_cluster: List[DinnerRoute], cluster_template: List[str]):
         meal_labels_current_cluster = [route.meal.label for route in routes_of_cluster]
