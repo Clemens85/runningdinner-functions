@@ -104,7 +104,7 @@ class DefaultClusterer(Clusterer):
     def __reassign_clusters_to_keep_assigned_meals(self):
         meal_labels = sorted({route.meal.label for route in self.routes}) # will typically contain 3 items: Vorspeise, Hauptspeise, Nachspeise
         iterated_cluster_labels = set()
-        for cluster_template_idx, cluster_template in enumerate(self.cluster_templates):
+        for cluster_template in self.cluster_templates:
             cluster_size = len(cluster_template)
             routes_of_cluster: List[DinnerRoute] = self.__get_cluster_with_max_distance_to_other_clusters_with_size(cluster_size, iterated_cluster_labels)
             cluster_label = routes_of_cluster[0].clusterNumber
