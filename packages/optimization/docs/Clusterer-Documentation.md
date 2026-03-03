@@ -241,7 +241,7 @@ max_distances = clusterer.print_max_distances_per_cluster()
 
 # Routes now have clusterNumber assigned
 for route in clustered_routes:
-    print(f"Team {route.teamNumber} in Cluster {route.clusterNumber}, hosts {route.meal}")
+   print(f"Team {route.teamNumber} in Cluster {route.clusterNumber}, hosts {route.meal}")
 ```
 
 ---

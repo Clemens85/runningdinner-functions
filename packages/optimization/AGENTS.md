@@ -24,7 +24,7 @@ This is a Python-based AWS Lambda function that optimizes dinner routes for a "r
 ## Critical Patterns
 
 ### Meal Class Balancing in Clustering
-After initial clustering, [Clusterer.predict()](DefaultClusterer.py#L101) performs two-phase rebalancing:
+After initial clustering, [Clusterer.predict()](LegacyClusterer.py#L101) performs two-phase rebalancing:
 1. **Remove excess:** Teams with wrong meal class are removed based on highest mean distance to cluster
 2. **Fill deficits:** Missing meal classes filled by selecting nearest available team from `available_indices`
 
