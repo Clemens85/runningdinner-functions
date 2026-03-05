@@ -85,20 +85,22 @@ class DefaultClusterer(Clusterer):
             expected_cluster_size = len(matching_cluster_template)
             assert num_teams_in_cluster == expected_cluster_size, f"Cluster {cluster_label} has {num_teams_in_cluster} teams, but expected {expected_cluster_size} teams based on cluster template after finalizing all clusters"
 
-        # Final output
-        final_routes: List[DinnerRoute] = []
-        final_cluster_labels: List[int] = []
+        # Ensure we satisfy running dinner requirements for meal assignments:
         if self.data_provider.get_optimization_settings().ignoreMealAssignments:
             for cluster_routes in self.final_route_clusters.values():
                 matching_cluster_template = [cluster_template for cluster_template in self.cluster_templates if len(cluster_template) == len(cluster_routes)][0]
                 self.__balance_meals_in_cluster(cluster_routes, matching_cluster_template)
-                final_routes.extend(cluster_routes)
-                final_cluster_labels.extend([cluster_routes[0].clusterNumber for _ in cluster_routes])
-            return final_routes, final_cluster_labels
         else:
             self.__reassign_clusters_to_keep_assigned_meals()
-            final_cluster_labels = [route.clusterNumber for route in self.routes]
-            return self.routes, final_cluster_labels
+
+        if self.data_provider.get_optimization_settings().minimumDistanceInMeters <= 1:
+             Log.info("Minimum distance in meters is set to 1 or below, skipping final distance check and potential reassignment of teams to other clusters to meet minimum distance requirement")
+        else:
+            # Final check if all teams meet minimum distance requirement to all other teams in their cluster, if not, reassign teams to other clusters until this is the case for all teams
+            self.__ensure_minimum_distance_requirement()
+            
+        final_cluster_labels = [route.clusterNumber for route in self.routes]
+        return self.routes, final_cluster_labels
 
 
     def __reassign_clusters_to_keep_assigned_meals(self):
@@ -137,7 +139,7 @@ class DefaultClusterer(Clusterer):
                         closest_swap_candidate.clusterNumber = other_cluster_team_with_meal.clusterNumber
                         other_cluster_team_with_meal.clusterNumber = cluster_label
                         # Update routes of cluster after swap
-                        routes_of_cluster = [route for route in self.routes if route.clusterNumber == cluster_label]
+                        routes_of_cluster = self.__filter_routes_by_label(cluster_label)
 
             iterated_cluster_labels.add(cluster_label)
 
@@ -281,7 +283,7 @@ class DefaultClusterer(Clusterer):
         
         candidate_clusters: List[List[DinnerRoute]] = []
         for cluster_label in cluster_labels_sorted:
-            routes_of_cluster = [route for route in self.routes if route.clusterNumber == cluster_label]
+            routes_of_cluster = self.__filter_routes_by_label(cluster_label) 
             if len(cluster_labels_sorted) == 1:
                 # only one candidate cluster, return it immediately
                 return routes_of_cluster
@@ -327,6 +329,11 @@ class DefaultClusterer(Clusterer):
         return result
 
     def __pick_swap_candidate_closest_to_target_cluster(self, swap_candidates: List[DinnerRoute], target_cluster_label: int) -> DinnerRoute:
+        """
+        Given a list of candidate routes to swap and a target cluster label, 
+        pick the candidate route which has the lowest mean distance to the routes of the target cluster, 
+        as this is likely to lead to the best overall distance for the resulting clusters after the swap. 
+        """
         target_cluster_indices = [route.originalIndex for route in self.routes if route.clusterNumber == target_cluster_label]
         min_mean_distance = float('inf')
         closest_candidate = None
@@ -339,7 +346,99 @@ class DefaultClusterer(Clusterer):
         if closest_candidate is None:
             raise Exception("No closest candidate found, but at least one candidate should be available")
         return closest_candidate
-        
+
+    def __ensure_minimum_distance_requirement(self):
+        minimum_distance = self.data_provider.get_optimization_settings().minimumDistanceInMeters
+        cluster_labels_sorted = sorted({route.clusterNumber for route in self.routes})
+        for cluster_label in cluster_labels_sorted:
+            routes_of_cluster = self.__filter_routes_by_label(cluster_label)
+            nearby_host_tuples = self.__get_nearby_host_tuples_of_cluster(routes_of_cluster)
+            duplicated_nearby_teams: Set[DinnerRoute] = self.get_duplicated_teams_from_nearby_host_tuples(nearby_host_tuples)
+
+            # First swap those teams that "connect" multiple nearby host tuples, which maybe already resolves the minium distance requirement
+            swapped_teams: Set[DinnerRoute] = set()
+            for team in duplicated_nearby_teams:
+                Log.info(f"""Team {team} in cluster {cluster_label} is part of multiple nearby host tuples""")
+                closest_team_other_cluster = self.__get_swap_candidate_from_other_cluster(team, swapped_teams)
+                
+                if closest_team_other_cluster is None:
+                    Log.info(f"No teams with meal class {team.meal.label} found in other clusters to swap with team {team} to resolve minimum distance of {minimum_distance} m. Skipping swap for this team.")
+                    continue
+
+                Log.info(f"Swapping team {team} in cluster {cluster_label} with team {closest_team_other_cluster} in cluster {closest_team_other_cluster.clusterNumber} to resolve minimum distance of {minimum_distance} m.")
+                team.clusterNumber = closest_team_other_cluster.clusterNumber
+                closest_team_other_cluster.clusterNumber = cluster_label
+                swapped_teams.add(team)
+                swapped_teams.add(closest_team_other_cluster)
+
+            # Refresh current cluster (I think it is reasonable to do this here and not in the loop...) and especially the nearby host tuples
+            routes_of_cluster = self.__filter_routes_by_label(cluster_label)
+            nearby_host_tuples = self.__get_nearby_host_tuples_of_cluster(routes_of_cluster)
+
+            # Now our nearby host tuples should be "unique"
+            for route_i, route_j in nearby_host_tuples:
+                swap_candidates_meals = {route_i.meal.label, route_j.meal.label}
+
+                if route_i in swapped_teams or route_j in swapped_teams:
+                    Log.info(f"At least one of the teams ({route_i}, {route_j}) in cluster {cluster_label} is already swapped in this minimum distance resolution process, skipping swap for these teams to avoid potential swap conflicts")
+                    continue
+
+                team_to_swap, closest_team_other_cluster = route_i, self.__get_swap_candidate_from_other_cluster(route_i, swapped_teams)
+                if closest_team_other_cluster is None:
+                    team_to_swap, closest_team_other_cluster = route_j, self.__get_swap_candidate_from_other_cluster(route_j, swapped_teams)
+
+                if closest_team_other_cluster is None:
+                    Log.info(f"No teams with meals {swap_candidates_meals} found in other clusters to swap with teams ({route_i}, {route_j}) to resolve minimum distance of {minimum_distance} m. Skipping swap for these teams.")
+                    continue
+                
+                Log.info(f"Swapping team {team_to_swap} in cluster {cluster_label} with team {closest_team_other_cluster} in cluster {closest_team_other_cluster.clusterNumber} to resolve minimum distance of {minimum_distance} m.")
+                team_to_swap.clusterNumber = closest_team_other_cluster.clusterNumber
+                closest_team_other_cluster.clusterNumber = cluster_label
+                swapped_teams.add(team_to_swap)
+                swapped_teams.add(closest_team_other_cluster)
+
+    def __get_swap_candidate_from_other_cluster(self, team: DinnerRoute, swapped_teams: Set[DinnerRoute]) -> DinnerRoute | None:
+        cluster_label = team.clusterNumber
+        closest_teams_other_cluster = self.__calculate_closest_teams_to_cluster(cluster_label, len(self.routes), set())
+        closest_teams_other_cluster = [route for route in closest_teams_other_cluster if route.meal.label == team.meal.label and route not in swapped_teams]
+
+        routes_of_cluster = [r for r in self.__filter_routes_by_label(cluster_label) if r is not team]
+
+        result = None
+        for swap_candidate in closest_teams_other_cluster:
+            # check the team from other cluster doesn't violate the minimum distance requirement to any team of our current cluster
+            all_routes_satisfy_minimum_distance = True
+            for route in routes_of_cluster:
+                if self.__is_minimum_distance_satisfied(swap_candidate, route) == False:
+                    all_routes_satisfy_minimum_distance = False
+                    break
+            if all_routes_satisfy_minimum_distance:
+                result = swap_candidate
+                break
+        return result
 
 
+    def get_duplicated_teams_from_nearby_host_tuples(self, nearby_host_tuples: List[Tuple[DinnerRoute, DinnerRoute]]) -> Set[DinnerRoute]:
+        team_counts = Counter()
+        for route_i, route_j in nearby_host_tuples:
+            team_counts[route_i] += 1
+            team_counts[route_j] += 1
+        duplicated_teams: Set[DinnerRoute] = {team for team, count in team_counts.items() if count > 1}
+        return duplicated_teams
 
+    def __get_nearby_host_tuples_of_cluster(self, routes_of_cluster: List[DinnerRoute]) -> List[Tuple[DinnerRoute, DinnerRoute]]:
+        minimum_distance = self.data_provider.get_optimization_settings().minimumDistanceInMeters
+        nearby_host_tuples = []
+        for i in range(len(routes_of_cluster)):
+            for j in range(i + 1, len(routes_of_cluster)):
+                route_i = routes_of_cluster[i]
+                route_j = routes_of_cluster[j]
+                distance_ij = self.dist_matrix[route_i.originalIndex, route_j.originalIndex]
+                if distance_ij < minimum_distance:
+                    nearby_host_tuples.append((route_i, route_j))
+        return nearby_host_tuples
+
+    def __is_minimum_distance_satisfied(self, route_i: DinnerRoute, route_j: DinnerRoute) -> bool:
+        minimum_distance = self.data_provider.get_optimization_settings().minimumDistanceInMeters
+        distance_ij = self.dist_matrix[route_i.originalIndex, route_j.originalIndex]
+        return distance_ij >= minimum_distance

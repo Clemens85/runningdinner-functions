@@ -18,14 +18,20 @@ WORKSPACE_BASE_DIR = WORKSPACE_BASE_DIR.resolve()
 IGNORE_MEAL_ASSIGNMENTS: RouteOptimizationSettings = RouteOptimizationSettings(
     currentSumDistanceInMeters=0,
     currentAverageDistanceInMeters=0,
-    ignoreMealAssignments=False,
+    ignoreMealAssignments=True,
     minimumDistanceInMeters=0
 )
 KEEP_MEAL_ASSIGNMENTS: RouteOptimizationSettings = RouteOptimizationSettings(
     currentSumDistanceInMeters=0,
     currentAverageDistanceInMeters=0,
-    ignoreMealAssignments=True,
+    ignoreMealAssignments=False,
     minimumDistanceInMeters=0
+)
+MINIMUM_DISTANCE: RouteOptimizationSettings = RouteOptimizationSettings(
+    currentSumDistanceInMeters=0,
+    currentAverageDistanceInMeters=0,
+    ignoreMealAssignments=False,
+    minimumDistanceInMeters=1800
 )
 
 def load_sample_data(filename: str, optimization_settings: RouteOptimizationSettings) -> DataProvider:
@@ -47,6 +53,7 @@ def _get_routes_of_cluster_with_meal(routes: List[DinnerRoute], cluster_label: i
 @pytest.mark.parametrize("optimization_settings", [
     pytest.param(KEEP_MEAL_ASSIGNMENTS, id="KEEP_MEAL_ASSIGNMENTS"),
     pytest.param(IGNORE_MEAL_ASSIGNMENTS, id="IGNORE_MEAL_ASSIGNMENTS"),
+    pytest.param(MINIMUM_DISTANCE, id="MINIMUM_DISTANCE")
 ])
 def test_predict_3_team_clusters(optimization_settings: RouteOptimizationSettings):
     data = load_sample_data("27_teams.json", optimization_settings=optimization_settings)
@@ -69,6 +76,7 @@ def test_predict_3_team_clusters(optimization_settings: RouteOptimizationSetting
 @pytest.mark.parametrize("optimization_settings", [
     pytest.param(KEEP_MEAL_ASSIGNMENTS, id="KEEP_MEAL_ASSIGNMENTS"),
     pytest.param(IGNORE_MEAL_ASSIGNMENTS, id="IGNORE_MEAL_ASSIGNMENTS"),
+    pytest.param(MINIMUM_DISTANCE, id="MINIMUM_DISTANCE")
 ])
 def test_predict_5_team_clusters(optimization_settings: RouteOptimizationSettings):
     data = load_sample_data("45_teams.json", optimization_settings=optimization_settings)
@@ -91,6 +99,7 @@ def test_predict_5_team_clusters(optimization_settings: RouteOptimizationSetting
 @pytest.mark.parametrize("optimization_settings", [
     pytest.param(KEEP_MEAL_ASSIGNMENTS, id="KEEP_MEAL_ASSIGNMENTS"),
     pytest.param(IGNORE_MEAL_ASSIGNMENTS, id="IGNORE_MEAL_ASSIGNMENTS"),
+    pytest.param(MINIMUM_DISTANCE, id="MINIMUM_DISTANCE")
 ])
 def test_predict_2_team_clusters_different_sizes(optimization_settings: RouteOptimizationSettings):
     data = load_sample_data("21_teams.json", optimization_settings=optimization_settings)
@@ -133,6 +142,7 @@ def test_predict_2_team_clusters_different_sizes(optimization_settings: RouteOpt
 @pytest.mark.parametrize("optimization_settings", [
     pytest.param(KEEP_MEAL_ASSIGNMENTS, id="KEEP_MEAL_ASSIGNMENTS"),
     pytest.param(IGNORE_MEAL_ASSIGNMENTS, id="IGNORE_MEAL_ASSIGNMENTS"),
+    pytest.param(MINIMUM_DISTANCE, id="MINIMUM_DISTANCE")
 ])
 def test_predict_only_one_cluster(optimization_settings: RouteOptimizationSettings):
     data = load_sample_data("15_teams.json", optimization_settings=optimization_settings)
@@ -173,6 +183,7 @@ def test_route_building():
 @pytest.mark.parametrize("optimization_settings", [
     pytest.param(KEEP_MEAL_ASSIGNMENTS, id="KEEP_MEAL_ASSIGNMENTS"),
     pytest.param(IGNORE_MEAL_ASSIGNMENTS, id="IGNORE_MEAL_ASSIGNMENTS"),
+    pytest.param(MINIMUM_DISTANCE, id="MINIMUM_DISTANCE")
 ])
 def test_predict_1_team_cluster_15_teams(optimization_settings: RouteOptimizationSettings):
     data = load_sample_data("15_teams.json", optimization_settings=optimization_settings)
