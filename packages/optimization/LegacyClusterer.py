@@ -9,6 +9,8 @@ from DinnerRouteList import DinnerRoute
 from logger.Log import Log
 
 
+# This was the first clusterer implementation. Is not used any longer and will be deleted soon (just here in case for being able to fast switch back to it,
+# if we face any production issues...
 class LegacyClusterer(Clusterer):
     def __init__(self, data_provider: DataProvider):
         """
