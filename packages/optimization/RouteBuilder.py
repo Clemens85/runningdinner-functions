@@ -22,7 +22,7 @@ class RouteBuilder:
     def __init__(self, data_provider: DataProvider, routes: List[DinnerRoute]):
         self.routes = deepcopy(routes) # Ensure we don't modify the original DataFrame
         self.dist_matrix = data_provider.get_distance_matrix()
-        self.meal_classes = data_provider.get_unique_meal_classes_ordered()  # e.g. ['Vorspeise', 'Hauptspeise', 'Nachspeise']
+        self.meal_labels = data_provider.get_unique_meal_labels_ordered()  # e.g. ['Vorspeise', 'Hauptspeise', 'Nachspeise']
 
     def build_route_for_cluster_label(self, cluster_label: int) -> Tuple[List[DinnerRoute], float]:
         """
@@ -36,9 +36,9 @@ class RouteBuilder:
         cluster_size = len(routes_of_cluster)
 
         # Get teams grouped by meal class
-        teams_by_meal_class = {}
-        for meal_class in self.meal_classes:
-            teams_by_meal_class[meal_class] = [route for route in routes_of_cluster if route.mealClass == meal_class]
+        teams_by_meal_label = {}
+        for meal_label in self.meal_labels:
+            teams_by_meal_label[meal_label] = [route for route in routes_of_cluster if route.meal.label == meal_label]
 
         matrix_list = get_matrixes_for_cluster_size(cluster_size)
         best_matrix: List[List[List[int]]] = []
@@ -48,7 +48,7 @@ class RouteBuilder:
         for matrix in matrix_list:
             Log.info(f"Building route for cluster label {cluster_label} with size {cluster_size} and matrix: {matrix}")
             # Find optimal assignment using brute force
-            assignment_candidate, distance_sum = self._find_optimal_assignment(teams_by_meal_class, matrix)
+            assignment_candidate, distance_sum = self._find_optimal_assignment(teams_by_meal_label, matrix)
             if distance_sum < best_distance:
                 best_matrix = matrix
                 best_distance = distance_sum
@@ -73,7 +73,7 @@ class RouteBuilder:
         
         # Generate all possible permutations for each meal class
         meal_class_permutations: List[List[DinnerRoute]] = []
-        for meal_class in self.meal_classes:
+        for meal_class in self.meal_labels:
             teams = teams_by_meal_class[meal_class]
             meal_class_permutations.append(list(itertools.permutations(teams)))
 
@@ -87,7 +87,7 @@ class RouteBuilder:
             matrix_number_to_team: Dict[int, DinnerRoute] = {}
 
             # Assign teams to matrix positions ensuring meal class blocks are respected
-            for meal_class_index, meal_class in enumerate(self.meal_classes):
+            for meal_class_index, meal_class in enumerate(self.meal_labels):
                 # permutation_of_meal_class is something like (team1, team2, team3) for 9er matrix
                 # but maybe also something like (team1, team2, team3, team4) for 12er matrix
                 permutation_of_meal_class = permutation_combo[meal_class_index]

@@ -27,6 +27,8 @@ class GeocodingResult(BaseModel):
 class RouteOptimizationSettings(BaseModel):
     currentSumDistanceInMeters: float
     currentAverageDistanceInMeters: float
+    ignoreMealAssignments: Optional[bool] = False
+    minimumDistanceInMeters: Optional[int] = 0
 
 class TeamsOnRoute(BaseModel):
     teamNumber: int
@@ -59,7 +61,6 @@ class DinnerRoute(BaseModel):
     geocodingResult: GeocodingResult
     clusterNumber: int
     teamsOnRoute: List[TeamsOnRoute] # List of teams which this host will visit on his route to take the other meals
-    mealClass: Optional[str] = None
     originalIndex: Optional[int] = None
     
     def __hash__(self):
