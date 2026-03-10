@@ -29,6 +29,7 @@ class DefaultClusterer(Clusterer):
         )
         self.data_provider = data_provider
         self.final_route_clusters: Dict[int, List[DinnerRoute]] = {}
+        self.cluster_template_indexes_populated: List[int] = []
 
     def predict(self) -> Tuple[List[DinnerRoute], List[int]]:
         self.__predict_draft()
@@ -50,9 +51,9 @@ class DefaultClusterer(Clusterer):
                 num_teams_in_cluster = len(routes_of_cluster)
             else:
                  # Special case, our cluster label was merged into other smaller clusters and does not exist any longer
-                routes_of_cluster = []
-                num_teams_in_cluster = 0
                 cluster_label = self.__get_first_lost_cluster_label(all_cluster_labels, iterated_cluster_labels)
+                routes_of_cluster = self.__filter_routes_by_label(cluster_label)
+                num_teams_in_cluster = len(routes_of_cluster)
 
             Log.info(f"Current iterated route cluster {cluster_label} has size of {num_teams_in_cluster} teams")
 
@@ -61,14 +62,16 @@ class DefaultClusterer(Clusterer):
             if num_teams_in_cluster < expected_cluster_size:
                 needed_teams = expected_cluster_size - num_teams_in_cluster
                 Log.info(f"Cluster {cluster_label} has shortage of {needed_teams} teams, adding missing teams without considering meal classes")
-                closest_teams: List[DinnerRoute] = self.__calculate_closest_teams_to_cluster(cluster_label, needed_teams, set(self.final_route_clusters.keys()))
+                closest_teams: List[DinnerRoute] = self.__calculate_closest_teams_to_cluster_for_filling_up(cluster_label, needed_teams, iterated_cluster_labels)
                 for route in closest_teams:
                     Log.info(f"Adding team from cluster {route.clusterNumber} to cluster {cluster_label} to meet expected cluster size of {expected_cluster_size}")
                     route.clusterNumber = cluster_label
-                self.final_route_clusters[cluster_label] = [route for route in self.routes if route.clusterNumber == cluster_label]
+                self.final_route_clusters[cluster_label] = self.__filter_routes_by_label(cluster_label)
+                self.cluster_template_indexes_populated.append(cluster_template_idx)
             elif num_teams_in_cluster == expected_cluster_size:
                 Log.info(f"Cluster {cluster_label} already has the expected size of {expected_cluster_size} teams, adding it to final clusters")
                 self.final_route_clusters[cluster_label] = routes_of_cluster
+                self.cluster_template_indexes_populated.append(cluster_template_idx)
 
         # Now all not finalized clusters should have automatically proper size. We can now add all remaining clusters to the final clusters
         remaining_cluster_labels = [label for label in all_cluster_labels if label not in set(self.final_route_clusters.keys())]
@@ -196,6 +199,32 @@ class DefaultClusterer(Clusterer):
 
     def __filter_routes_by_label(self, cluster_label: int) -> List[DinnerRoute]:
         return [route for route in self.routes if route.clusterNumber == cluster_label]
+
+    def __calculate_closest_teams_to_cluster_for_filling_up(self, to_cluster_label: int, num_needed_teams: int, iterated_cluster_labels: Set[int]) -> List[DinnerRoute]:
+        remaining_cluster_templates = [template for idx, template in enumerate(self.cluster_templates) if idx not in self.cluster_template_indexes_populated]
+        if len(remaining_cluster_templates) == 0:
+            return self.__calculate_closest_teams_to_cluster(to_cluster_label, num_needed_teams, set(self.final_route_clusters.keys()))
+
+        closest_teams_not_finalized_clusters = self.__calculate_closest_teams_to_cluster(to_cluster_label, len(self.routes), set(self.final_route_clusters.keys()))
+        
+        num_teams_by_lost_cluster: Dict[int, int] = {}
+        result: List[DinnerRoute] = []
+        for closest_team in closest_teams_not_finalized_clusters:
+            # Very special case: Closest team is not in finalized cluster, but in an iterated cluster (this happens only in "lost" clusters which were merged into other clusters and therefore lost their cluster label, 
+            # but we have already iterated their cluster template in the outer loop). 
+            # We must ensure that we don't shrink this cluster anymore, as this cluster is taken "as is" at the end and will built up a final cluster.
+            if closest_team.clusterNumber in iterated_cluster_labels:
+                num_teams_in_cluster = num_teams_by_lost_cluster.get(closest_team.clusterNumber, len(self.__filter_routes_by_label(closest_team.clusterNumber)))
+                if num_teams_in_cluster <= len(remaining_cluster_templates[0]):
+                    continue
+                num_teams_in_cluster -= 1
+                num_teams_by_lost_cluster[closest_team.clusterNumber] = num_teams_in_cluster
+
+            result.append(closest_team)
+            if len(result) >= num_needed_teams:
+                break
+
+        return result
 
     def __calculate_closest_teams_to_cluster(self, to_cluster_label: int, num_needed_teams: int, iterated_cluster_labels: Set[int]) -> List[DinnerRoute]:
         target_cluster_routes = [route for route in self.routes if route.clusterNumber == to_cluster_label]
