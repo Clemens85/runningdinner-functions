@@ -5,6 +5,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
 import * as sns from 'aws-cdk-lib/aws-sns';
+import * as snsSubscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Construct } from 'constructs';
 
 import { CommonUtils } from './CommonUtils';
@@ -37,6 +38,15 @@ export class RouteOptimizationStack extends cdk.Stack {
       displayName: topicName,
     });
 
+    const errorTopicName = 'route-optimization-error-alerts';
+    const errorTopic = new sns.Topic(this, errorTopicName, {
+      topicName: errorTopicName,
+      displayName: errorTopicName,
+    });
+    if (ENVIRONMENT.sns.notificationEmail) {
+      errorTopic.addSubscription(new snsSubscriptions.EmailSubscription(ENVIRONMENT.sns.notificationEmail));
+    }
+
     const optimizationLayer = new lambda.LayerVersion(this, 'route_optimization_layer', {
       layerVersionName: 'route_optimization_layer',
       code: lambda.Code.fromAsset(path.join(__dirname, 'layers/route_optimization')),
@@ -56,6 +66,7 @@ export class RouteOptimizationStack extends cdk.Stack {
       deadLetterQueueEnabled: true,
       environment: {
         SNS_TOPIC_ARN: topic.topicArn,
+        SNS_ERROR_TOPIC_ARN: errorTopic.topicArn,
       },
       bundling: {
         assetExcludes: [
@@ -83,6 +94,7 @@ export class RouteOptimizationStack extends cdk.Stack {
     });
 
     topic.grantPublish(optimizationFunc.lambdaFunction);
+    errorTopic.grantPublish(optimizationFunc.lambdaFunction);
 
     bucket.addEventNotification(
       s3.EventType.OBJECT_CREATED, // Trigger on object creation

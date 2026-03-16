@@ -1,8 +1,8 @@
 from pathlib import Path
-from typing import Dict
 
 from RouteOptimizer import RouteOptimizer
 from local_adapter.LocalFileDataLoader import LocalFileDataLoader
+from response.OptimizationEvent import OptimizationEvent
 from response.ResponseHandler import ResponseHandler
 
 WORKSPACE_BASE_DIR = test_dir = Path(__file__).parent.parent / "test-data"
@@ -13,7 +13,7 @@ class InMemoryResponseHandler(ResponseHandler):
         self.json_payloads = []
         self.finished_events = []
 
-    def send(self, json_payload: str, finished_event: Dict[str, any]):
+    def send(self, json_payload: str, finished_event: OptimizationEvent):
         self.json_payloads.append(json_payload)
         self.finished_events.append(finished_event)
 
@@ -26,9 +26,9 @@ def test_exception_handling():
   except Exception as e:
     assert len(test_response_handler.json_payloads) == 1
     assert len(test_response_handler.finished_events) == 1
-    assert test_response_handler.finished_events[0]['adminId'] == route_optimizer.data.get_admin_id()
-    assert test_response_handler.finished_events[0]['optimizationId'] == route_optimizer.data.get_optimization_id()
-    assert len(test_response_handler.finished_events[0]['errorMessage']) > 0
+    assert test_response_handler.finished_events[0].adminId == route_optimizer.data.get_admin_id()
+    assert test_response_handler.finished_events[0].optimizationId == route_optimizer.data.get_optimization_id()
+    assert len(test_response_handler.finished_events[0].errorMessage) > 0
     assert test_response_handler.json_payloads[0] == '{"errorMessage": "list index out of range"}'
 
 def test_route_optimizer_with_valid_data():
@@ -42,6 +42,6 @@ def test_route_optimizer_with_valid_data():
 
     assert len(test_response_handler.json_payloads) > 0
     assert len(test_response_handler.finished_events) > 0
-    assert test_response_handler.finished_events[0]['adminId'] == route_optimizer.data.get_admin_id()
-    assert test_response_handler.finished_events[0]['optimizationId'] == route_optimizer.data.get_optimization_id()
+    assert test_response_handler.finished_events[0].adminId == route_optimizer.data.get_admin_id()
+    assert test_response_handler.finished_events[0].optimizationId == route_optimizer.data.get_optimization_id()
     assert '"dinnerRoutes": [' in test_response_handler.json_payloads[0]

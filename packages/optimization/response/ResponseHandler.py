@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Dict
+from response.OptimizationEvent import OptimizationEvent
+
 
 class ResponseHandler(ABC):
     @abstractmethod
-    def send(self, json_payload: str, finished_event: Dict[str, any]):
+    def send(self, json_payload: str, finished_event: OptimizationEvent):
         pass

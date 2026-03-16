@@ -1,4 +1,5 @@
 import json
+from response.OptimizationEvent import OptimizationEvent
 from response.ResponseHandler import ResponseHandler
 import requests
 
@@ -8,7 +9,7 @@ class LocalFileResponseHandler(ResponseHandler):
         self.file_path = file_path
         self.notification_url = "http://localhost:9090/rest/sse/v1/dinnerroute/optimization/notify"
 
-    def send(self, json_string: str, finished_event: dict):
+    def send(self, json_string: str, finished_event: OptimizationEvent):
         with open(self.file_path, 'w') as f:
             f.write(json_string)
             f.flush()
@@ -16,7 +17,7 @@ class LocalFileResponseHandler(ResponseHandler):
 
         self._send_notification_response(finished_event)
 
-    def _send_notification_response(self, finished_event: dict):
+    def _send_notification_response(self, finished_event: OptimizationEvent):
         # admin_id, optimization_id = self._parse_ids_from_response_path()
         print (f"Sending notification response to {self.notification_url} for finished event {finished_event}")
 
@@ -27,10 +28,10 @@ class LocalFileResponseHandler(ResponseHandler):
         # Wrap payload as SNS message
         sns_message = {
             "Type": "Notification",
-            "MessageId": finished_event.get("optimizatinId"),
+            "MessageId": finished_event.optimizationId,
             "TopicArn": "arn:aws:sns:region:eu-central-1:local-python-code",
             "Subject": "OptimizationNotification",
-            "Message": json.dumps(finished_event),
+            "Message": finished_event.model_dump_json(exclude_none=True),
             "Timestamp": "2025-07-29T12:00:00.000Z"
         }
 
