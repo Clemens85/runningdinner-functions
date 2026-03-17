@@ -22,7 +22,7 @@ class LocalInMemoryDbRepository(VectorDbRepository):
         """
         self.documents[doc_id] = document
 
-    def find_similar_docs(self, query: str, top_k: int = 3) -> List[DocumentVectorizable]:
+    def find_similar_docs(self, query: str, top_k: int = 3, exclude_admin_id: str | None = None) -> List[DocumentVectorizable]:
         """
         Find similar documents using basic text matching.
         Ranks documents by the number of matching words with the query.
@@ -30,6 +30,7 @@ class LocalInMemoryDbRepository(VectorDbRepository):
         Args:
             query (str): The query string to search for similar documents
             top_k (int): The number of top similar documents to return
+            exclude_admin_id (str | None): If provided, documents belonging to this admin are excluded
         
         Returns:
             List[DocumentVectorizable]: List of similar documents
@@ -37,7 +38,8 @@ class LocalInMemoryDbRepository(VectorDbRepository):
         if not self.documents:
             return []
 
-        return list(self.documents.values())[:top_k]
+        docs = [d for d in self.documents.values() if d.admin_id != exclude_admin_id] if exclude_admin_id else list(self.documents.values())
+        return docs[:top_k]
 
     def reset(self):
         """

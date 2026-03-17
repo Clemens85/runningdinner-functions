@@ -4,7 +4,7 @@ from DocumentVectorizable import DocumentVectorizable
 
 class VectorDbRepository(ABC):
     @abstractmethod
-    def find_similar_docs(self, query: str, top_k: int = 3) -> List[DocumentVectorizable]:
+    def find_similar_docs(self, query: str, top_k: int = 3, exclude_admin_id: str | None = None) -> List[DocumentVectorizable]:
         pass
 
     @abstractmethod

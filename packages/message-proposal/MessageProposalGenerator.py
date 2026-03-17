@@ -9,6 +9,10 @@ from logger.Log import logger
 from prompt.MessageGenerationPrompts import get_message_generation_system_prompt, get_message_generation_user_prompt
 from ExampleMessage import ExampleMessage
 
+MAX_SIMILAR_DOCS = 12
+MAX_EXAMPLES_PER_TYPE = 3
+PROPOSAL_TYPES = [ProposalFileType.TEAM, ProposalFileType.DINNER_ROUTE, ProposalFileType.PARTICIPANT]
+
 class MessageProposalGenerator:
     def __init__(self, vector_db_repository: VectorDbRepository, data_accessor: DataAccessor, llm: ChatOpenAI):
         self.vector_db_repository = vector_db_repository
@@ -19,22 +23,29 @@ class MessageProposalGenerator:
 
     def generate_proposals(self, event_description: str, request: InputRequest) -> List[ExampleMessage]:
         logger.info(f"Generating message proposals for event description")
-        similar_event_desc_docs = self.vector_db_repository.find_similar_docs(event_description)
+        current_admin_id = request.get_admin_id()
+        similar_event_desc_docs = self.vector_db_repository.find_similar_docs(event_description, top_k=MAX_SIMILAR_DOCS, exclude_admin_id=current_admin_id)
         if not similar_event_desc_docs or len(similar_event_desc_docs) == 0:
             logger.warning(f"No similar event descriptions found in vector database for event description")
             return []  # No similar documents found, cannot generate proposals
 
         logger.info(f"Found {len(similar_event_desc_docs)} similar event descriptions in vector database for event description")
         for similar_event_desc_doc in similar_event_desc_docs:
-            self.__add_message_of_event_to_examples(similar_event_desc_doc, request, ProposalFileType.TEAM)
-            self.__add_message_of_event_to_examples(similar_event_desc_doc, request, ProposalFileType.DINNER_ROUTE)
-            self.__add_message_of_event_to_examples(similar_event_desc_doc, request, ProposalFileType.PARTICIPANT)
+            if all(self.__examples_count_for_type(t) >= MAX_EXAMPLES_PER_TYPE for t in PROPOSAL_TYPES):
+                logger.info(f"All message types have reached {MAX_EXAMPLES_PER_TYPE} examples, stopping early")
+                break
+            for proposal_type in PROPOSAL_TYPES:
+                if self.__examples_count_for_type(proposal_type) < MAX_EXAMPLES_PER_TYPE:
+                    self.__add_message_of_event_to_examples(similar_event_desc_doc, request, proposal_type)
 
         self.__generate_message_proposal(event_description=event_description, proposal_type=ProposalFileType.TEAM, request=request)
         self.__generate_message_proposal(event_description=event_description, proposal_type=ProposalFileType.DINNER_ROUTE, request=request)
         self.__generate_message_proposal(event_description=event_description, proposal_type=ProposalFileType.PARTICIPANT, request=request)
 
         return self.generation_results
+
+    def __examples_count_for_type(self, proposal_type: ProposalFileType) -> int:
+        return sum(1 for ex in self.examples if ex.type == proposal_type)
 
     def __add_message_of_event_to_examples(self, event_desc_doc: DocumentVectorizable, request: InputRequest, proposal_type: ProposalFileType):
         message_content = self.__get_message_content(event_desc_doc, request, proposal_type)

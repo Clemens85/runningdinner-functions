@@ -88,13 +88,14 @@ class PineconeDbRepository(VectorDbRepository):
         print(f"Recreating Pinecone index {self.index_name}...")
         self.__init_index(auto_create=True)
       
-    def find_similar_docs(self, query: str, top_k: int = 3) -> List[DocumentVectorizable]:
+    def find_similar_docs(self, query: str, top_k: int = 3, exclude_admin_id: str | None = None) -> List[DocumentVectorizable]:
         """
         Find similar documents in the Pinecone index based on a query string
         
         Args:
             query (str): The query string to search for similar documents
             top_k (int): The number of top similar documents to return
+            exclude_admin_id (str | None): If provided, documents belonging to this admin are excluded
         
         Returns:
             list[str]: List of document texts that are similar to the query
@@ -102,11 +103,14 @@ class PineconeDbRepository(VectorDbRepository):
 
         query_embedding = self.__embed_text(query)
 
+        query_filter = {"admin_id": {"$ne": exclude_admin_id}} if exclude_admin_id else None
+
         # Perform the query to find similar documents
         results = self.index.query(
             vector=query_embedding,
             top_k=top_k,
-            include_metadata=True
+            include_metadata=True,
+            filter=query_filter
         )
 
         return [
