@@ -38,6 +38,7 @@ class ProposalInputHandler:
         logger.info(f"Processing event description for proposal generation")
         content_anonymized = self.anonymizer.anonymize_personal_data(content, ProposalFileType.EVENT_DESCRIPTION)
         processed_storage_path = input_file_path.get_processed_path()
+        logger.info(f"Wrote anonymized event description to {processed_storage_path}")
         self.data_accessor.write_string_to_path(content_anonymized, processed_storage_path)
 
         # Workflow 1): Trigger message proposal generation
@@ -64,4 +65,6 @@ class ProposalInputHandler:
 
     def __process_message_text(self, content: str, proposal_file_type: ProposalFileType, input_file_path: InputRequest):
         content_anonymized = self.anonymizer.anonymize_personal_data(content, proposal_file_type)
-        self.data_accessor.write_string_to_path(content_anonymized, input_file_path.get_processed_path())
+        processed_path = input_file_path.get_processed_path()
+        self.data_accessor.write_string_to_path(content_anonymized, processed_path)
+        logger.info(f"Wrote {proposal_file_type} to {processed_path}")
