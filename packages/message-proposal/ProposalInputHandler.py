@@ -1,6 +1,7 @@
 from DataAccessor import DataAccessor
 from ProposalFileType import ProposalFileType
 from Anonymizer import Anonymizer
+from Translator import Translator
 from VectorDbRepository import VectorDbRepository
 from DocumentVectorizable import DocumentVectorizable
 from MessageProposalGenerator import MessageProposalGenerator
@@ -17,6 +18,7 @@ class ProposalInputHandler:
         self.data_accessor = data_accessor
         self.llm = llm
         self.notification_handler = notification_handler
+        self.translator = Translator(llm=llm)
 
     def process_request(self, storage_path: str):
 
@@ -38,7 +40,9 @@ class ProposalInputHandler:
         logger.info(f"Processing event description for proposal generation")
         content_anonymized = self.anonymizer.anonymize_personal_data(content, ProposalFileType.EVENT_DESCRIPTION)
         processed_storage_path = input_file_path.get_processed_path()
-        logger.info(f"Wrote anonymized event description to {processed_storage_path}")
+
+
+        logger.info(f"Write anonymized event description to {processed_storage_path}")
         self.data_accessor.write_string_to_path(content_anonymized, processed_storage_path)
 
         # Workflow 1): Trigger message proposal generation

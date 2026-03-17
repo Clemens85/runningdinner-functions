@@ -1,4 +1,3 @@
-from openai import OpenAI
 from ProposalFileType import ProposalFileType
 from llm.ChatOpenAI import ChatOpenAI
 
