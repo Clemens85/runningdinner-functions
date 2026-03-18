@@ -1,5 +1,6 @@
 from llm.ChatOpenAI import ChatOpenAI
 from DetectedLanguage import DetectedLanguage
+from TextTranslation import TextTranslation
 from logger.Log import logger
 
 class Translator:
@@ -26,10 +27,13 @@ class Translator:
         return translation_response.content.strip()
 
     def detect_language(self, text: str) -> DetectedLanguage:
+        
+        text_excerpt = text[:512]  # Use only the first 512 characters for language detection to save costs and speed up the process
+
         detection_prompt = f"""
         Detect the language of the following text excerpt and return the language code with a dash and then the language name (e.g. 'de - German' for German, 'en - English' for English).
         Return only the language code with the language name. Do not return any explanations or additional information.
-        Here is the text:\n\n{text}\n\nLanguage code with language name:
+        Here is the text:\n\n{text_excerpt}\n\nLanguage code with language name:
         """
         detection_response = self.llm.invoke(
             model_override=self.model,
@@ -47,10 +51,11 @@ class Translator:
             # In case of any parsing issues, default to German
             logger.error(f"Failed to parse detected language response: {str(e)}. Response was: '{result_str}'. Defaulting to German.")
             return DetectedLanguage(iso_code="de", name="German")
-    
-    def translate_to_german_if_needed(self, text: str) -> str:
-        detected_language = self.detect_language(text)
-        if detected_language.iso_code != "de":
-            return self.translate_to_language(text, DetectedLanguage(iso_code="de", name="German"))
+
+    def translate_to_german_if_needed(self, text: str) -> TextTranslation:
+        original_language = self.detect_language(text)
+        if original_language.iso_code != "de":
+            german_translation = self.translate_to_language(text, DetectedLanguage(iso_code="de", name="German"))
+            return TextTranslation(original=text, german_translation=german_translation, original_language=original_language)
         else:
-            return text
+            return TextTranslation(original=text, german_translation=text, original_language=original_language)
