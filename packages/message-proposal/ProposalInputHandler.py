@@ -1,6 +1,8 @@
 from DataAccessor import DataAccessor
+from TextTranslation import TextTranslation
 from ProposalFileType import ProposalFileType
 from Anonymizer import Anonymizer
+from Translator import Translator
 from VectorDbRepository import VectorDbRepository
 from DocumentVectorizable import DocumentVectorizable
 from MessageProposalGenerator import MessageProposalGenerator
@@ -17,6 +19,7 @@ class ProposalInputHandler:
         self.data_accessor = data_accessor
         self.llm = llm
         self.notification_handler = notification_handler
+        self.translator = Translator(llm=llm)
 
     def process_request(self, storage_path: str):
 
@@ -36,21 +39,23 @@ class ProposalInputHandler:
     def __process_event_description(self, content: str, input_file_path: InputRequest):
         
         logger.info(f"Processing event description for proposal generation")
-        content_anonymized = self.anonymizer.anonymize_personal_data(content, ProposalFileType.EVENT_DESCRIPTION)
+        content_translated = self.translator.translate_to_german_if_needed(content)
+        content_anonymized_german_str = self.anonymizer.anonymize_personal_data(content_translated.german_translation, ProposalFileType.EVENT_DESCRIPTION)
+
         processed_storage_path = input_file_path.get_processed_path()
-        logger.info(f"Wrote anonymized event description to {processed_storage_path}")
-        self.data_accessor.write_string_to_path(content_anonymized, processed_storage_path)
+        logger.info(f"Write anonymized event description to {processed_storage_path} in German (original language was {content_translated.original_language.name})")
+        self.data_accessor.write_string_to_path(content_anonymized_german_str, processed_storage_path)
 
         # Workflow 1): Trigger message proposal generation
-        # Very Important: Use original content (not anonymized) for proposal generation to ensure high quality proposals
+        # Very Important: Use original content (not anonymized, but always in German) for proposal generation to ensure high quality proposals
         message_proposal_generator = MessageProposalGenerator(self.vector_db_repository, self.data_accessor, self.llm)
-        resulting_proposals = message_proposal_generator.generate_proposals(content, input_file_path)
+        resulting_proposals = message_proposal_generator.generate_proposals(content_translated, input_file_path)
 
         # Workflow 2): Store event description in vector DB (for future proposal generations)
         admin_id = input_file_path.get_admin_id()
         doc_id = f"{ProposalFileType.EVENT_DESCRIPTION.value}_{admin_id}"
         document = DocumentVectorizable(
-            page_content=content_anonymized,
+            page_content=content_anonymized_german_str,
             id=doc_id,
             admin_id=admin_id,
             type=ProposalFileType.EVENT_DESCRIPTION.value,
@@ -64,7 +69,9 @@ class ProposalInputHandler:
             self.notification_handler.send_notification(notification_message)
 
     def __process_message_text(self, content: str, proposal_file_type: ProposalFileType, input_file_path: InputRequest):
-        content_anonymized = self.anonymizer.anonymize_personal_data(content, proposal_file_type)
+        content_translated = self.translator.translate_to_german_if_needed(content)
+        content_anonymized_german_str = self.anonymizer.anonymize_personal_data(content_translated.german_translation,
+                                                                                proposal_file_type)
         processed_path = input_file_path.get_processed_path()
-        self.data_accessor.write_string_to_path(content_anonymized, processed_path)
-        logger.info(f"Wrote {proposal_file_type} to {processed_path}")
+        self.data_accessor.write_string_to_path(content_anonymized_german_str, processed_path)
+        logger.info(f"Wrote {proposal_file_type} to {processed_path} in German (original language was {content_translated.original_language.name})")

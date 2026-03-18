@@ -1,5 +1,7 @@
 from typing import List
 from DataAccessor import DataAccessor
+from TextTranslation import TextTranslation
+from Translator import Translator, is_not_german
 from VectorDbRepository import VectorDbRepository
 from InputRequest import InputRequest
 from ProposalFileType import ProposalFileType
@@ -20,11 +22,12 @@ class MessageProposalGenerator:
         self.llm = llm
         self.examples: List[ExampleMessage] = []
         self.generation_results: List[ExampleMessage] = []
+        self.translator = Translator(self.llm)
 
-    def generate_proposals(self, event_description: str, request: InputRequest) -> List[ExampleMessage]:
+    def generate_proposals(self, event_description: TextTranslation, request: InputRequest) -> List[ExampleMessage]:
         logger.info(f"Generating message proposals for event description")
         current_admin_id = request.get_admin_id()
-        similar_event_desc_docs = self.vector_db_repository.find_similar_docs(event_description, top_k=MAX_SIMILAR_DOCS, exclude_admin_id=current_admin_id)
+        similar_event_desc_docs = self.vector_db_repository.find_similar_docs(event_description.german_translation, top_k=MAX_SIMILAR_DOCS, exclude_admin_id=current_admin_id)
         if not similar_event_desc_docs or len(similar_event_desc_docs) == 0:
             logger.warning(f"No similar event descriptions found in vector database for event description")
             return []  # No similar documents found, cannot generate proposals
@@ -62,7 +65,7 @@ class MessageProposalGenerator:
             logger.exception(f"Failed to load message content from {message_storage_path}. This maybe also be due to file does not exist: {str(e)}")
             return None
 
-    def __generate_message_proposal(self, event_description: str, proposal_type: ProposalFileType, request: InputRequest):
+    def __generate_message_proposal(self, event_description: TextTranslation, proposal_type: ProposalFileType, request: InputRequest):
 
         examples_for_type = [ex for ex in self.examples if ex.type == proposal_type]
         if len(examples_for_type) == 0:
@@ -71,8 +74,9 @@ class MessageProposalGenerator:
         
         logger.info(f"Generating message proposal for type {proposal_type} using {len(examples_for_type)} example messages")
 
-        generation_prompt = get_message_generation_user_prompt(input_event_description=event_description, examples=examples_for_type,
-                                                                proposal_type=proposal_type)
+        generation_prompt = get_message_generation_user_prompt(input_event_description=event_description.german_translation,
+                                                               examples=examples_for_type,
+                                                               proposal_type=proposal_type)
         result = self.llm.invoke(
             prompt=[
                 {
@@ -87,8 +91,11 @@ class MessageProposalGenerator:
         )
         proposal_text = result.content
 
+        if is_not_german(event_description.original_language):
+            proposal_text = self.translator.translate_to_language(proposal_text, event_description.original_language)
+
         proposal_storage_path = request.get_path_for_generated_message(proposal_type)
         logger.info(f"Storing generated message proposal for type {proposal_type} at {proposal_storage_path}")
         self.data_accessor.write_string_to_path(proposal_text, proposal_storage_path)
 
-        self.generation_results.append(ExampleMessage(message=proposal_text, event_description=event_description, type=proposal_type))
+        self.generation_results.append(ExampleMessage(message=proposal_text, event_description=event_description.original, type=proposal_type))
