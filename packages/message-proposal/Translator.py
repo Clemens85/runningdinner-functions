@@ -26,7 +26,7 @@ class Translator:
             model_override=self.model,
             temperature_override=self.temperature,
             prompt=[
-                {"role": "system", "content": "You are a helpful assistant that translates texts to German."},
+                {"role": "system", "content": f"You are a helpful assistant that translates texts to {language.name}."},
                 {"role": "user", "content": translation_prompt}
             ]
         )

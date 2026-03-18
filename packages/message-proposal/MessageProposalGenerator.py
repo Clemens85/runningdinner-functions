@@ -98,4 +98,4 @@ class MessageProposalGenerator:
         logger.info(f"Storing generated message proposal for type {proposal_type} at {proposal_storage_path}")
         self.data_accessor.write_string_to_path(proposal_text, proposal_storage_path)
 
-        self.generation_results.append(ExampleMessage(message=proposal_text, event_description=event_description.german_translation, type=proposal_type))
+        self.generation_results.append(ExampleMessage(message=proposal_text, event_description=event_description.original, type=proposal_type))

@@ -17,7 +17,7 @@ class TestTranslator:
 
     def test_translate_to_german_for_english_text(self):
         llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.3)
-        translator = Translator(llm=llm, temperature=0)
+        translator = Translator(llm=llm)
 
         result = translator.translate_to_german_if_needed("This is a test string that should be translated to German.")
 
@@ -28,7 +28,7 @@ class TestTranslator:
 
     def test_no_translation_for_german_text(self):
         llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0.3)
-        translator = Translator(llm=llm, temperature=0)
+        translator = Translator(llm=llm)
 
         result = translator.translate_to_german_if_needed("Das ist ein einfacher Test")
 

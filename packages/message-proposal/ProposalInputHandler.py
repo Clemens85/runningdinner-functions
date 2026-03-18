@@ -69,8 +69,9 @@ class ProposalInputHandler:
             self.notification_handler.send_notification(notification_message)
 
     def __process_message_text(self, content: str, proposal_file_type: ProposalFileType, input_file_path: InputRequest):
-        content_anonymized_text = self.anonymizer.anonymize_personal_data(content, proposal_file_type)
-        content_anonymized = self.translator.translate_to_german_if_needed(content_anonymized_text)
+        content_translated = self.translator.translate_to_german_if_needed(content)
+        content_anonymized_german_str = self.anonymizer.anonymize_personal_data(content_translated.german_translation,
+                                                                                proposal_file_type)
         processed_path = input_file_path.get_processed_path()
-        self.data_accessor.write_string_to_path(content_anonymized.german_translation, processed_path)
-        logger.info(f"Wrote {proposal_file_type} to {processed_path} in German (original language was {content_anonymized.original_language.name})")
+        self.data_accessor.write_string_to_path(content_anonymized_german_str, processed_path)
+        logger.info(f"Wrote {proposal_file_type} to {processed_path} in German (original language was {content_translated.original_language.name})")
