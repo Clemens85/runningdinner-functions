@@ -3,6 +3,12 @@ from DetectedLanguage import DetectedLanguage
 from TextTranslation import TextTranslation
 from logger.Log import logger
 
+GERMAN_LANGUAGE = DetectedLanguage(iso_code="de", name="Deutsch")
+
+def is_not_german(language: DetectedLanguage) -> bool:
+    return language.iso_code != "de"
+
+
 class Translator:
     def __init__(self, llm: ChatOpenAI, model: str = None, temperature: float = 0):
         self.llm = llm
@@ -36,7 +42,7 @@ class Translator:
         Here is the text:\n\n{text_excerpt}\n\nLanguage code with language name:
         """
         detection_response = self.llm.invoke(
-            model_override=self.model,
+            model_override="gpt-4o-mini", # far enough for detection
             temperature_override=self.temperature,
             prompt=[
                 {"role": "system", "content": "You are a helpful assistant that detects the language of a given text and returns the corresponding language code with the language name."},
@@ -50,12 +56,12 @@ class Translator:
         except Exception as e:
             # In case of any parsing issues, default to German
             logger.error(f"Failed to parse detected language response: {str(e)}. Response was: '{result_str}'. Defaulting to German.")
-            return DetectedLanguage(iso_code="de", name="German")
+            return GERMAN_LANGUAGE
 
     def translate_to_german_if_needed(self, text: str) -> TextTranslation:
         original_language = self.detect_language(text)
-        if original_language.iso_code != "de":
-            german_translation = self.translate_to_language(text, DetectedLanguage(iso_code="de", name="German"))
+        if is_not_german(original_language):
+            german_translation = self.translate_to_language(text, GERMAN_LANGUAGE)
             return TextTranslation(original=text, german_translation=german_translation, original_language=original_language)
         else:
             return TextTranslation(original=text, german_translation=text, original_language=original_language)
