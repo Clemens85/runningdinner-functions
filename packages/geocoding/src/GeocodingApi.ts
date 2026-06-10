@@ -10,13 +10,11 @@ import { Validator } from './Validator';
 const googleMapsApiKeyFactory = GoogleMapsApiKeyFactory.getInstance();
 
 type GeocodingApiSingleResult = {
-  formatted_address: string;
-  geometry: {
-    location_type: string;
-    location: {
-      lat: number;
-      lng: number;
-    };
+  formattedAddress: string;
+  granularity: string;
+  location: {
+    latitude: number;
+    longitude: number;
   };
 };
 
@@ -27,9 +25,11 @@ export class GeocodingApi {
 
     const addressQueryParam = GeocodingApi.getAddressQueryParam(address);
     logger.info(`Fetching geocode for address: ${addressQueryParam}`);
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${addressQueryParam}&key=${apiKey}`;
+    const url = `https://geocode.googleapis.com/v4/geocode/address/${addressQueryParam}`;
 
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      headers: { 'X-Goog-Api-Key': apiKey },
+    });
     if (response.status !== 200) {
       Util.logAndThrowError(`Error fetching geocode: ${response.statusText}`);
     }
@@ -39,21 +39,9 @@ export class GeocodingApi {
       Util.logAndThrowError('No data received from geocode API');
     }
 
-    if (data.status === 'ZERO_RESULTS') {
-      logger.warn(`No results found for address: ${addressQueryParam}`);
-      return null;
-    }
-    if (data.status !== 'OK') {
-      if (data.status === 'REQUEST_DENIED') {
-        // Try to refetch API key (in case lambda is warmed), but don't wait here. But this may help on next request
-        googleMapsApiKeyFactory.triggerRefetchApiKey();
-      }
-      Util.logAndThrowError(`Error in geocode response: ${data.status}`);
-    }
-
     const results = (data.results || []) as GeocodingApiSingleResult[];
     if (results.length === 0) {
-      logger.error(`Results array was empty for address: ${addressQueryParam}`);
+      logger.warn(`No results found for address: ${addressQueryParam}`);
       return null;
     }
 
@@ -65,14 +53,21 @@ export class GeocodingApi {
   public static getAddressQueryParam(address: Address): string {
     const { street, streetNr, cityName, zip } = address;
     Validator.validateAddress(address);
-    const addressString = `${street} ${streetNr}, ${zip} ${cityName}`;
-    return encodeURIComponent(addressString);
+    const streetWithNr = streetNr ? `${street} ${streetNr}` : street;
+    const addressString = `${streetWithNr}, ${zip}, ${cityName}`;
+    return encodeURIComponent(addressString).replace(/%20/g, '+').replace(/%2C/gi, ',');
   }
 
   static findBestResult(results: GeocodingApiSingleResult[]): GeocodingApiSingleResult {
-    let bestResult = results.find((result) => result.geometry?.location_type === 'ROOFTOP');
+    let bestResult = results.find((result) => result.granularity === 'ROOFTOP');
     if (!bestResult) {
-      bestResult = results.find((result) => result.geometry?.location_type === 'APPROXIMATE');
+      bestResult = results.find((result) => result.granularity === 'RANGE_INTERPOLATED');
+    }
+    if (!bestResult) {
+      bestResult = results.find((result) => result.granularity === 'GEOMETRIC_CENTER');
+    }
+    if (!bestResult) {
+      bestResult = results.find((result) => result.granularity === 'APPROXIMATE');
     }
     if (!bestResult) {
       bestResult = results[0];
@@ -81,24 +76,19 @@ export class GeocodingApi {
   }
 
   static mapApiResultToGeocodingResult(result: GeocodingApiSingleResult): GeocodingResult {
-    const formattedAddress = result.formatted_address;
+    const formattedAddress = result.formattedAddress;
 
     let exactness: EXACTNESS_TYPE = 'NONE';
-    if (result.geometry?.location_type === 'ROOFTOP') {
+    if (result.granularity === 'ROOFTOP') {
       exactness = 'EXACT';
-    } else if (
-      result.geometry?.location_type === 'APPROXIMATE' ||
-      result.geometry?.location_type === 'GEOMETRIC_CENTER' ||
-      result.geometry?.location_type === 'RANGE_INTERPOLATED'
-    ) {
+    } else if (result.granularity === 'APPROXIMATE' || result.granularity === 'GEOMETRIC_CENTER' || result.granularity === 'RANGE_INTERPOLATED') {
       exactness = 'NOT_EXACT';
     }
 
-    logger.info(`GOT LOCATION TYPE ${result.geometry?.location_type} for address: ${formattedAddress}, exactness: ${exactness}`);
+    logger.info(`GOT LOCATION TYPE ${result.granularity} for address: ${formattedAddress}, exactness: ${exactness}`);
 
-    const location = result.geometry?.location;
-    const lat = location?.lat || -1;
-    const lng = location?.lng || -1;
+    const lat = result.location?.latitude || -1;
+    const lng = result.location?.longitude || -1;
     return {
       lat,
       lng,
@@ -107,3 +97,121 @@ export class GeocodingApi {
     };
   }
 }
+
+/**
+ *
+ *
+ * curl -H "X-Goog-Api-Key: <KEY>" \
+ * "https://geocode.googleapis.com/v4/geocode/address/2a+K%C3%A4strich,+55116,+Mainz"
+ *
+ * => Response:
+ *
+ * {
+ *   "results": [
+ *     {
+ *       "place": "places/ChIJm_kYUR6XvUcRNbEvf2WIj1U",
+ *       "placeId": "ChIJm_kYUR6XvUcRNbEvf2WIj1U",
+ *       "location": {
+ *         "latitude": 49.9948252,
+ *         "longitude": 8.2667321
+ *       },
+ *       "granularity": "ROOFTOP",
+ *       "viewport": {
+ *         "low": {
+ *           "latitude": 49.9934590697085,
+ *           "longitude": 8.265384919708497
+ *         },
+ *         "high": {
+ *           "latitude": 49.9961570302915,
+ *           "longitude": 8.2680828802915016
+ *         }
+ *       },
+ *       "bounds": {
+ *         "low": {
+ *           "latitude": 49.9947601,
+ *           "longitude": 8.2666425999999991
+ *         },
+ *         "high": {
+ *           "latitude": 49.994880599999995,
+ *           "longitude": 8.2668252
+ *         }
+ *       },
+ *       "formattedAddress": "Kästrich 2A, 55116 Mainz, Deutschland",
+ *       "postalAddress": {
+ *         "regionCode": "DE",
+ *         "languageCode": "en",
+ *         "postalCode": "55116",
+ *         "locality": "Mainz",
+ *         "addressLines": [
+ *           "Kästrich 2A"
+ *         ]
+ *       },
+ *       "addressComponents": [
+ *         {
+ *           "longText": "2A",
+ *           "shortText": "2A",
+ *           "types": [
+ *             "street_number"
+ *           ]
+ *         },
+ *         {
+ *           "longText": "Kästrich",
+ *           "shortText": "Kästrich",
+ *           "types": [
+ *             "route"
+ *           ],
+ *           "languageCode": "de"
+ *         },
+ *         {
+ *           "longText": "Mainz",
+ *           "shortText": "MZ",
+ *           "types": [
+ *             "locality",
+ *             "political"
+ *           ],
+ *           "languageCode": "de"
+ *         },
+ *         {
+ *           "longText": "Mainz",
+ *           "shortText": "Mainz",
+ *           "types": [
+ *             "administrative_area_level_3",
+ *             "political"
+ *           ],
+ *           "languageCode": "de"
+ *         },
+ *         {
+ *           "longText": "Rheinland-Pfalz",
+ *           "shortText": "RP",
+ *           "types": [
+ *             "administrative_area_level_1",
+ *             "political"
+ *           ],
+ *           "languageCode": "de"
+ *         },
+ *         {
+ *           "longText": "Deutschland",
+ *           "shortText": "DE",
+ *           "types": [
+ *             "country",
+ *             "political"
+ *           ],
+ *           "languageCode": "de"
+ *         },
+ *         {
+ *           "longText": "55116",
+ *           "shortText": "55116",
+ *           "types": [
+ *             "postal_code"
+ *           ]
+ *         }
+ *       ],
+ *       "types": [
+ *         "premise",
+ *         "street_address"
+ *       ]
+ *     }
+ *   ]
+ * }
+ *
+ */
