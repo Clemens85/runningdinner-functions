@@ -12,7 +12,7 @@ const googleMapsApiKeyFactory = GoogleMapsApiKeyFactory.getInstance();
 type GeocodingApiSingleResult = {
   formattedAddress: string;
   granularity: string;
-  location: {
+  location?: {
     latitude: number;
     longitude: number;
   };
@@ -27,14 +27,19 @@ export class GeocodingApi {
     logger.info(`Fetching geocode for address: ${addressQueryParam}`);
     const url = `https://geocode.googleapis.com/v4/geocode/address/${addressQueryParam}`;
 
-    const response = await axios.get(url, {
-      headers: { 'X-Goog-Api-Key': apiKey },
-    });
-    if (response.status !== 200) {
-      Util.logAndThrowError(`Error fetching geocode: ${response.statusText}`);
+    let data: Record<string, unknown>;
+    try {
+      const response = await axios.get(url, {
+        headers: { 'X-Goog-Api-Key': apiKey },
+      });
+      data = response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && (error.response?.status === 401 || error.response?.status === 403)) {
+        // Try to refetch API key (in case lambda is warmed), but don't wait here. This may help on next request
+        googleMapsApiKeyFactory.triggerRefetchApiKey();
+      }
+      Util.logAndThrowError(`Error fetching geocode: ${error}`);
     }
-
-    const data = response.data;
     if (!data) {
       Util.logAndThrowError('No data received from geocode API');
     }
