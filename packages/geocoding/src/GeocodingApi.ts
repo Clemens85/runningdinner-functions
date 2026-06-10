@@ -10,13 +10,11 @@ import { Validator } from './Validator';
 const googleMapsApiKeyFactory = GoogleMapsApiKeyFactory.getInstance();
 
 type GeocodingApiSingleResult = {
-  formatted_address: string;
-  geometry: {
-    location_type: string;
-    location: {
-      lat: number;
-      lng: number;
-    };
+  formattedAddress: string;
+  granularity: string;
+  location?: {
+    latitude: number;
+    longitude: number;
   };
 };
 
@@ -27,33 +25,28 @@ export class GeocodingApi {
 
     const addressQueryParam = GeocodingApi.getAddressQueryParam(address);
     logger.info(`Fetching geocode for address: ${addressQueryParam}`);
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${addressQueryParam}&key=${apiKey}`;
+    const url = `https://geocode.googleapis.com/v4/geocode/address/${addressQueryParam}`;
 
-    const response = await axios.get(url);
-    if (response.status !== 200) {
-      Util.logAndThrowError(`Error fetching geocode: ${response.statusText}`);
+    let data: Record<string, unknown>;
+    try {
+      const response = await axios.get(url, {
+        headers: { 'X-Goog-Api-Key': apiKey },
+      });
+      data = response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && (error.response?.status === 401 || error.response?.status === 403)) {
+        // Try to refetch API key (in case lambda is warmed), but don't wait here. This may help on next request
+        googleMapsApiKeyFactory.triggerRefetchApiKey();
+      }
+      Util.logAndThrowError(`Error fetching geocode: ${error}`);
     }
-
-    const data = response.data;
     if (!data) {
       Util.logAndThrowError('No data received from geocode API');
     }
 
-    if (data.status === 'ZERO_RESULTS') {
-      logger.warn(`No results found for address: ${addressQueryParam}`);
-      return null;
-    }
-    if (data.status !== 'OK') {
-      if (data.status === 'REQUEST_DENIED') {
-        // Try to refetch API key (in case lambda is warmed), but don't wait here. But this may help on next request
-        googleMapsApiKeyFactory.triggerRefetchApiKey();
-      }
-      Util.logAndThrowError(`Error in geocode response: ${data.status}`);
-    }
-
     const results = (data.results || []) as GeocodingApiSingleResult[];
     if (results.length === 0) {
-      logger.error(`Results array was empty for address: ${addressQueryParam}`);
+      logger.warn(`No results found for address: ${addressQueryParam}`);
       return null;
     }
 
@@ -65,14 +58,21 @@ export class GeocodingApi {
   public static getAddressQueryParam(address: Address): string {
     const { street, streetNr, cityName, zip } = address;
     Validator.validateAddress(address);
-    const addressString = `${street} ${streetNr}, ${zip} ${cityName}`;
-    return encodeURIComponent(addressString);
+    const streetWithNr = streetNr ? `${street} ${streetNr}` : street;
+    const addressString = `${streetWithNr}, ${zip}, ${cityName}`;
+    return encodeURIComponent(addressString).replace(/%20/g, '+').replace(/%2C/gi, ',');
   }
 
   static findBestResult(results: GeocodingApiSingleResult[]): GeocodingApiSingleResult {
-    let bestResult = results.find((result) => result.geometry?.location_type === 'ROOFTOP');
+    let bestResult = results.find((result) => result.granularity === 'ROOFTOP');
     if (!bestResult) {
-      bestResult = results.find((result) => result.geometry?.location_type === 'APPROXIMATE');
+      bestResult = results.find((result) => result.granularity === 'RANGE_INTERPOLATED');
+    }
+    if (!bestResult) {
+      bestResult = results.find((result) => result.granularity === 'GEOMETRIC_CENTER');
+    }
+    if (!bestResult) {
+      bestResult = results.find((result) => result.granularity === 'APPROXIMATE');
     }
     if (!bestResult) {
       bestResult = results[0];
@@ -81,24 +81,19 @@ export class GeocodingApi {
   }
 
   static mapApiResultToGeocodingResult(result: GeocodingApiSingleResult): GeocodingResult {
-    const formattedAddress = result.formatted_address;
+    const formattedAddress = result.formattedAddress;
 
     let exactness: EXACTNESS_TYPE = 'NONE';
-    if (result.geometry?.location_type === 'ROOFTOP') {
+    if (result.granularity === 'ROOFTOP') {
       exactness = 'EXACT';
-    } else if (
-      result.geometry?.location_type === 'APPROXIMATE' ||
-      result.geometry?.location_type === 'GEOMETRIC_CENTER' ||
-      result.geometry?.location_type === 'RANGE_INTERPOLATED'
-    ) {
+    } else if (result.granularity === 'APPROXIMATE' || result.granularity === 'GEOMETRIC_CENTER' || result.granularity === 'RANGE_INTERPOLATED') {
       exactness = 'NOT_EXACT';
     }
 
-    logger.info(`GOT LOCATION TYPE ${result.geometry?.location_type} for address: ${formattedAddress}, exactness: ${exactness}`);
+    logger.info(`GOT LOCATION TYPE ${result.granularity} for address: ${formattedAddress}, exactness: ${exactness}`);
 
-    const location = result.geometry?.location;
-    const lat = location?.lat || -1;
-    const lng = location?.lng || -1;
+    const lat = result.location?.latitude || -1;
+    const lng = result.location?.longitude || -1;
     return {
       lat,
       lng,
