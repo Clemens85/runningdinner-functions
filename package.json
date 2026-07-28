@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.162",
-    "typescript": "^5.8.3",
+    "typescript": "6.0.3",
     "@types/node": "^22.15.18",
     "vitest": "4.1.10",
     "vite": "7.2.6",

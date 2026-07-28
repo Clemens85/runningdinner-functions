@@ -12,6 +12,7 @@
     /* If NOT transpiling with TypeScript: */
     "moduleResolution": "node",
     "module": "commonjs",
+    "ignoreDeprecations": "6.0",
     "noEmit": true,
     "sourceMap": true,
     /* If your code doesn't run in the DOM: */
