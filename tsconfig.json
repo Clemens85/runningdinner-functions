@@ -16,6 +16,7 @@
     "noEmit": true,
     "sourceMap": true,
     /* If your code doesn't run in the DOM: */
-    "lib": ["esnext"]
+    "lib": ["esnext"],
+    "types": ["node"]
   }
 }
