@@ -32,7 +32,7 @@ export class GoogleMapsApiKeyFactory {
       } catch (innerError) {
         const errorMessage = `Failed to fetch SSM parameter (${SSM_PARAMETER}): ${innerError}`;
         logger.error(errorMessage);
-        throw new Error(errorMessage);
+        throw new Error(errorMessage, { cause: innerError });
       }
     }
     const result = response?.Parameter?.Value;
