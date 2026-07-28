@@ -6,6 +6,8 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 
+import { LambdaLogInsightsQueries } from './LambdaLogInsightsQueries';
+
 export type PythonLambdaProps = {
   name: string;
   packageFolderName: string;
@@ -79,5 +81,7 @@ export class PythonLambda extends Construct {
         key: `${normalizedPackageFolderName}FunctionUrl`,
       });
     }
+
+    LambdaLogInsightsQueries.create(this, `runningdinner/${name}`, [this.logGroup]);
   }
 }

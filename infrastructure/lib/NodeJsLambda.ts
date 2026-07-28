@@ -5,6 +5,8 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 
+import { LambdaLogInsightsQueries } from './LambdaLogInsightsQueries';
+
 export type LambdaFunctionUrlProps = {
   name: string;
   packageFolderName: string;
@@ -76,5 +78,7 @@ export class NodeJsLambda extends Construct {
         key: `${normalizedPackageFolderName}FunctionUrl`,
       });
     }
+
+    LambdaLogInsightsQueries.create(this, `runningdinner/${name}`, [this.logGroup]);
   }
 }
