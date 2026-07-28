@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "uuid": "^11.1.0",
+    "uuid": "14.0.1",
     "date-fns": "^4.4.0",
     "@aws-lambda-powertools/logger": "^2.34.0",
     "http-errors": "^2.0.1",
@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.162",
     "typescript": "6.0.3",
-    "@types/node": "^22.15.18",
+    "@types/node": "22.20.1",
     "vitest": "4.1.10",
     "vite": "7.2.6",
     "@types/uuid": "9.0.8",
@@ -33,8 +33,8 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-unused-imports": "^4.4.1",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "globals": "15.9.0",
+    "eslint-plugin-simple-import-sort": "14.0.0",
+    "globals": "17.8.0",
     "prettier": "3.9.6",
     "typescript-eslint": "8.65.0",
     "@types/lodash-es": "4.17.12"
