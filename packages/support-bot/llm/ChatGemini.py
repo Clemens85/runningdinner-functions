@@ -84,11 +84,25 @@ class ChatGemini(ChatModel):
             )
             
             answer = response.text
+            if not answer:
+                # response.text is None when the response is blocked by safety
+                # filters or when there are no candidates; surface this clearly
+                # so ChatModelDispatcher can fall back to the other model.
+                finish_reason = None
+                try:
+                    finish_reason = response.candidates[0].finish_reason if response.candidates else "no candidates"
+                except Exception:
+                    pass
+                raise RuntimeError(
+                    f"Gemini returned empty response (finish_reason={finish_reason})"
+                )
             return ChatResponse(
                 content=answer,
                 is_structured=custom_response_class is not None
             )
             
+        except RuntimeError:
+            raise
         except Exception as e:
             raise RuntimeError(f"Failed to generate content with Gemini: {str(e)}") from e
 

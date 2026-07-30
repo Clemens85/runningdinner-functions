@@ -24,7 +24,7 @@ export class SupportBotStack extends cdk.Stack {
       index: 'LambdaHandler.py',
       handler: 'lambda_handler',
       memorySize: 256,
-      timeout: cdk.Duration.seconds(20),
+      timeout: cdk.Duration.seconds(60),
       addFunctionUrl: true,
       cors: this.corsForHttpMethods([lambda.HttpMethod.HEAD, lambda.HttpMethod.GET, lambda.HttpMethod.POST]),
       environment: {
@@ -54,6 +54,7 @@ export class SupportBotStack extends cdk.Stack {
           '*.dist-info',
           '*.egg-info',
           'tests/',
+          'local_web_adapter/',
           'local_web-adapter/',
           'run_local_server.py',
           '.pytest_cache/',
@@ -62,7 +63,10 @@ export class SupportBotStack extends cdk.Stack {
       },
     });
 
-    const table = this.createDynamoDbTable('supportbot-v1');
+    // supportbot-v2: uses langgraph-checkpoint-aws DynamoDBSaver which writes TTL
+    // to the 'ttl' attribute. The old supportbot-v1 table used 'expireAt' and a
+    // different data format (aioboto3-based) incompatible with the new saver.
+    const table = this.createDynamoDbTable('supportbot-v2');
     commonUtils.grantReadWriteDataToTable([supportBotFunc.lambdaFunction], table);
 
     // Grant access to the SSM parameter store
@@ -92,7 +96,8 @@ export class SupportBotStack extends cdk.Stack {
         type: AttributeType.STRING,
       },
       tableName: tableName,
-      timeToLiveAttribute: 'expireAt',
+      // langgraph-checkpoint-aws writes TTL to 'ttl' attribute (not 'expireAt')
+      timeToLiveAttribute: 'ttl',
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       billingMode: BillingMode.PROVISIONED,
       readCapacity: 4,

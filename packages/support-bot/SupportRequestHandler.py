@@ -21,10 +21,13 @@ class SupportRequestHandler:
 
     @traceable
     def process_user_request(self, user_request: UserRequest):
+        Log.info("Starting to process user request for thread %s", user_request.thread_id)
         self._add_tracing_metadata(user_request)
 
         configurable = self._new_configurable_from_user_request(user_request=user_request)
+        Log.info("Creating SupportBot instance for thread %s", user_request.thread_id)
         support_bot = SupportBot(memory_provider=self.memory_provider, vector_db_repository=self.vector_db_repository, thread_id=user_request.thread_id)
+        Log.info("Invoking SupportBot graph for thread %s", user_request.thread_id)
         response = support_bot.query(user_request, configurable)
 
         user_response = UserResponse(answer=response, thread_id=user_request.thread_id)
@@ -56,12 +59,15 @@ class SupportRequestHandler:
     def warm_up(self):
         try: 
             Log.info("Warming up SupportBot and its workflow graph...")
+            Log.info("Creating SupportBot instance for warmup...")
             support_bot = SupportBot(memory_provider=self.memory_provider, vector_db_repository=self.vector_db_repository, thread_id="warmup-thread")
+            Log.info("SupportBot instance created, building workflow graph...")
             support_bot.build_workflow_graph()
             Log.info("... warmed up SupportBot and its workflow graph")
             return {
                 "statusCode": 200,
-                "headers": {"Content-Type": APPLICATION_JSON}
+                "headers": {"Content-Type": APPLICATION_JSON},
+                "body": json.dumps({"status": "warm"})
             }
         except Exception as e:
             Log.exception("Exception during warm up: %s", str(e))

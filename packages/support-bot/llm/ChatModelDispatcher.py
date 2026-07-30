@@ -37,14 +37,21 @@ class ChatModelDispatcher(ChatModel):
     def invoke(self, prompt: PromptValue, custom_response_class: Optional[Type[BaseModel]] = None) -> ChatResponse:
         preferred_model = self.models[0]
         try:
-            Log.info("Invoking preferred model: %s", str(preferred_model))
-            return preferred_model.invoke(prompt, custom_response_class)
+            return self._invoke_model(preferred_model, prompt, custom_response_class)
         except Exception as e:
             if len(self.models) > 1:
-                Log.exception("Preferred model %s failed with error: %s", str(preferred_model), str(e))
                 fallback_model = self.models[1]
-                Log.info("Falling back to model: %s", str(fallback_model))
-                return fallback_model.invoke(prompt, custom_response_class)
-            else:
-                raise e
+                Log.warning("Preferred model %s failed, trying fallback %s", str(preferred_model), str(fallback_model))
+                return self._invoke_model(fallback_model, prompt, custom_response_class)
+            raise
+
+    def _invoke_model(self, model: ChatModel, prompt: PromptValue, custom_response_class: Optional[Type[BaseModel]]) -> ChatResponse:
+        Log.info("Invoking model: %s", str(model))
+        try:
+            response = model.invoke(prompt, custom_response_class)
+            Log.info("Model %s responded successfully", str(model))
+            return response
+        except Exception as e:
+            Log.exception("Model %s failed: %s", str(model), str(e))
+            raise
 

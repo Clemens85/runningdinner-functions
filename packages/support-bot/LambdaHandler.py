@@ -3,10 +3,6 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 import json
 import os
 
-from langsmith.wrappers import OpenAIAgentsTracingProcessor
-from agents import set_trace_processors
-from langchain_core.tracers.langchain import wait_for_all_tracers
-
 from logger.Log import Log
 from UserRequest import UserRequest
 from memory.MemoryProvider import MemoryProvider
@@ -43,31 +39,55 @@ try:
 except Exception as e:
     raise EnvironmentError(f"Failed to retrieve API keys from SSM Parameter Store: {str(e)}")
 
-set_trace_processors([OpenAIAgentsTracingProcessor()])
-
 vector_db_repository = PineconeDbRepository()
 memory_provider = MemoryProvider()
 support_request_handler = SupportRequestHandler(memory_provider=memory_provider, vector_db_repository=vector_db_repository)
+
+
+def _flush_langsmith_traces(timeout_seconds: float = 3.0) -> None:
+    """Flush pending LangSmith traces before Lambda freezes.
+
+    wait_for_all_tracers() has no timeout and can block indefinitely if the
+    LangSmith endpoint is slow or the queue is large, causing Lambda to time out
+    before returning a response.  We instead call Client.flush(timeout=...) which
+    is supported by langsmith>=0.3.0.
+    """
+    try:
+        import langsmith.run_trees as _rt
+        client = getattr(_rt, "_CLIENT", None)
+        if client is not None:
+            flush = getattr(client, "flush", None)
+            if flush is not None:
+                try:
+                    flush(timeout=timeout_seconds)
+                except TypeError:
+                    # Fallback for older langsmith that doesn't accept timeout
+                    flush()
+    except Exception as exc:
+        Log.warning("Could not flush LangSmith traces: %s", str(exc))
+
 
 @tracer.capture_lambda_handler
 @Log.inject_lambda_context(log_event=True)
 def lambda_handler(event: dict, context: LambdaContext):
 
-    Log.info("Processing event: %s", event)
-
     if is_http_path_match(event, "/warmup") and get_http_method(event) == "GET":
+        Log.info("Processing warmup event")
         result = support_request_handler.warm_up()
         return result
 
+    Log.info("Processing query event")
     try:
-        http_body_str = event['body']
+        http_body_str = event.get('body')
+        if not http_body_str:
+            raise ValueError(f"Request has no body (event keys: {list(event.keys())})")
         http_body = json.loads(http_body_str)
         user_request = UserRequest(**http_body)
         result = support_request_handler.process_user_request(user_request)
         return result
     except Exception as exception:
-        Log.exception("Unhandled exception when processing request %s", str(exception))
+        Log.exception("Unhandled exception when processing request: %s", str(exception))
         error_result = support_request_handler.process_error(exception)
         return error_result
     finally:
-        wait_for_all_tracers()
+        _flush_langsmith_traces(timeout_seconds=3.0)

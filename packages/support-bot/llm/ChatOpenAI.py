@@ -18,23 +18,41 @@ class ChatOpenAI(ChatModel):
 
         messages = to_openai_messages(prompt)
 
-        if custom_response_class is not None:
-            response = self.openai_client.responses.parse(
+        try:
+            if custom_response_class is not None:
+                response = self.openai_client.responses.parse(
+                    model=self.model,
+                    temperature=self.temperature,
+                    input=messages,
+                    text_format=custom_response_class,
+                )
+                answer = response.output_text
+                if not answer:
+                    raise RuntimeError(
+                        f"OpenAI responses.parse() returned empty output_text "
+                        f"(model={self.model})"
+                    )
+                return ChatResponse(content=answer, is_structured=True)
+
+            response = self.openai_client.chat.completions.create(
                 model=self.model,
                 temperature=self.temperature,
-                input=messages,
-                text_format=custom_response_class,
+                messages=messages,
             )
-            answer = response.output_text
-            return ChatResponse(content=answer, is_structured=True)
-        
-        response = self.openai_client.chat.completions.create(
-            model=self.model,
-            temperature=self.temperature,
-            messages=messages,
-        )
-        answer = response.choices[0].message.content
-        return ChatResponse(content=answer, is_structured=False)
+            answer = response.choices[0].message.content
+            if not answer:
+                # content is None when the model returns a tool/function call
+                # instead of a plain text message
+                finish_reason = response.choices[0].finish_reason
+                raise RuntimeError(
+                    f"OpenAI returned empty message content "
+                    f"(model={self.model}, finish_reason={finish_reason})"
+                )
+            return ChatResponse(content=answer, is_structured=False)
+        except RuntimeError:
+            raise
+        except Exception as e:
+            raise RuntimeError(f"OpenAI call failed (model={self.model}): {str(e)}") from e
 
     def __str__(self):
         return self.__repr__()

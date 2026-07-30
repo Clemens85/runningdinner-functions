@@ -40,11 +40,14 @@ class State(TypedDict, total=False):
 class SupportBot:
   
   def __init__(self, memory_provider: MemoryProvider, vector_db_repository: VectorDbRepository, thread_id: str):
+    Log.info("Initializing SupportBot for thread %s", thread_id)
     self.llm_model_dispatcher = ChatModelDispatcher()
+    Log.info("ChatModelDispatcher initialized for thread %s", thread_id)
     self.vector_db = vector_db_repository
     self.memory_provider = memory_provider
     self.query_refiner = QueryRefiner(self.llm_model_dispatcher)
     self.thread_id = thread_id
+    Log.info("SupportBot fully initialized for thread %s", thread_id)
 
   def build_workflow_graph(self):
     builder = StateGraph(state_schema=State)
@@ -165,9 +168,9 @@ class SupportBot:
     return { "messages": final_messages, "answer": final_answer }
   
   def query(self, user_request: UserRequest, config: RunnableConfig) -> str:
-    
+    Log.info("Building workflow graph for thread %s", self.thread_id)
     graph = self.build_workflow_graph()
-    
+    Log.info("Invoking workflow graph for thread %s", self.thread_id)
     response = graph.invoke({
       "question": user_request.question,
       "request_params": user_request.request_params or {},
