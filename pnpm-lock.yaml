@@ -106,6 +106,8 @@ importers:
         specifier: ^1.0.0
         version: link:../geocoding
 
+  packages/uptime-monitor: {}
+
 packages:
 
   '@aws-lambda-powertools/commons@2.34.0':

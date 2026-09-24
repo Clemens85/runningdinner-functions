@@ -8,6 +8,7 @@ import { LocalDevUserStack } from '../lib/LocalDevUserStack';
 import { MessageProposalStack } from '../lib/MessageProposalStack';
 import { RouteOptimizationStack } from '../lib/RouteOptimizationStack';
 import { SupportBotStack } from '../lib/SupportBotStack';
+import { UptimeMonitorStack } from '../lib/UptimeMonitorStack';
 
 const app = new cdk.App();
 
@@ -23,6 +24,8 @@ new RouteOptimizationStack(app, 'RouteOptimizationStack', {
 });
 
 new SupportBotStack(app, 'SupportBotStack', {});
+
+new UptimeMonitorStack(app, 'UptimeMonitorStack', {});
 
 new MessageProposalStack(app, 'MessageProposalStack', {
   localDevUser: devUserStack.localDevUser,

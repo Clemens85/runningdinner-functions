@@ -1,0 +1,57 @@
+name: 'Deploy Uptime Monitor Stack'
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy against'
+        type: environment
+        required: true
+
+jobs:
+  deploy-uptime-monitor:
+    name: 'Deploy Uptime Monitor Stack'
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event.inputs.environment }}
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Check-out repository
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm package manager
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        name: 'Install Node.js & cache pnpm store'
+        with:
+          cache: 'pnpm'
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-central-1
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github
+
+      - name: Create placeholder for route optimization layer
+        run: mkdir -p infrastructure/lib/layers/route_optimization
+
+      - name: Deploy Geocoding Stack
+        working-directory: infrastructure
+        env:
+          RUNNINGDINNER_FUNCTIONS_STAGE: ${{ github.event.inputs.environment }}
+        run: |
+          npm install
+          npx cdk deploy UptimeMonitorStack \
+            --context region=eu-central-1 \
+            --require-approval never \
+            --verbose

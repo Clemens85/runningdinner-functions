@@ -1,0 +1,66 @@
+name: 'Uptime Monitor - Build & Test'
+
+on:
+  push:
+    paths:
+      - 'packages/uptime-monitor/**'
+      - 'infrastructure/bin/infrastructure.ts'
+      - 'infrastructure/lib/UptimeMonitorStack.ts'
+      - 'infrastructure/lib/NodeJsLambda.ts'
+      - 'infrastructure/lib/Environment.ts'
+      - 'infrastructure/package.json'
+      - 'infrastructure/tsconfig.json'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/build-uptime-monitor.yml'
+  workflow_dispatch:
+
+jobs:
+  build-test-uptime-monitor:
+    name: 'Uptime Monitor: Typecheck, lint & test'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Check-out repository
+
+      - uses: gensecaihq/Shai-Hulud-2.0-Detector@v2
+        with:
+          fail-on-critical: true
+
+      - uses: gensecaihq/Shai-Hulud-2.0-Detector@v2
+        with:
+          fail-on-critical: true
+          working-directory: 'infrastructure'
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm package manager
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        name: 'Install Node.js & cache pnpm store'
+        with:
+          cache: 'pnpm'
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm --filter @runningdinner/uptime-monitor typecheck
+
+      - name: Lint
+        run: pnpm --filter @runningdinner/uptime-monitor lint
+
+      - name: Test
+        run: pnpm --filter @runningdinner/uptime-monitor test
+
+      - name: Publish Geocoding Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: packages/geocoding/reports/junit.xml
+          check_name: Geocoding Test Results
