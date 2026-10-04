@@ -60,6 +60,8 @@ class DinnerRoute(BaseModel):
     status: str
     geocodingResult: GeocodingResult
     clusterNumber: int
+    isHomeAccessible: bool = False
+    requiresAccessibleHome: bool = False
     teamsOnRoute: List[TeamsOnRoute] # List of teams which this host will visit on his route to take the other meals
     originalIndex: Optional[int] = None
     

@@ -43,15 +43,20 @@ class RouteBuilder:
         matrix_list = get_matrixes_for_cluster_size(cluster_size)
         best_matrix: List[List[List[int]]] = []
         best_distance = float('inf')
+        best_inaccessible_visits = float('inf')
         best_assignment: Dict[int, DinnerRoute] = {}
 
         for matrix in matrix_list:
             Log.info(f"Building route for cluster label {cluster_label} with size {cluster_size} and matrix: {matrix}")
             # Find optimal assignment using brute force
             assignment_candidate, distance_sum = self._find_optimal_assignment(teams_by_meal_label, matrix)
-            if distance_sum < best_distance:
+            if assignment_candidate is None:
+                continue
+            inaccessible_visits = self._count_inaccessible_visits(assignment_candidate, matrix)
+            if (inaccessible_visits, distance_sum) < (best_inaccessible_visits, best_distance):
                 best_matrix = matrix
                 best_distance = distance_sum
+                best_inaccessible_visits = inaccessible_visits
                 best_assignment = assignment_candidate
 
         if len(best_matrix) == 0:
@@ -59,17 +64,24 @@ class RouteBuilder:
 
         # Apply the best assignment found
         optimized_routes = self._apply_assignment(best_assignment, best_matrix)
+        Log.info(f"Cluster {cluster_label}: {best_inaccessible_visits} inaccessible visits remaining")
         return optimized_routes, best_distance
 
     def _find_optimal_assignment(self, teams_by_meal_class: Dict[str, List[DinnerRoute]], matrix: List[List[List[int]]]) -> Tuple[Dict[int, DinnerRoute], float]:
         """
-        Find the optimal assignment of teams to matrix positions using brute force.
+        Minimize inaccessible visits, then distance, using brute force.
         :param teams_by_meal_class: Dictionary mapping meal classes to lists of teams.
         :param matrix: The meal arrangement matrix.
         :return: The best assignment of teams to routes.
         """
         best_distance = float('inf')
+        best_inaccessible_visits = float('inf')
         best_assignment: Dict[int, DinnerRoute] = None
+        has_accessibility_requirements = any(
+            team.requiresAccessibleHome
+            for teams in teams_by_meal_class.values()
+            for team in teams
+        )
         
         # Generate all possible permutations for each meal class
         meal_class_permutations: List[List[DinnerRoute]] = []
@@ -108,16 +120,30 @@ class RouteBuilder:
                 #     matrix_number_to_team[matrix_position] = team
 
             # Calculate total distance for this assignment
+            inaccessible_visits = self._count_inaccessible_visits(matrix_number_to_team, matrix) if has_accessibility_requirements else 0
             total_distance = self._calculate_total_distance(matrix_number_to_team, matrix)
             # print(f"Total distance for current assignment: {total_distance}")
             
             # Keep track of the best assignment
-            if total_distance < best_distance:
+            if (inaccessible_visits, total_distance) < (best_inaccessible_visits, best_distance):
                 best_distance = total_distance
+                best_inaccessible_visits = inaccessible_visits
                 best_assignment = matrix_number_to_team
 
         Log.info(f"Best assignment: {best_assignment}")
         return best_assignment, best_distance
+
+    def _count_inaccessible_visits(self, matrix_number_to_team: Dict[int, DinnerRoute], matrix: List[List[List[int]]]) -> int:
+        inaccessible_visits = 0
+        for meal_block in matrix:
+            for hosting_arrangement in meal_block:
+                host = matrix_number_to_team[hosting_arrangement[0]]
+                if not host.isHomeAccessible:
+                    inaccessible_visits += sum(
+                        matrix_number_to_team[guest_number].requiresAccessibleHome
+                        for guest_number in hosting_arrangement[1:]
+                    )
+        return inaccessible_visits
 
     def _calculate_total_distance(self, matrix_number_to_team: Dict[int, DinnerRoute], matrix: List[List[List[int]]]) -> float:
         """

@@ -1,10 +1,12 @@
 from collections import Counter
+from itertools import permutations, product
 from pathlib import Path
 from typing import List
 
 from DefaultClusterer import DefaultClusterer
 from DataProvider import DataProvider
 from DinnerRouteList import DinnerRoute, RouteOptimizationSettings
+from MatrixTemplates import get_matrixes_for_cluster_size, matrix9_1, matrix9_2
 from RouteBuilder import calculate_distance_sum
 from RouteBuilder import RouteBuilder
 from local_adapter.LocalFileDataLoader import LocalFileDataLoader
@@ -206,6 +208,90 @@ def test_predict_1_team_cluster_15_teams(optimization_settings: RouteOptimizatio
     routes_of_cluster, _ = route_builder.build_route_for_cluster_label(0)
 
     assert_routes_of_cluster(routes_of_cluster, cluster_label=0, expected_meals_size=5)
+
+
+def _count_inaccessible_route_visits(routes: List[DinnerRoute]) -> int:
+    hosts_by_number = {route.teamNumber: route for route in routes}
+    return sum(
+        not hosts_by_number[host.teamNumber].isHomeAccessible
+        for route in routes if route.requiresAccessibleHome
+        for host in route.teamsOnRoute
+    )
+
+
+@pytest.mark.parametrize("requiring_positions, accessible_positions", [
+    pytest.param([], [], id="no_requirements"),
+    pytest.param([0], list(range(1, 9)), id="requiring_home_need_not_be_accessible"),
+    pytest.param([0], [3], id="partially_fulfillable"),
+    pytest.param([0], [], id="unfulfillable"),
+    pytest.param(list(range(9)), [0, 3, 6], id="competing_requirements"),
+])
+def test_route_building_accessibility(requiring_positions, accessible_positions):
+    data = load_sample_data("27_teams.json", optimization_settings=KEEP_MEAL_ASSIGNMENTS)
+    meal_labels = data.get_unique_meal_labels_ordered()
+    routes = [route for route in data.get_routes() if route.clusterNumber == 1]
+    routes = [route for meal in meal_labels for route in routes if route.meal.label == meal]
+    for position, route in enumerate(routes):
+        route.requiresAccessibleHome = position in requiring_positions
+        route.isHomeAccessible = position in accessible_positions
+    original_routes = [route.model_dump() for route in routes]
+    distances = data.get_distance_matrix()
+    expected_score = (float('inf'), float('inf'))
+
+    for matrix in get_matrixes_for_cluster_size(9):
+        meal_permutations = [permutations([route for route in routes if route.meal.label == meal]) for meal in meal_labels]
+        for combination in product(*meal_permutations):
+            assignment = {
+                arrangement[0]: team
+                for meal_block, teams in zip(matrix, combination)
+                for arrangement, team in zip(meal_block, teams)
+            }
+            visits = [
+                (assignment[guest_number], assignment[arrangement[0]])
+                for meal_block in matrix
+                for arrangement in meal_block
+                for guest_number in arrangement[1:]
+            ]
+            score = (
+                sum(guest.requiresAccessibleHome and not host.isHomeAccessible for guest, host in visits),
+                sum(distances[host.originalIndex][guest.originalIndex] for guest, host in visits),
+            )
+            expected_score = min(expected_score, score)
+
+    optimized_routes, distance = RouteBuilder(data, routes).build_route_for_cluster_label(1)
+
+    assert (_count_inaccessible_route_visits(optimized_routes), distance) == expected_score
+    assert distance == pytest.approx(calculate_distance_sum(optimized_routes, distances))
+    assert_routes_of_cluster(optimized_routes, cluster_label=1, expected_meals_size=3)
+    assert [route.model_dump() for route in routes] == original_routes
+    assert {
+        route.teamNumber: (route.requiresAccessibleHome, route.isHomeAccessible, route.originalIndex)
+        for route in optimized_routes
+    } == {
+        route.teamNumber: (route.requiresAccessibleHome, route.isHomeAccessible, route.originalIndex)
+        for route in routes
+    }
+
+
+def test_route_building_prefers_accessibility_across_templates(monkeypatch):
+    data = load_sample_data("27_teams.json", optimization_settings=KEEP_MEAL_ASSIGNMENTS)
+    routes = [route for route in data.get_routes() if route.clusterNumber == 1]
+    builder = RouteBuilder(data, routes)
+    assignment = {
+        arrangement[0]: team
+        for meal_label, meal_block in zip(builder.meal_labels, matrix9_1)
+        for arrangement, team in zip(meal_block, [route for route in builder.routes if route.meal.label == meal_label])
+    }
+    assignment[1].requiresAccessibleHome = True
+    assignment[6].isHomeAccessible = True
+    assignment[9].isHomeAccessible = True
+    monkeypatch.setattr("RouteBuilder.get_matrixes_for_cluster_size", lambda size: [matrix9_2, matrix9_1])
+    monkeypatch.setattr(builder, "_find_optimal_assignment", lambda teams, matrix: (assignment, 100.0 if matrix is matrix9_1 else 1.0))
+
+    optimized_routes, distance = builder.build_route_for_cluster_label(1)
+
+    assert _count_inaccessible_route_visits(optimized_routes) == 0
+    assert distance == 100.0
 
 
 def assert_routes_of_cluster(routes_of_cluster: List[DinnerRoute], cluster_label: int, expected_meals_size: int):
