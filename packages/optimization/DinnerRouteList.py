@@ -35,6 +35,8 @@ class TeamsOnRoute(BaseModel):
     teamId: str
     meal: Meal
     status: str
+    isHomeAccessible: bool = False
+    requiresAccessibleHome: bool = False
     geocodingResult: GeocodingResult
     clusterNumber: int
     teamsOnRoute: List["TeamsOnRoute"] = [] # Will always be empty in this context
