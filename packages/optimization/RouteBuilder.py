@@ -200,6 +200,8 @@ class RouteBuilder:
                             teamId=team_on_route.teamId,
                             meal=team_on_route.meal,
                             status=team_on_route.status,
+                            isHomeAccessible=team_on_route.isHomeAccessible,
+                            requiresAccessibleHome=team_on_route.requiresAccessibleHome,
                             geocodingResult=team_on_route.geocodingResult,
                             clusterNumber=team_on_route.clusterNumber,
                             teamsOnRoute=[]
