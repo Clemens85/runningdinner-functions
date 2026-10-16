@@ -29,6 +29,7 @@ class RouteOptimizationSettings(BaseModel):
     currentAverageDistanceInMeters: float
     ignoreMealAssignments: Optional[bool] = False
     minimumDistanceInMeters: Optional[int] = 0
+    ignoreAccessibilityRequirements: Optional[bool] = False
 
 class TeamsOnRoute(BaseModel):
     teamNumber: int
