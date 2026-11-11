@@ -25,7 +25,7 @@ def get_message_generation_user_prompt(input_event_description: str, examples: L
 
     message_placeholders = "{firstname}, {lastname}"
     if proposal_type == ProposalFileType.TEAM:
-        message_placeholders += ", {partner}, {meal}, {mealtime}, {mealspecifics}, {host}, {managehostlink}"
+        message_placeholders += ", {partner}, {meal}, {mealtime}, {mealspecifics}, {host}, {managehostlink}, {managenamelink}"
     elif proposal_type == ProposalFileType.DINNER_ROUTE:
         message_placeholders += ", {route}, {routelink}"
 
@@ -58,7 +58,7 @@ def get_message_generation_user_prompt(input_event_description: str, examples: L
        return f"""
         Use the following example messages and their corresponding event description, to generate a new team message for teams for a running dinner event.
         The example messages are written in Markdown with sections like {team_sections}.
-        The ## Message Template may contain placeholders like {{firstname}}, {{lastname}}, {{partner}}, {{meal}}, {{mealtime}}, {{mealspecifics}}, {{host}}, {{managehostlink}} which should also be used in the generated message template if reasonable.
+        The ## Message Template may contain placeholders like {{firstname}}, {{lastname}}, {{partner}}, {{meal}}, {{mealtime}}, {{mealspecifics}}, {{host}}, {{managehostlink}}, {{managenamelink}} which should also be used in the generated message template if reasonable.
         The ## Non Host Template may contain placeholders like {{partner}} which should also be used in the generated non host template if reasonable.
         
         {generate_sections_advice(team_sections)}
